@@ -1,12 +1,14 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
+    "name": "lagdo/polr-admin",
+    "description": "An admin dashboard for the Polr URL shortener.",
     "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "license": "GPL-v2",
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*"
+        "laravel/framework": "5.1.*",
+        "jaxon-php/jaxon-laravel": "~2.0",
+        "jaxon-php/jaxon-dialogs": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
