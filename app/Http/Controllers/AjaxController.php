@@ -17,11 +17,11 @@ class AjaxController extends JaxonController
      * @return void
      */
     public function initInstance($instance)
-	{
-		// Dialogs and notifications are implemented by the Dialogs plugin
-		$instance->dialog = $this->jaxon->ajaxResponse()->dialog;
-		$instance->notify = $this->jaxon->ajaxResponse()->dialog;
-	}
+    {
+        // Dialogs and notifications are implemented by the Dialogs plugin
+        $instance->dialog = $this->jaxon->ajaxResponse()->dialog;
+        $instance->notify = $this->jaxon->ajaxResponse()->dialog;
+    }
 
     /**
      * Callback before processing a Jaxon request.
@@ -32,21 +32,21 @@ class AjaxController extends JaxonController
      *
      * @return void
      */
-	public function beforeRequest($instance, $method, &$bEndRequest)
-	{
-		if(Auth::guest())
-		{
-			// Access to these classes is allowed to guest users
-			$guestAllowedClasses = [];
-			if(in_array(get_class($instance), $guestAllowedClasses))
-			{
-				return;
-			}
-			// End Jaxon request, and redirect to login page
-			$bEndRequest = true;
-			$instance->response->redirect(route('showLogin'));
-		}
-	}
+    public function beforeRequest($instance, $method, &$bEndRequest)
+    {
+        if(Auth::guest())
+        {
+            // Access to these classes is allowed to guest users
+            $guestAllowedClasses = [];
+            if(in_array(get_class($instance), $guestAllowedClasses))
+            {
+                return;
+            }
+            // End Jaxon request, and redirect to login page
+            $bEndRequest = true;
+            $instance->response->redirect(route('showLogin'));
+        }
+    }
 
     /**
      * Callback after processing a Jaxon request.
@@ -56,7 +56,7 @@ class AjaxController extends JaxonController
      *
      * @return void
      */
-	/*public function afterRequest($instance, $method)
-	{
-	}*/
+    /*public function afterRequest($instance, $method)
+    {
+    }*/
 }
