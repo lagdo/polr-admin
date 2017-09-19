@@ -142,4 +142,18 @@ class LinkHelper {
 
         return $base_x_val;
     }
+
+    public static function getLinkBy($attr, $value) {
+        $link = Link::where($attr, $value);
+
+        return $link->first();
+    }
+
+    public static function getLinkById($link_id) {
+        return self::getLinkBy('id', $link_id);
+    }
+
+    public static function getLinkByShortUrl($short_url) {
+        return self::getLinkBy('short_url', $short_url);
+    }
 }

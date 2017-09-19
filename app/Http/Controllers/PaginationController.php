@@ -21,12 +21,14 @@ class PaginationController extends Controller
 
     /* Cell rendering functions */
 
-    public function renderLongUrlCell($link) {
+    public function renderLongUrlCell($link)
+    {
         return '<a target="_blank" title="' . e($link->long_url) . '" href="'. $link->long_url .'">' . str_limit($link->long_url, 50) . '</a>
-            <a class="btn btn-primary btn-xs edit-long-link-btn" ng-click="editLongLink(\'' . $link->short_url . '\', \'' . $link->long_url . '\')"><i class="fa fa-edit edit-link-icon"></i></a>';
+            <a class="btn btn-primary btn-xs edit-long-link-btn"><i class="fa fa-edit edit-link-icon"></i></a>';
     }
 
-    public function renderClicksCell($link) {
+    public function renderClicksCell($link)
+    {
         if (env('SETTING_ADV_ANALYTICS')) {
             return $link->clicks . ' <a target="_blank" class="stats-icon" href="/admin/stats/' . e($link->short_url) . '">
                 <i class="fa fa-area-chart" aria-hidden="true"></i>
@@ -52,15 +54,14 @@ class PaginationController extends Controller
         return '<a class="btn btn-sm btn-danger ' . $btn_class . '">Delete</a>';
     }
 
-    public function renderDeleteLinkCell($link) {
+    public function renderDeleteLinkCell($link)
+    {
         // Add "Delete" action button
-        return '<a ng-click="deleteLink($event, \'' . e($link->short_url)  . '\')"
-            class="btn btn-sm btn-warning delete-link">
-            Delete
-        </a>';
+        return '<a class="btn btn-sm btn-warning btn-delete-link delete-link">Delete</a>';
     }
 
-    public function renderAdminApiActionCell($user) {
+    public function renderAdminApiActionCell($user)
+    {
         // Add "API Info" action button
         if (session('username') === $user->username)
         {
@@ -133,7 +134,8 @@ class PaginationController extends Controller
         return $select_role;
     }
 
-    public function renderToggleLinkActiveCell($link) {
+    public function renderToggleLinkActiveCell($link)
+    {
         // Add "Disable/Enable" action buttons
         $btn_class = 'btn-danger';
         $btn_text = 'Disable';
@@ -143,14 +145,13 @@ class PaginationController extends Controller
             $btn_text = 'Enable';
         }
 
-        return '<a ng-click="toggleLink($event, \'' . e($link->short_url) . '\')" class="btn btn-sm ' . $btn_class . '">
-            ' . $btn_text . '
-        </a>';
+        return '<a class="btn btn-sm btn-toggle-link ' . $btn_class . '">' . $btn_text . '</a>';
     }
 
     /* DataTables bindings */
 
-    public function paginateAdminUsers(Request $request) {
+    public function paginateAdminUsers(Request $request)
+    {
         self::ensureAdmin();
 
         $admin_users = User::select(['username', 'email', 'created_at', 'active', 'api_key', 'api_active', 'api_quota', 'role', 'id']);
@@ -167,11 +168,16 @@ class PaginationController extends Controller
             ->make(true);
     }
 
-    public function paginateAdminLinks(Request $request) {
+    public function paginateAdminLinks(Request $request)
+    {
         self::ensureAdmin();
 
-        $admin_links = Link::select(['short_url', 'long_url', 'clicks', 'created_at', 'creator', 'is_disabled']);
+        $admin_links = Link::select(['id', 'short_url', 'long_url', 'clicks', 'created_at', 'creator', 'is_disabled']);
         return Datatables::of($admin_links)
+            ->setRowAttr([
+                'data-id' => '{{$id}}',
+                'data-ending' => '{{$short_url}}',
+            ])
             ->addColumn('disable', [$this, 'renderToggleLinkActiveCell'])
             ->addColumn('delete', [$this, 'renderDeleteLinkCell'])
             ->editColumn('clicks', [$this, 'renderClicksCell'])
@@ -180,7 +186,8 @@ class PaginationController extends Controller
             ->make(true);
     }
 
-    public function paginateUserLinks(Request $request) {
+    public function paginateUserLinks(Request $request)
+    {
         self::ensureLoggedIn();
 
         $username = session('username');
@@ -188,6 +195,10 @@ class PaginationController extends Controller
             ->select(['id', 'short_url', 'long_url', 'clicks', 'created_at']);
 
         return Datatables::of($user_links)
+            ->setRowAttr([
+                'data-id' => '{{$id}}',
+                'data-ending' => '{{$short_url}}',
+            ])
             ->editColumn('clicks', [$this, 'renderClicksCell'])
             ->editColumn('long_url', [$this, 'renderLongUrlCell'])
             ->escapeColumns(['short_url'])

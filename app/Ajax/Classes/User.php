@@ -109,7 +109,7 @@ class User extends JaxonClass
         $this->jq('#change-password-form .password-box')->val('');
 
         // Show a confirmation message
-        $this->notify->info("Password changed successfully.", 'Success');
+        $this->notify->info("Password successfully changed.", 'Success');
 
         return $this->response;
     }

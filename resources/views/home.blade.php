@@ -184,10 +184,22 @@ $(document).ready(function() {
                 ->confirm('Delete user {1}?', jq()->parent()->parent()->attr('data-name')) ) !!};
     });
     $('#admin_links_table').on('draw.dt', function() {
-        alert('Table admin_links_table redrawn');
+        // Edit long URL
+        {!! jq('#admin_links_table .edit-long-link-btn')->click(
+            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'admin') ) !!};
+        // Enable/disable link
+        {!! jq('#admin_links_table .btn-toggle-link')->click(
+            $jaxonLink->toggleLink(jq()->parent()->parent()->attr('data-id'))
+                ->confirm('Toggle link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
+        // Delete user
+        {!! jq('#admin_links_table .btn-delete-link')->click(
+            $jaxonLink->deleteLink(jq()->parent()->parent()->attr('data-id'))
+                ->confirm('Delete link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
     });
     $('#user_links_table').on('draw.dt', function() {
-        alert('Table user_links_table redrawn');
+        // Edit long URL
+        {!! jq('#user_links_table .edit-long-link-btn')->click(
+            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'user') ) !!};
     });
 });
 </script>
