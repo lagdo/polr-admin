@@ -2,11 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Auth;
+use Jaxon\Laravel\Jaxon;
 use Jaxon\Laravel\Http\Controllers\JaxonController;
 
 class AjaxController extends JaxonController
 {
+    /**
+     * @var Request           The HTTP request
+     */
+    protected $request;
+
+    /**
+     * The constructor.
+     * 
+     * The parameters are automatically populated by Laravel, thanks to its service container.
+     * 
+     * @param Request           $request                The HTTP request
+     * @param Jaxon             $jaxon                  The Laravel Jaxon plugin
+     */
+    public function __construct(Request $request, Jaxon $jaxon)
+    {
+        $this->request = $request;
+        parent::__construct($jaxon);
+    }
+
     /**
      * Callback for initializing a Jaxon class instance.
      * 
@@ -21,6 +42,8 @@ class AjaxController extends JaxonController
         // Dialogs and notifications are implemented by the Dialogs plugin
         $instance->dialog = $this->jaxon->ajaxResponse()->dialog;
         $instance->notify = $this->jaxon->ajaxResponse()->dialog;
+        // The HTTP request
+        $instance->httpRequest = $this->request;
     }
 
     /**
