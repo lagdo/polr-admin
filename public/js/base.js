@@ -1,10 +1,3 @@
-// AJAX settings
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-
 // Escape jQuery selectors
 function esc_selector(selector) {
     return selector.replace( /(:|\.|\[|\]|,)/g, "\\$1" );
@@ -20,10 +13,26 @@ jQuery.fn.clearForm = function() {
     return this;
 };
 
+$(document).ready(function() {
+    // AJAX settings
+    if((csrfToken = $('meta[name="csrf-token"]').attr('content')))
+    {
+        // Add the CSRF token to all Ajax and Jaxon requests
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': csrfToken}});
+        jaxon.config.postHeaders = {'X-CSRF-TOKEN': csrfToken};
+    }
+
+    $('.admin-nav a').click(function(e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    $('.new-user-fields').hide();
+});
+
 // Output helpful console message
 console.log('%cPolr', 'font-size:5em;color:green');
 console.log('%cNeed help? Open a ticket: https://github.com/cydrobolt/polr', 'color:blue');
 console.log('%cDocs: https://docs.polr.me', 'color:blue');
 
 // Set up Angular module
-var polr = angular.module('polr',[]);
+// var polr = angular.module('polr',[]);
