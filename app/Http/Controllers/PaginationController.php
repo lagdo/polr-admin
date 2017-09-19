@@ -1,11 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\Link;
 use App\Models\User;
 use App\Helpers\UserHelper;
+
+use Datatables;
 
 class PaginationController extends Controller
 {

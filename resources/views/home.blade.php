@@ -138,6 +138,8 @@
 @section('js')
 
 {{-- Include extra JS --}}
+<script src='/js/datatables.min.js'></script>
+
 {!! $jaxonCss !!}
 {!! $jaxonJs !!}
 {!! $jaxonScript !!}
