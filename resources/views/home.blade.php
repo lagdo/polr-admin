@@ -57,9 +57,9 @@
 
             <div role="tabpanel" class="tab-pane" id="users">
                 <h3 class="users-heading">Users</h3>
-                <a ng-click="state.showNewUserWell = !state.showNewUserWell" class="btn btn-primary btn-sm status-display">New</a>
+                <a class="btn btn-primary btn-sm status-display new-user-add">New</a>
 
-                <div ng-if="state.showNewUserWell" class="new-user-fields well">
+                <div class="new-user-fields well">
                     <table class="table">
                         <tr>
                             <th>Username</th>
@@ -69,18 +69,21 @@
                             <th></th>
                         </tr>
                         <tr id="new-user-form">
-                            <td><input type="text" class="form-control" ng-model="newUserParams.username"></td>
-                            <td><input type="password" class="form-control" ng-model="newUserParams.userPassword"></td>
-                            <td><input type="email" class="form-control" ng-model="newUserParams.userEmail"></td>
+                            <td><input type="text" class="form-control" name="username"></td>
+                            <td><input type="password" class="form-control" name="user_password"></td>
+                            <td><input type="email" class="form-control" name="user_email"></td>
                             <td>
-                                <select class="form-control new-user-role" ng-model="newUserParams.userRole">
+                                <select class="form-control new-user-role" name="user_role">
                                     @foreach  ($user_roles as $role_text => $role_val)
                                         <option value="{{$role_val}}">{{$role_text}}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td>
-                                <a ng-click="addNewUser($event)" class="btn btn-primary btn-sm status-display new-user-add">Add</a>
+                                <a class="btn btn-primary btn-sm status-display new-user-save">Save</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger btn-sm status-display new-user-cancel">Cancel</a>
                             </td>
                         </tr>
                     </table>
@@ -147,6 +150,18 @@ $(document).ready(function() {
     });
     $('#change-password-form .change-password-btn').click(function() {
         {!! $jaxonUser->changePassword(rq()->form('change-password-form'))->confirm('Save the new password?') !!}
+    });
+    // New user
+    $('#users .new-user-add').click(function() {
+        $('#new-user-form input.form-control').val('');
+        $('.new-user-fields').show();
+    });
+    $('#users .new-user-cancel').click(function() {
+        $('#new-user-form input.form-control').val('');
+        $('.new-user-fields').hide();
+    });
+    $('#users .new-user-save').click(function() {
+        {!! $jaxonUser->addNewUser(rq()->form('new-user-form'))->confirm('Save the new user?') !!}
     });
 });
 </script>

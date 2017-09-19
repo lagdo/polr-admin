@@ -5,6 +5,7 @@ namespace Jaxon\App;
 use Hash;
 use App\Helpers\UserHelper;
 use App\Helpers\CryptoHelper;
+use App\Factories\UserFactory;
 use Jaxon\Sentry\Armada as JaxonClass;
 
 class User extends JaxonClass
@@ -98,6 +99,28 @@ class User extends JaxonClass
 
         // Show a confirmation message
         $this->dialog->info("Password changed successfully.", 'Success');
+
+        return $this->response;
+    }
+
+    public function addNewUser(array $formValues)
+    {
+        if (!$this->currIsAdmin())
+        {
+            $this->dialog->error('User is not admin.', 'Error');
+            return $this->response;
+        }
+
+        $ip = $this->httpRequest->ip();
+        $username = $formValues['username'];
+        $user_password = $formValues['user_password'];
+        $user_email = $formValues['user_email'];
+        $user_role = $formValues['user_role'];
+
+        UserFactory::createUser($username, $user_email, $user_password, 1, $ip, false, 0, $user_role);
+
+        // Show a confirmation message
+        $this->dialog->info("User successfully created.", 'Success');
 
         return $this->response;
     }
