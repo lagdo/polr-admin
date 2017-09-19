@@ -38,6 +38,13 @@ Route::group(array('middleware' => 'user.check'), function()
     Route::post('/password/lost', array('as' => 'postLostPassword', 'uses' => 'UserController@postLostPassword'));
     Route::post('/password/reset/{username}/{recoveryKey}',
         ['as' => 'postResetPassword', 'uses' => 'UserController@resetPassword']);
+
+    // Pagination routes (for Datatables)
+    Route::group(['prefix' => '/api/v2', 'namespace' => 'App\Http\Controllers'], function ($app) {
+        Route::get('admin/get_admin_users', ['as' => 'api_get_admin_users', 'uses' => 'PaginationController@paginateAdminUsers']);
+        Route::get('admin/get_admin_links', ['as' => 'api_get_admin_links', 'uses' => 'PaginationController@paginateAdminLinks']);
+        Route::get('admin/get_user_links', ['as' => 'api_get_user_links', 'uses' => 'PaginationController@paginateUserLinks']);
+    });
 });
 
 // Jaxon request processor
