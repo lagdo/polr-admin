@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Helpers\UserHelper;
 
 use Datatables;
+use Jaxon\Laravel\Jaxon;
 
 class PaginationController extends Controller
 {
@@ -36,15 +37,19 @@ class PaginationController extends Controller
         }
     }
 
-    public function renderDeleteUserCell($user) {
+    public function renderDeleteUserCell($user)
+    {
         // Add "Delete" action button
         $btn_class = '';
-        if (session('username') === $user->username) {
+        if (session('username') === $user->username)
+        {
             $btn_class = 'disabled';
         }
-        return '<a ng-click="deleteUser($event, \''. $user->id .'\')" class="btn btn-sm btn-danger ' . $btn_class . '">
-            Delete
-        </a>';
+        else
+        {
+            $btn_class = 'btn-delete-user';
+        }
+        return '<a class="btn btn-sm btn-danger ' . $btn_class . '">Delete</a>';
     }
 
     public function renderDeleteLinkCell($link) {
@@ -57,51 +62,67 @@ class PaginationController extends Controller
 
     public function renderAdminApiActionCell($user) {
         // Add "API Info" action button
-        return '<a class="activate-api-modal btn btn-sm btn-info"
-            ng-click="openAPIModal($event, \'' . e($user->username) . '\', \'' . $user->api_key . '\', \'' . $user->api_active . '\', \'' . e($user->api_quota) . '\', \'' . $user->id . '\')">
-            API info
-        </a>';
+        if (session('username') === $user->username)
+        {
+            $btn_class = 'disabled';
+        }
+        else
+        {
+            $btn_class = 'btn-show-api-info';
+        }
+        return '<a class="' . $btn_class . ' btn btn-sm btn-info">API info</a>';
     }
 
-    public function renderToggleUserActiveCell($user) {
+    public function renderToggleUserActiveCell($user)
+    {
         // Add user account active state toggle buttons
         $btn_class = '';
-        if (session('username') === $user->username) {
+        if (session('username') === $user->username)
+        {
             $btn_class = ' disabled';
         }
+        else
+        {
+            $btn_class = ' btn-toggle-user-active';
+        }
 
-        if ($user->active) {
+        if ($user->active)
+        {
             $active_text = 'Active';
             $btn_color_class = ' btn-success';
         }
-        else {
+        else
+        {
             $active_text = 'Inactive';
             $btn_color_class = ' btn-danger';
         }
 
-        return '<a class="btn btn-sm status-display' . $btn_color_class . $btn_class . '" ng-click="toggleUserActiveStatus($event, ' . $user->id . ')">' . $active_text . '</a>';
+        return '<a class="btn btn-sm status-display' . $btn_color_class . $btn_class . '">' . $active_text . '</a>';
     }
 
-    public function renderChangeUserRoleCell($user) {
+    public function renderChangeUserRoleCell($user)
+    {
         // Add "change role" select box
         // <select> field does not use Angular bindings
         // because of an issue affecting fields with duplicate names.
 
-        $select_role = '<select ng-init="changeUserRole.u' . $user->id . ' = \'' . e($user->role) . '\'"
-            ng-model="changeUserRole.u' . $user->id . '" ng-change="changeUserRole(changeUserRole.u' . $user->id . ', '.$user->id.')"
-            class="form-control"';
-
-        if (session('username') === $user->username) {
+        if (session('username') === $user->username)
+        {
             // Do not allow user to change own role
-            $select_role .= ' disabled';
+            $select_role = '<select class="form-control" disabled>';
         }
-        $select_role .= '>';
+        else
+        {
+            $select_role = '<select class="form-control change-user-role">';
+        }
 
-        foreach (UserHelper::$USER_ROLES as $role_text => $role_val) {
+        foreach (UserHelper::$USER_ROLES as $role_text => $role_val)
+        {
             // Iterate over each available role and output option
             $select_role .= '<option value="' . e($role_val) . '"';
 
-            if ($user->role === $role_val) {
+            if ($user->role === $role_val)
+            {
                 $select_role .= ' selected';
             }
 
@@ -134,6 +155,10 @@ class PaginationController extends Controller
 
         $admin_users = User::select(['username', 'email', 'created_at', 'active', 'api_key', 'api_active', 'api_quota', 'role', 'id']);
         return Datatables::of($admin_users)
+            ->setRowAttr([
+                'data-id' => '{{$id}}',
+                'data-name' => '{{$username}}',
+            ])
             ->addColumn('api_action', [$this, 'renderAdminApiActionCell'])
             ->addColumn('toggle_active', [$this, 'renderToggleUserActiveCell'])
             ->addColumn('change_role', [$this, 'renderChangeUserRoleCell'])

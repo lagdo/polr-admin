@@ -148,7 +148,7 @@
 $(document).ready(function() {
     // Set click handlers on buttons
     $('#api-reset-key').click(function() {
-        {!! $jaxonUser->generateNewAPIKey($user_id)->confirm('Generate a new API key?') !!}
+        {!! $jaxonUser->generateNewAPIKey($user_id, true)->confirm('Generate a new API key?') !!}
     });
     $('#change-password-form .change-password-btn').click(function() {
         {!! $jaxonUser->changePassword(rq()->form('change-password-form'))->confirm('Save the new password?') !!}
@@ -164,6 +164,30 @@ $(document).ready(function() {
     });
     $('#users .new-user-save').click(function() {
         {!! $jaxonUser->addNewUser(rq()->form('new-user-form'))->confirm('Save the new user?') !!}
+    });
+    // Events on datatables
+    // Theses handlers are called anytime a new page is printed in a datatable
+    $('#admin_users_table').on('draw.dt', function() {
+        // Toggle user active/inactive
+        {!! jq('#admin_users_table .btn-toggle-user-active')->click(
+            $jaxonUser->toggleUserActive(jq()->parent()->parent()->attr('data-id')) ) !!};
+        // Change user role
+        {!! jq('#admin_users_table select.change-user-role')->change(
+            $jaxonUser->changeUserRole(jq()->parent()->parent()->attr('data-id'), jq()->val())
+                ->confirm('Change role for user {1}?', jq()->parent()->parent()->attr('data-name')) ) !!};
+        // Show API info dialog
+        {!! jq('#admin_users_table .btn-show-api-info')->click(
+            $jaxonUser->showAPIInfo(jq()->parent()->parent()->attr('data-id'), jq()->val()) ) !!};
+        // Delete user
+        {!! jq('#admin_users_table .btn-delete-user')->click(
+            $jaxonUser->deleteUser(jq()->parent()->parent()->attr('data-id'))
+                ->confirm('Delete user {1}?', jq()->parent()->parent()->attr('data-name')) ) !!};
+    });
+    $('#admin_links_table').on('draw.dt', function() {
+        alert('Table admin_links_table redrawn');
+    });
+    $('#user_links_table').on('draw.dt', function() {
+        alert('Table user_links_table redrawn');
     });
 });
 </script>

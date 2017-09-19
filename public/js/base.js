@@ -13,6 +13,19 @@ jQuery.fn.clearForm = function() {
     return this;
 };
 
+// Datatables
+var datatables = {};
+var datatables_config = {
+    'autoWidth': false,
+    'processing': true,
+    'serverSide': true,
+
+    'drawCallback': function () {
+        // Compile Angular bindings on each draw
+        // $compile($(this))($scope);
+    }
+};
+
 $(document).ready(function() {
     // AJAX settings
     if((csrfToken = $('meta[name="csrf-token"]').attr('content')))
@@ -27,19 +40,6 @@ $(document).ready(function() {
         $(this).tab('show');
     });
     $('.new-user-fields').hide();
-
-    // Datatables
-    var datatables = {};
-    var datatables_config = {
-        'autoWidth': false,
-        'processing': true,
-        'serverSide': true,
-
-        'drawCallback': function () {
-            // Compile Angular bindings on each draw
-            // $compile($(this))($scope);
-        }
-    };
 
     if ($('#admin_users_table').length) {
         datatables['admin_users_table'] = $('#admin_users_table').DataTable($.extend({
