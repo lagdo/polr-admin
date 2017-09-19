@@ -147,6 +147,8 @@ return [
 
         // Jaxon Ajax library
         Jaxon\Laravel\JaxonServiceProvider::class,
+        // Datatables
+        Yajra\Datatables\DatatablesServiceProvider::class,
     ],
 
     /*
@@ -197,6 +199,8 @@ return [
 
         // Jaxon Ajax library
         'LaravelJaxon' => Jaxon\Laravel\Facades\Jaxon::class,
+        // Datatables
+        'Datatables'   => Yajra\Datatables\Facades\Datatables::class,
     ],
 
 ];

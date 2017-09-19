@@ -9,6 +9,7 @@
         "laravel/framework": "5.1.*",
         "jaxon-php/jaxon-laravel": "~2.0",
         "jaxon-php/jaxon-dialogs": "~1.0",
+        "yajra/laravel-datatables-oracle": "~6.0",
         "vlucas/phpdotenv": "~1.0",
         "paragonie/random_compat": "^1.0.6",
         "torann/geoip": "^1.0",
