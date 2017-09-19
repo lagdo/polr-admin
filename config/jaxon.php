@@ -3,7 +3,7 @@
 return array(
     'app' => array(
         'request' => array(
-            'route' => 'ajax',
+            'route' => 'jaxon',
         ),
         'classes' => array(
             array(
@@ -19,7 +19,7 @@ return array(
             'language' => 'en',
             'encoding' => 'UTF-8',
             'request' => array(
-                // 'uri' => url('ajax'),
+                // 'uri' => url('jaxon'),
             ),
             'prefix' => array(
                 'class' => '',

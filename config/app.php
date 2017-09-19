@@ -145,6 +145,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // Jaxon Ajax library
+        Jaxon\Laravel\JaxonServiceProvider::class,
     ],
 
     /*
@@ -193,6 +195,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
+        // Jaxon Ajax library
+        'LaravelJaxon' => Jaxon\Laravel\Facades\Jaxon::class,
     ],
 
 ];
