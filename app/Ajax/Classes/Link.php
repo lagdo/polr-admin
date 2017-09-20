@@ -88,7 +88,7 @@ class Link extends JaxonClass
         return $this->response;
     }
 
-    public function toggleLink($link_id)
+    public function setLinkStatus($link_id, $status)
     {
         if(!$this->currIsAdmin())
         {
@@ -103,15 +103,14 @@ class Link extends JaxonClass
             return $this->response;
         }
 
-        $current_status = $link->is_disabled;
-        $new_status = ($current_status == 1) ? 0 : 1;
+        $new_status = ($status) ? 0 : 1;
         $link->is_disabled = $new_status;
         $link->save();
 
         // Reload the datatable
         $this->response->script("$.fn.dataTable.ext.search = [];datatables['admin_links_table'].draw();");
         // Show a confirmation message
-        $status = ($new_status == 1) ? 'enabled' : 'disabled';
+        $status = ($new_status == 1) ? 'disabled' : 'enabled';
         $this->notify->info("Link successfully $status.", 'Success');
 
         return $this->response;

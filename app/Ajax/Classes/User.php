@@ -174,10 +174,15 @@ class User extends JaxonClass
             return $this->response;
         }
 
-        $user = UserHelper::getUserById($user_id);
+        $user = UserHelper::getUserById($user_id, true);
         if(!$user)
         {
             $this->notify->error('User not found.', 'Error');
+            return $this->response;
+        }
+        if(!$user->active)
+        {
+            $this->notify->error('User not active.', 'Error');
             return $this->response;
         }
 
@@ -260,7 +265,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function toggleUserActive($user_id)
+    public function setUserStatus($user_id, $status)
     {
         if(!$this->currIsAdmin())
         {
@@ -275,8 +280,7 @@ class User extends JaxonClass
             return $this->response;
         }
 
-        $current_status = $user->active;
-        $new_status = ($current_status == 1) ? 0 : 1;
+        $new_status = !($status) ? 0 : 1;
 
         $user->active = $new_status;
         $user->save();

@@ -77,14 +77,13 @@ class PaginationController extends Controller
     public function renderToggleUserActiveCell($user)
     {
         // Add user account active state toggle buttons
-        $btn_class = '';
         if (session('username') === $user->username)
         {
             $btn_class = ' disabled';
         }
         else
         {
-            $btn_class = ' btn-toggle-user-active';
+            $btn_class = ($user->active) ? ' btn-disable-user' : ' btn-enable-user';
         }
 
         if ($user->active)
@@ -139,16 +138,16 @@ class PaginationController extends Controller
         // Add "Disable/Enable" action buttons
         if($link->is_disabled)
         {
-            $btn_class = 'btn-danger';
+            $btn_class = 'btn-enable-link btn-danger';
             $btn_text = 'Enable';
         }
         else
         {
-            $btn_class = 'btn-success';
+            $btn_class = 'btn-disable-link btn-success';
             $btn_text = 'Disable';
         }
 
-        return '<a class="btn btn-sm btn-toggle-link ' . $btn_class . '">' . $btn_text . '</a>';
+        return '<a class="btn btn-sm ' . $btn_class . '">' . $btn_text . '</a>';
     }
 
     /* DataTables bindings */

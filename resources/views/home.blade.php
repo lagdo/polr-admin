@@ -168,9 +168,13 @@ $(document).ready(function() {
     // Events on datatables
     // Theses handlers are called anytime a new page is printed in a datatable
     $('#admin_users_table').on('draw.dt', function() {
-        // Toggle user active/inactive
-        {!! jq('#admin_users_table .btn-toggle-user-active')->click(
-            $jaxonUser->toggleUserActive(jq()->parent()->parent()->attr('data-id')) ) !!};
+        // Activate/Deactivate user access
+        {!! jq('#admin_users_table .btn-disable-user')->click(
+            $jaxonUser->setUserStatus(jq()->parent()->parent()->attr('data-id'), 0)
+                ->confirm('Disable access for user {1}?', jq()->parent()->parent()->attr('data-name')) ) !!};
+        {!! jq('#admin_users_table .btn-enable-user')->click(
+            $jaxonUser->setUserStatus(jq()->parent()->parent()->attr('data-id'), 1)
+                ->confirm('Enable access for user {1}?', jq()->parent()->parent()->attr('data-name')) ) !!};
         // Change user role
         {!! jq('#admin_users_table select.change-user-role')->change(
             $jaxonUser->changeUserRole(jq()->parent()->parent()->attr('data-id'), jq()->val())
@@ -188,9 +192,12 @@ $(document).ready(function() {
         {!! jq('#admin_links_table .edit-long-link-btn')->click(
             $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'admin') ) !!};
         // Enable/disable link
-        {!! jq('#admin_links_table .btn-toggle-link')->click(
-            $jaxonLink->toggleLink(jq()->parent()->parent()->attr('data-id'))
-                ->confirm('Toggle link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
+        {!! jq('#admin_links_table .btn-disable-link')->click(
+            $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-id'), 0)
+                ->confirm('Disable link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
+        {!! jq('#admin_links_table .btn-enable-link')->click(
+            $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-id'), 1)
+                ->confirm('Enable link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
         // Delete user
         {!! jq('#admin_links_table .btn-delete-link')->click(
             $jaxonLink->deleteLink(jq()->parent()->parent()->attr('data-id'))
