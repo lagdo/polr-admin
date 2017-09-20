@@ -137,12 +137,15 @@ class PaginationController extends Controller
     public function renderToggleLinkActiveCell($link)
     {
         // Add "Disable/Enable" action buttons
-        $btn_class = 'btn-danger';
-        $btn_text = 'Disable';
-
-        if ($link->is_disabled) {
-            $btn_class = 'btn-success';
+        if($link->is_disabled)
+        {
+            $btn_class = 'btn-danger';
             $btn_text = 'Enable';
+        }
+        else
+        {
+            $btn_class = 'btn-success';
+            $btn_text = 'Disable';
         }
 
         return '<a class="btn btn-sm btn-toggle-link ' . $btn_class . '">' . $btn_text . '</a>';
