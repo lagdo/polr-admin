@@ -168,8 +168,3 @@ var parseInputDate = function (inputDate) {
     // $scope.init();
 
 })(polr.stats);
-
-$(document).ready(function() {
-    // Init the stats data
-    polr.stats.init();
-});

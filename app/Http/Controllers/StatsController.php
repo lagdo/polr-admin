@@ -8,12 +8,13 @@ use App\Models\Link;
 use App\Models\Clicks;
 use App\Helpers\StatsHelper;
 use Illuminate\Support\Facades\DB;
+use Jaxon\Laravel\Jaxon;
 
 class StatsController extends Controller
 {
     const DAYS_TO_FETCH = 30;
 
-    public function displayStats(Request $request, $short_url) {
+    public function displayStats(Request $request, Jaxon $jaxon, $short_url) {
         $validator = \Validator::make($request->all(), [
             'left_bound' => 'date',
             'right_bound' => 'date'
@@ -74,7 +75,9 @@ class StatsController extends Controller
         $country_stats = $stats->getCountryStats();
         $referer_stats = $stats->getRefererStats();
 
-        return view('stats.link', [
+        $jaxon->register();
+
+        return view('stats', [
             'link' => $link,
             'day_stats' => $day_stats,
             'country_stats' => $country_stats,
@@ -83,7 +86,10 @@ class StatsController extends Controller
             'left_bound' => ($user_left_bound ?: $left_bound->toDateTimeString()),
             'right_bound' => ($user_right_bound ?: $right_bound->toDateTimeString()),
 
-            'no_div_padding' => true
+            'jaxonCss' => $jaxon->css(),
+            'jaxonJs' => $jaxon->js(),
+            'jaxonScript' => $jaxon->script(),
+            'jaxonStats' => $jaxon->request(\Jaxon\App\Stats::class), // Jaxon request to the \Jaxon\App\Stats class
         ]);
     }
 }

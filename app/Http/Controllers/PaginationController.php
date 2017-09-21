@@ -29,12 +29,21 @@ class PaginationController extends Controller
 
     public function renderClicksCell($link)
     {
-        if (env('SETTING_ADV_ANALYTICS')) {
+        /*if (env('SETTING_ADV_ANALYTICS')) {
             return $link->clicks . ' <a target="_blank" class="stats-icon" href="/stats/' . e($link->short_url) . '">
                 <i class="fa fa-area-chart" aria-hidden="true"></i>
             </a>';
         }
         else {
+            return $link->clicks;
+        }*/
+        if (env('SETTING_ADV_ANALYTICS'))
+        {
+            return $link->clicks . ' <a class="stats-icon show-link-stats" href="javascript:void(0)">' .
+                '<i class="fa fa-area-chart" aria-hidden="true"></i></a>';
+        }
+        else
+        {
             return $link->clicks;
         }
     }

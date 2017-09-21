@@ -3,6 +3,9 @@
 @section('css')
 <link rel='stylesheet' href='/css/admin.css'>
 <link rel='stylesheet' href='/css/datatables.min.css'>
+<link rel='stylesheet' href='/css/stats.css'>
+<link rel='stylesheet' href='/css/jquery-jvectormap.css'>
+<link rel='stylesheet' href='/css/bootstrap-datetimepicker.min.css'>
 @endsection
 
 @section('content')
@@ -21,6 +24,7 @@
             @if ($api_active == 1)
             <li role='presentation' class='admin-nav-item'><a href='#developer'>Developer</a></li>
             @endif
+            <li role='presentation' class='admin-nav-item invisible stats'><a href='#stats'>Stats</a></li>
         </ul>
     </div>
     <div class='col-md-10'>
@@ -128,6 +132,9 @@
                 <span> requests per minute</span>
             </div>
             @endif
+
+            <div role="tabpanel" class="tab-pane" id="stats">
+            </div>
         </div>
     </div>
 </div>
@@ -139,13 +146,30 @@
 
 {{-- Include extra JS --}}
 <script src='/js/datatables.min.js'></script>
+<script src='/js/lodash.min.js'></script>
+<script src='/js/chart.bundle.min.js'></script>
+<script src='/js/datatables.min.js'></script>
+<script src='/js/jquery-jvectormap.min.js'></script>
+<script src='/js/jquery-jvectormap-world-mill.js'></script>
+<script src='/js/moment.min.js'></script>
+<script src='/js/bootstrap-datetimepicker.min.js'></script>
 <script src='/js/home.js'></script>
+<script src='/js/stats.js'></script>
 
 {!! $jaxonCss !!}
 {!! $jaxonJs !!}
 {!! $jaxonScript !!}
 
 <script type="text/javascript">
+// Stats data
+var dayData = {};
+var refererData = {};
+var countryData = {};
+
+// Datepicker dates
+var datePickerLeftBound = '';
+var datePickerRightBound = '';
+
 $(document).ready(function() {
     // Set click handlers on buttons
     $('#api-reset-key').click(function() {
@@ -192,6 +216,9 @@ $(document).ready(function() {
         // Edit long URL
         {!! jq('#admin_links_table .edit-long-link-btn')->click(
             $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'admin') ) !!};
+        // Show link stats
+        {!! jq('#admin_links_table .show-link-stats')->click(
+            $jaxonStats->showLinkStats([], jq()->parent()->parent()->attr('data-ending')) ) !!};
         // Enable/disable link
         {!! jq('#admin_links_table .btn-disable-link')->click(
             $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-id'), 0)
@@ -199,7 +226,7 @@ $(document).ready(function() {
         {!! jq('#admin_links_table .btn-enable-link')->click(
             $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-id'), 1)
                 ->confirm('Enable link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
-        // Delete user
+        // Delete link
         {!! jq('#admin_links_table .btn-delete-link')->click(
             $jaxonLink->deleteLink(jq()->parent()->parent()->attr('data-id'))
                 ->confirm('Delete link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
@@ -208,6 +235,9 @@ $(document).ready(function() {
         // Edit long URL
         {!! jq('#user_links_table .edit-long-link-btn')->click(
             $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'user') ) !!};
+        // Show link stats
+        {!! jq('#user_links_table .show-link-stats')->click(
+            $jaxonStats->showLinkStats([], jq()->parent()->parent()->attr('data-ending')) ) !!};
     });
 });
 </script>

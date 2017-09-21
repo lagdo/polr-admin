@@ -30,7 +30,7 @@ class HomeController extends Controller
             return redirect(route('showLogin'))->with('error', 'Invalid or disabled account.');
         }
 
-        return view('home', [
+        return view('index', [
             'role' => $role,
             'admin_role' => UserHelper::$USER_ROLES['admin'],
             'user_roles' => UserHelper::$USER_ROLES,
@@ -43,7 +43,7 @@ class HomeController extends Controller
             'jaxonScript' => $jaxon->script(),
             'jaxonUser' => $jaxon->request(\Jaxon\App\User::class), // Jaxon request to the \Jaxon\App\User class
             'jaxonLink' => $jaxon->request(\Jaxon\App\Link::class), // Jaxon request to the \Jaxon\App\Link class
-            // 'jaxonStats' => $jaxon->request(\Jaxon\App\Stats::class), // Jaxon request to the \Jaxon\App\Stats class
+            'jaxonStats' => $jaxon->request(\Jaxon\App\Stats::class), // Jaxon request to the \Jaxon\App\Stats class
         ]);
     }
 }

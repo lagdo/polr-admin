@@ -1,3 +1,14 @@
+@extends('layouts.base')
+
+@section('css')
+<link rel='stylesheet' href='/css/datatables.min.css'>
+<link rel='stylesheet' href='/css/stats.css'>
+<link rel='stylesheet' href='/css/jquery-jvectormap.css'>
+<link rel='stylesheet' href='/css/bootstrap-datetimepicker.min.css'>
+@endsection
+
+@section('content')
+<div ng-controller="StatsCtrl" class="ng-root">
     <div class="stats-header bottom-padding">
         <h3>Stats</h3>
         <div class="row">
@@ -18,7 +29,7 @@
                 </p> --}}
             </div>
             <div class="col-md-3">
-                <form id="stats-dates">
+                <form action="" method="GET">
                     <div class="form-group">
                         <div class='input-group date' id='left-bound-picker'>
                             <input type="text" class="form-control" name="left_bound">
@@ -36,7 +47,7 @@
                         </div>
                     </div>
 
-                    <input type="button" class="form-control btn-refresh-stats" value="Refresh" class="form-control" />
+                    <input type="submit" value="Refresh" class="form-control">
                 </form>
             </div>
         </div>
@@ -79,3 +90,36 @@
 
         </div>
     </div>
+</div>
+
+@endsection
+
+@section('js')
+{{-- Load data --}}
+<script>
+// Load data
+var dayData = JSON.parse('{!! json_encode($day_stats) !!}');
+var refererData = JSON.parse('{!! json_encode($referer_stats) !!}');
+var countryData = JSON.parse('{!! json_encode($country_stats) !!}');
+
+// Load datepicker dates
+var datePickerLeftBound = '{{ $left_bound }}';
+var datePickerRightBound = '{{ $right_bound }}';
+
+$(document).ready(function() {
+    // Init the stats data
+    polr.stats.init();
+});
+</script>
+
+{{-- Include extra JS --}}
+<script src='/js/lodash.min.js'></script>
+<script src='/js/chart.bundle.min.js'></script>
+<script src='/js/datatables.min.js'></script>
+<script src='/js/jquery-jvectormap.min.js'></script>
+<script src='/js/jquery-jvectormap-world-mill.js'></script>
+<script src='/js/moment.min.js'></script>
+<script src='/js/bootstrap-datetimepicker.min.js'></script>
+<script src='/js/stats.js'></script>
+
+@endsection
