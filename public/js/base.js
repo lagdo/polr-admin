@@ -17,9 +17,8 @@ $(document).ready(function() {
     // AJAX settings
     if((csrfToken = $('meta[name="csrf-token"]').attr('content')))
     {
-        // Add the CSRF token to all Ajax and Jaxon requests
+        // Add the CSRF token to all Ajax requests
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': csrfToken}});
-        jaxon.config.postHeaders = {'X-CSRF-TOKEN': csrfToken};
     }
 });
 
@@ -27,3 +26,8 @@ $(document).ready(function() {
 console.log('%cPolr', 'font-size:5em;color:green');
 console.log('%cNeed help? Open a ticket: https://github.com/cydrobolt/polr', 'color:blue');
 console.log('%cDocs: https://docs.polr.me', 'color:blue');
+
+//Set up the Polr object
+var polr = {
+    stats: {}
+};

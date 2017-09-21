@@ -20,6 +20,7 @@ return array(
             'encoding' => 'UTF-8',
             'request' => array(
                 // 'uri' => url('jaxon'),
+                'csrf_meta' => 'csrf-token',
             ),
             'prefix' => array(
                 'class' => '',
