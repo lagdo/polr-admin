@@ -29,5 +29,6 @@ console.log('%cDocs: https://docs.polr.me', 'color:blue');
 
 //Set up the Polr object
 var polr = {
+    home: {},
     stats: {}
 };

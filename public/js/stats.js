@@ -3,14 +3,6 @@ var parseInputDate = function (inputDate) {
 };
 
 (function($scope) {
-    $scope.dayChart = null;
-    $scope.refererChart = null;
-    $scope.countryChart = null;
-
-    $scope.dayData = dayData;
-    $scope.refererData = refererData;
-    $scope.countryData = countryData;
-
     $scope.populateEmptyDayData = function () {
         // Populate empty days in $scope.dayData with zeroes
 
@@ -159,6 +151,14 @@ var parseInputDate = function (inputDate) {
     }
 
     $scope.init = function () {
+        $scope.dayChart = null;
+        $scope.refererChart = null;
+        $scope.countryChart = null;
+
+        $scope.dayData = dayData;
+        $scope.refererData = refererData;
+        $scope.countryData = countryData;
+
         $scope.initDayChart();
         $scope.initRefererChart();
         $scope.initCountryChart();
@@ -170,6 +170,6 @@ var parseInputDate = function (inputDate) {
 })(polr.stats);
 
 $(document).ready(function() {
-    // Init the Polr stats data
+    // Init the stats data
     polr.stats.init();
 });
