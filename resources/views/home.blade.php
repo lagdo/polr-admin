@@ -128,6 +128,9 @@
                 <span> requests per minute</span>
             </div>
             @endif
+
+            <!-- <div role="tabpanel" class="tab-pane" id="stats">
+            </div> -->
         </div>
     </div>
 </div>
@@ -139,6 +142,7 @@
 
 {{-- Include extra JS --}}
 <script src='/js/datatables.min.js'></script>
+<script src='/js/home.js'></script>
 
 {!! $jaxonCss !!}
 {!! $jaxonJs !!}

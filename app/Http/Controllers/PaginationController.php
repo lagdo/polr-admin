@@ -30,7 +30,7 @@ class PaginationController extends Controller
     public function renderClicksCell($link)
     {
         if (env('SETTING_ADV_ANALYTICS')) {
-            return $link->clicks . ' <a target="_blank" class="stats-icon" href="/admin/stats/' . e($link->short_url) . '">
+            return $link->clicks . ' <a target="_blank" class="stats-icon" href="/stats/' . e($link->short_url) . '">
                 <i class="fa fa-area-chart" aria-hidden="true"></i>
             </a>';
         }
