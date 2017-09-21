@@ -97,9 +97,13 @@ class Stats extends JaxonClass
         // Set the stats content
         $this->response->html('stats-content', $content);
         // Set the datepickers, the table and the graphs
-        $this->response->script("polr.stats.initData('" . json_encode($day_stats) . "','" .
-            json_encode($referer_stats) . "','" . json_encode($country_stats) . "','" .
-            $this->left_bound . "','" . $this->right_bound . "')");
+        /*$this->response->script("polr.stats.initData(" . json_encode($day_stats) . "," .
+            json_encode($referer_stats) . "," . json_encode($country_stats) . ",'" .
+            $this->left_bound . "','" . $this->right_bound . "')");*/
+        // Il faut convertir les dates en string pour ne pas envoyer des objets vers
+        // le navigateur, car la fonction polr.stats.initData() attend des string.
+        $this->response->call("polr.stats.initData", $day_stats, $referer_stats,
+             $country_stats, (string)$this->left_bound, (string)$this->right_bound);
         $this->response->script("polr.stats.initCharts()");
     }
 

@@ -131,7 +131,6 @@ var parseInputDate = function (inputDate) {
                 el.html(el.html()+' (' + (parsedCountryData[code] || 0) + ')');
             }
         });
-
     };
 
     $scope.initDatePickers = function () {
@@ -154,9 +153,9 @@ var parseInputDate = function (inputDate) {
 
     $scope.initData = function (day, referer, country, leftBound, rightBound) {
         // Stats data
-        dayData = JSON.parse(day);
-        refererData = JSON.parse(referer);
-        countryData = JSON.parse(country);
+        dayData = day;
+        refererData = referer;
+        countryData = country;
         // Datepicker dates
         datePickerLeftBound = leftBound;
         datePickerRightBound = rightBound;

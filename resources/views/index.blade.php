@@ -223,7 +223,7 @@ $(document).ready(function() {
     $('#admin_links_table').on('draw.dt', function() {
         // Edit long URL
         {!! jq('#admin_links_table .edit-long-link-btn')->click(
-            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'admin') ) !!};
+            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id')) ) !!};
         // Show link stats
         {!! jq('#admin_links_table .show-link-stats')->click(
             $jaxonStats->showLinkStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
@@ -242,7 +242,7 @@ $(document).ready(function() {
     $('#user_links_table').on('draw.dt', function() {
         // Edit long URL
         {!! jq('#user_links_table .edit-long-link-btn')->click(
-            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'user') ) !!};
+            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id')) ) !!};
         // Show link stats
         {!! jq('#user_links_table .show-link-stats')->click(
             $jaxonStats->showLinkStats(jq()->parent()->parent()->attr('data-ending')) ) !!};

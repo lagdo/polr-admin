@@ -15,7 +15,7 @@ class Link extends JaxonClass
         return ($role == 'admin');
     }
 
-    public function editLongUrl($link_id, $datatable)
+    public function editLongUrl($link_id)
     {
         $link = LinkHelper::getLinkById($link_id);
         if(!$link)
@@ -30,7 +30,7 @@ class Link extends JaxonClass
             [
                 'title' => 'Save link',
                 'class' => 'btn btn-primary btn-sm',
-                'click' => $this->rq()->saveLongUrl($link->id, rq()->form('edit-long-url'), $datatable),
+                'click' => $this->rq()->saveLongUrl($link->id, rq()->form('edit-long-url')),
             ],
             [
                 'title' => 'Cancel',
@@ -44,7 +44,7 @@ class Link extends JaxonClass
         return $this->response;
     }
     
-    public function saveLongUrl($link_id, array $formValues, $datatable)
+    public function saveLongUrl($link_id, array $formValues)
     {
         /**
          * If user is an admin, allow the user to edit the value of any link's long URL.
