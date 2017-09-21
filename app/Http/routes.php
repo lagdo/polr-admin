@@ -19,10 +19,13 @@ Route::group(array('middleware' => 'user.guest'), function()
 
     // Pagination routes (for Datatables)
     Route::group(['prefix' => '/api/v2'], function ($app) {
-        Route::get('admin/get_admin_users', ['as' => 'api_get_admin_users', 'uses' => 'PaginationController@paginateAdminUsers']);
-        Route::get('admin/get_admin_links', ['as' => 'api_get_admin_links', 'uses' => 'PaginationController@paginateAdminLinks']);
-        Route::get('admin/get_user_links', ['as' => 'api_get_user_links', 'uses' => 'PaginationController@paginateUserLinks']);
+        Route::get('get_admin_users', ['as' => 'api_get_admin_users', 'uses' => 'PaginationController@paginateAdminUsers']);
+        Route::get('get_admin_links', ['as' => 'api_get_admin_links', 'uses' => 'PaginationController@paginateAdminLinks']);
+        Route::get('get_user_links', ['as' => 'api_get_user_links', 'uses' => 'PaginationController@paginateUserLinks']);
     });
+
+    // Link stats
+    Route::get('stats/{short_url}', ['uses' => 'StatsController@displayStats']);
 });
 
 Route::group(array('middleware' => 'user.check'), function()
