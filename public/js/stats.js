@@ -73,6 +73,7 @@ var parseInputDate = function (inputDate) {
             }
         });
     };
+
     $scope.initRefererChart = function () {
         // Traffic sources
         var ctx = $("#refererChart");
@@ -109,6 +110,7 @@ var parseInputDate = function (inputDate) {
 
         $('#refererTable').DataTable();
     };
+
     $scope.initCountryChart = function () {
         var parsedCountryData = {};
 
@@ -150,7 +152,17 @@ var parseInputDate = function (inputDate) {
         $rightPicker.data("DateTimePicker").date(datePickerRightBound, Date, moment, null);
     }
 
-    $scope.init = function () {
+    $scope.initData = function (day, referer, country, leftBound, rightBound) {
+        // Stats data
+        dayData = JSON.parse(day);
+        refererData = JSON.parse(referer);
+        countryData = JSON.parse(country);
+        // Datepicker dates
+        datePickerLeftBound = leftBound;
+        datePickerRightBound = rightBound;
+    };
+
+    $scope.initCharts = function () {
         $scope.dayChart = null;
         $scope.refererChart = null;
         $scope.countryChart = null;
@@ -162,6 +174,10 @@ var parseInputDate = function (inputDate) {
         $scope.initDayChart();
         $scope.initRefererChart();
         $scope.initCountryChart();
+    };
+
+    $scope.init = function () {
+        $scope.initCharts();
         $scope.initDatePickers();
     };
 

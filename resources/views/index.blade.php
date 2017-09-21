@@ -6,6 +6,11 @@
 <link rel='stylesheet' href='/css/stats.css'>
 <link rel='stylesheet' href='/css/jquery-jvectormap.css'>
 <link rel='stylesheet' href='/css/bootstrap-datetimepicker.min.css'>
+<style>
+#mapChart {
+    height: 24em;
+}
+</style>
 @endsection
 
 @section('content')
@@ -134,6 +139,9 @@
             @endif
 
             <div role="tabpanel" class="tab-pane" id="stats">
+                <h3>Stats</h3>
+                <div id="stats-header"></div>
+                <div id="stats-content" class="bottom-padding"></div>
             </div>
         </div>
     </div>
@@ -218,7 +226,7 @@ $(document).ready(function() {
             $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'admin') ) !!};
         // Show link stats
         {!! jq('#admin_links_table .show-link-stats')->click(
-            $jaxonStats->showLinkStats([], jq()->parent()->parent()->attr('data-ending')) ) !!};
+            $jaxonStats->showLinkStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
         // Enable/disable link
         {!! jq('#admin_links_table .btn-disable-link')->click(
             $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-id'), 0)
@@ -237,7 +245,7 @@ $(document).ready(function() {
             $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id'), 'user') ) !!};
         // Show link stats
         {!! jq('#user_links_table .show-link-stats')->click(
-            $jaxonStats->showLinkStats([], jq()->parent()->parent()->attr('data-ending')) ) !!};
+            $jaxonStats->showLinkStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
     });
 });
 </script>
