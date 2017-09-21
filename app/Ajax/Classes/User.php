@@ -134,7 +134,7 @@ class User extends JaxonClass
         $this->jq('#new-user-form input.form-control')->val('');
         $this->jq('.new-user-fields')->hide();
         // Reload the datatable
-        $this->response->script("$.fn.dataTable.ext.search = [];datatables['admin_users_table'].draw();");
+        $this->response->script("polr.home.reloadUserTables()");
         // Show a confirmation message
         $this->notify->info("User successfully created.", 'Success');
 
@@ -159,7 +159,7 @@ class User extends JaxonClass
         $user->delete();
 
         // Reload the datatable
-        $this->response->script("$.fn.dataTable.ext.search = [];datatables['admin_users_table'].draw();");
+        $this->response->script("polr.home.reloadUserTables()");
         // Show a confirmation message
         $this->notify->info("User successfully deleted.", 'Success');
 
@@ -286,7 +286,7 @@ class User extends JaxonClass
         $user->save();
 
         // Reload the datatable
-        $this->response->script("$.fn.dataTable.ext.search = [];datatables['admin_users_table'].draw();");
+        $this->response->script("polr.home.reloadUserTables()");
         // Show a confirmation message
         $status = ($new_status == 1) ? 'active' : 'inactive';
         $this->notify->info("Status of user {$user->username} successfully changed to $status.", 'Success');
@@ -313,7 +313,7 @@ class User extends JaxonClass
         $user->save();
 
         // Reload the datatable
-        $this->response->script("$.fn.dataTable.ext.search = [];datatables['admin_users_table'].draw();");
+        $this->response->script("polr.home.reloadUserTables()");
         // Show a confirmation message
         if(!$role)
         {

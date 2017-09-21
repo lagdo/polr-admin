@@ -79,7 +79,7 @@ class Link extends JaxonClass
         $link->save();
 
         // Reload the datatable
-        $this->response->script("$.fn.dataTable.ext.search = [];datatables['{$datatable}_links_table'].draw();");
+        $this->response->script("polr.home.reloadLinkTables()");
         // Show a confirmation message
         $this->notify->info("Long URL successfully changed.", 'Success');
         // Hide the dialog
@@ -108,7 +108,7 @@ class Link extends JaxonClass
         $link->save();
 
         // Reload the datatable
-        $this->response->script("$.fn.dataTable.ext.search = [];datatables['admin_links_table'].draw();");
+        $this->response->script("polr.home.reloadLinkTables()");
         // Show a confirmation message
         $status = ($new_status == 1) ? 'disabled' : 'enabled';
         $this->notify->info("Link successfully $status.", 'Success');
@@ -134,7 +134,7 @@ class Link extends JaxonClass
         $link->delete();
 
         // Reload the datatable
-        $this->response->script("$.fn.dataTable.ext.search = [];datatables['admin_links_table'].draw();");
+        $this->response->script("polr.home.reloadLinkTables()");
         // Show a confirmation message
         $this->notify->info("Link successfully deleted.", 'Success');
 
