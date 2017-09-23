@@ -33,13 +33,11 @@ class Stats extends JaxonClass
             'left_bound' => 'date',
             'right_bound' => 'date'
         ]);
-
         if ($validator->fails())
         {
             $this->notify->error('Invalid date bounds.', 'Error');
             return false;
         }
-
         $user_left_bound = array_key_exists('left_bound', $dates) ? $dates['left_bound'] : '';
         $user_right_bound = array_key_exists('right_bound', $dates) ? $dates['right_bound'] : '';
 
