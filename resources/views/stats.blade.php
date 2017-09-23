@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-<div ng-controller="StatsCtrl" class="ng-root">
+<div>
     <div class="stats-header bottom-padding">
         <h3>Stats</h3>
         <div class="row">

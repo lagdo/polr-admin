@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-<div ng-controller="AdminCtrl" class="ng-root">
+<div>
     <div class='col-md-2'>
         <ul class='nav nav-pills nav-stacked admin-nav' role='tablist'>
             <li role='presentation' aria-controls="home" class='admin-nav-item active'><a href='#home'>Home</a></li>
@@ -46,7 +46,7 @@
                         <input type='url' autocomplete='off' class='form-control long-link-input'
                             placeholder='http://' name='link-url' />
 
-                        <div class='row' id='options' ng-cloak>
+                        <div class='row' id='options'>
                             <p>Customize link</p>
 
                             @if (!env('SETTING_PSEUDORANDOM_ENDING'))

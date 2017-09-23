@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-<div ng-controller="AdminCtrl" class="ng-root">
+<div>
     <div class='col-md-2'>
         <ul class='nav nav-pills nav-stacked admin-nav' role='tablist'>
             <li role='presentation' aria-controls="home" class='admin-nav-item active'><a href='#home'>Home</a></li>

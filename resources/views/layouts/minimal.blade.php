@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
 <!DOCTYPE html>
-<html ng-app="polr">
+<html>
     <head>
         <title>Polr @yield('title')</title>
         @yield('css')
