@@ -93,8 +93,9 @@
             <div role="tabpanel" class="tab-pane" id="settings">
                 <h3>Change Password</h3>
                 <form method='POST' id="change-password-form">
-                    Old Password: <input class="form-control password-box" type='password' name='current_password' />
+                    Old Password: <input class="form-control password-box" type='password' name='old_password' />
                     New Password: <input class="form-control password-box" type='password' name='new_password' />
+                    Confirm Password: <input class="form-control password-box" type='password' name='new_password_confirmation' />
                     <input type="hidden" name='_token' value='{{csrf_token()}}' />
                     <input type='button' class='btn btn-success change-password-btn' value="Change" />
                 </form>

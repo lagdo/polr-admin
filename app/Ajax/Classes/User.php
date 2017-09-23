@@ -90,9 +90,25 @@ class User extends JaxonClass
     public function changePassword(array $formValues)
     {
         $username = session('username');
-        $old_password = $formValues['current_password'];
+        $old_password = $formValues['old_password'];
         $new_password = $formValues['new_password'];
 
+        $messages = [
+            'old_password.required' => 'The old Password is required',
+            'new_password.required' => 'The new password is required',
+            'new_password.min' => 'The new password must have at least 6 chars length',
+            'new_password.regex' => 'The new password must contain at least one uppercase/lowercase letter and one number.',
+            'new_password.confirmed' => 'The confirmation password is not the same as the new password.',
+        ];
+        // Check password validity
+        $validator = \Validator::make($formValues, [
+            'new_password' => 'required|min:6|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+        ], $messages);
+        if ($validator->fails())
+        {
+            $this->notify->error($validator->errors()->first(), 'Error');
+            return $this->response;
+        }
         if(UserHelper::checkCredentials($username, $old_password) == false)
         {
             // Invalid credentials
