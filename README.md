@@ -11,9 +11,10 @@ Features
 The features are mostly the same as in the Polr Admin section, but with few differences.
 
 - The link redirection feature is not included.
-- This dashboard is based on Laravel instead of Lumen.
+- The dashboard is based on Laravel instead of Lumen.
 - AngularJS is dropped in favor of Jaxon [https://www.jaxon-php.org](https://www.jaxon-php.org).
 - A `Confirm Password` field is added to the `Change Password` form.
+- The URL shortening and link stats features are fully implemented with Ajax, using Jaxon. 
 
 Installation
 ------------
