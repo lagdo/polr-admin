@@ -34,11 +34,14 @@ return array(
             ),
         ),
         'js' => array(
+            'lib' => array(
+                'uri' => 'https://cdn.jaxon-php.org/libs/jaxon/1.2.0',
+            ),
             'app' => array(
                 // 'uri' => '',
                 // 'dir' => '',
-                // 'extern' => true,
-                // 'minify' => true,
+                'extern' => false,
+                'minify' => false,
             ),
         ),
         'assets' => array(
