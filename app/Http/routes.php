@@ -11,7 +11,7 @@
 |
 */
 
-// Homepage
+// Homepage, logout and pagination
 Route::group(array('middleware' => 'user.guest'), function()
 {
     Route::get('/', array('as' => 'index', 'uses' => 'HomeController@index'));
@@ -23,15 +23,13 @@ Route::group(array('middleware' => 'user.guest'), function()
         Route::get('get_admin_links', ['as' => 'api_get_admin_links', 'uses' => 'PaginationController@paginateAdminLinks']);
         Route::get('get_user_links', ['as' => 'api_get_user_links', 'uses' => 'PaginationController@paginateUserLinks']);
     });
-
-    // Link stats
-    Route::get('stats/{short_url}', ['uses' => 'StatsController@displayStats']);
 });
 
+// Account creation, user login and password reset
 Route::group(array('middleware' => 'user.check'), function()
 {
     Route::get('/login', array('as' => 'showLogin', 'uses' => 'UserController@showLogin'));
-    if(true /*env('POLR_ALLOW_ACCT_CREATION')*/)
+    if(env('POLR_ALLOW_ACCT_CREATION'))
     {
         Route::get('/signup', array('as' => 'showSignup', 'uses' => 'UserController@showSignup'));
     }
@@ -41,7 +39,7 @@ Route::group(array('middleware' => 'user.check'), function()
         ['as' => 'getResetPassword', 'uses' => 'UserController@resetPassword']);
 
     Route::post('login', array('as' => 'postLogin', 'uses' => 'UserController@postLogin'));
-    if(true /*env('POLR_ALLOW_ACCT_CREATION')*/)
+    if(env('POLR_ALLOW_ACCT_CREATION'))
     {
         Route::post('/signup', array('as' => 'postSignup', 'uses' => 'UserController@postSignup'));
     }
