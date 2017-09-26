@@ -14,7 +14,7 @@ use App\Models\User;
 use App\Helpers\UserHelper;
 use Jaxon\Laravel\Jaxon;
 
-class HomeController extends Controller
+class IndexController extends Controller
 {
     public function index(Request $request, Jaxon $jaxon)
     {

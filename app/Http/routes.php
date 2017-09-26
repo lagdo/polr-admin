@@ -14,7 +14,7 @@
 // Homepage, logout and pagination
 Route::group(array('middleware' => 'user.guest'), function()
 {
-    Route::get('/', array('as' => 'index', 'uses' => 'HomeController@index'));
+    Route::get('/', array('as' => 'index', 'uses' => 'IndexController@index'));
     Route::get('/logout', array('as' => 'logout', 'uses' => 'UserController@logout'));
 
     // Pagination routes (for Datatables)
