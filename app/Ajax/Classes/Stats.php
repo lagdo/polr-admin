@@ -53,15 +53,20 @@ class Stats extends JaxonClass
             return false;
         }
 
-        $this->link = LinkHelper::getLinkByShortUrl($short_url);
-        // Return 404 if link not found
-        if ($this->link == null)
+        $link_id = 0;
+        $this->link = null;
+        if(($short_url))
         {
-            $this->notify->error('Cannot show stats for nonexistent link.', 'Error');
-            return false;
+            $this->link = LinkHelper::getLinkByShortUrl($short_url);
+            if ($this->link == null)
+            {
+                $this->notify->error('Cannot show stats for nonexistent link.', 'Error');
+                return false;
+            }
+            $link_id = $this->link->id;
         }
 
-        if((session('username') != $this->link->creator) && !$this->currIsAdmin() )
+        if(!$this->currIsAdmin() && (!$this->link || session('username') != $this->link->creator))
         {
             $this->notify->error('You do not have permission to view stats for this link.', 'Error');
             return false;
@@ -70,7 +75,7 @@ class Stats extends JaxonClass
         try
         {
             // Initialize StatHelper
-            $this->stats = new StatsHelper($this->link->id, $this->left_bound, $this->right_bound);
+            $this->stats = new StatsHelper($link_id, $this->left_bound, $this->right_bound);
         }
         catch (\Exception $e)
         {
@@ -81,31 +86,33 @@ class Stats extends JaxonClass
         return true;
     }
 
-    private function showLinkStatsContent()
+    private function showStatsContent()
     {
         $day_stats = $this->stats->getDayStats();
         $country_stats = $this->stats->getCountryStats();
         $referer_stats = $this->stats->getRefererStats();
 
-        $content = view('stats.link.content', [
-            'link' => $this->link,
+        $clicks = 0;
+        foreach($referer_stats as $stats)
+        {
+            $clicks += $stats->clicks;
+        }
+        $content = view('stats.content', [
+            'clicks' => $clicks,
             'referer_stats' => $referer_stats,
         ]);
 
         // Set the stats content
         $this->response->html('stats-content', $content);
         // Set the datepickers, the table and the graphs
-        /*$this->response->script("polr.stats.initData(" . json_encode($day_stats) . "," .
-            json_encode($referer_stats) . "," . json_encode($country_stats) . ",'" .
-            $this->left_bound . "','" . $this->right_bound . "')");*/
-        // Il faut convertir les dates en string pour ne pas envoyer des objets vers
-        // le navigateur, car la fonction polr.stats.initData() attend des string.
+        // The dates must explicitely be converted to strings, or else they will be sent as JSON objects.
+        // The polr.stats.initData() function takes strings as date parameters.
         $this->response->call("polr.stats.initData", $day_stats, $referer_stats,
              $country_stats, (string)$this->left_bound, (string)$this->right_bound);
         $this->response->script("polr.stats.initCharts()");
     }
 
-    public function refreshLinkStats(array $dates, $short_url)
+    public function refreshStats(array $dates, $short_url)
     {
         if(!$this->checkInputs($dates, $short_url))
         {
@@ -113,12 +120,12 @@ class Stats extends JaxonClass
         }
 
         // Set the table and the graphs
-        $this->showLinkStatsContent();
+        $this->showStatsContent();
 
         return $this->response;
     }
 
-    public function showLinkStats($short_url)
+    public function showStats($short_url)
     {
         if(!$this->checkInputs([], $short_url))
         {
@@ -126,21 +133,22 @@ class Stats extends JaxonClass
         }
 
         // Set the stats header
-        $header = view('stats.link.header', [
-            'link' => $this->link,
-        ]);
-        $this->response->html('stats-header', $header);
+        if(($this->link))
+        {
+            $header = view('stats.link.header', [
+                'link' => $this->link,
+            ]);
+            $this->response->html('stats-filter', $header);
+
+            // Show the stats tab
+            $this->jq('.admin-nav .stats a')->tab('show');
+        }
 
         // Set the click handler on the refresh button
-        $this->jq('#stats-dates .btn-refresh-stats')->click(
-            $this->rq()->refreshLinkStats(rq()->form('stats-dates'), $this->link->short_url)
-        );
-
-        // Show the stats tab
-        $this->jq('.admin-nav .stats a')->tab('show');
+        $this->response->script("polr.stats.short_url='$short_url'");
 
         // Set the table and the graphs
-        $this->showLinkStatsContent();
+        $this->showStatsContent();
 
         // Set the datepickers
         $this->response->script("polr.stats.initDatePickers()");

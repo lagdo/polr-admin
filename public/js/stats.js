@@ -3,6 +3,9 @@ var parseInputDate = function (inputDate) {
 };
 
 (function($scope) {
+    // The short URL whose stats are displayed.
+    $scope.short_url = '';
+
     $scope.populateEmptyDayData = function () {
         // Populate empty days in $scope.dayData with zeroes
 
@@ -183,3 +186,8 @@ var parseInputDate = function (inputDate) {
     // $scope.init();
 
 })(polr.stats);
+
+$(document).ready(function() {
+    // Init the date pickers
+    polr.stats.initDatePickers();
+});

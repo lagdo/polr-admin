@@ -37,10 +37,16 @@ class StatsHelper {
         * @return DB rows
         */
 
-        return DB::table('clicks')
-            ->where('link_id', $this->link_id)
+        $rows = DB::table('clicks')
+            // ->where('link_id', $this->link_id)
             ->where('created_at', '>=', $this->left_bound_parsed)
             ->where('created_at', '<=', $this->right_bound_parsed);
+        // Filter on link id only if it is greater than 0
+        if($this->link_id > 0)
+        {
+            $rows->where('link_id', $this->link_id);
+        }
+        return $rows;
     }
 
     public function getDayStats() {

@@ -30,7 +30,7 @@
             @if ($api_active == 1)
             <li role='presentation' class='admin-nav-item'><a href='#developer'>Developer</a></li>
             @endif
-            <li role='presentation' class='admin-nav-item invisible stats'><a href='#stats'>Stats</a></li>
+            <li role='presentation' class='admin-nav-item stats'><a href='#stats'>Stats</a></li>
         </ul>
     </div>
     <div class='col-md-10'>
@@ -185,8 +185,40 @@
 
             <div role="tabpanel" class="tab-pane" id="stats">
                 <h3>Stats</h3>
-                <div id="stats-header"></div>
-                <div id="stats-content" class="bottom-padding"></div>
+                <div class="row" id="stats-header">
+                    <div class="col-md-3">
+                        <form id="stats-dates">
+                            <div class="form-group">
+                                <div class='input-group date' id='left-bound-picker'>
+                                    <input type="text" class="form-control" name="left_bound">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class='input-group date' id='right-bound-picker'>
+                                    <input type="text" class="form-control" name="right_bound">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>       
+                        </form>
+                    </div>
+                    <div class="col-md-9 link-meta" id="stats-filter">
+                    </div>
+                </div>
+                <div class="row" id="stats-buttons">
+                    <div class="col-md-3">
+                        <input type="button" class="form-control btn-refresh-stats" value="Refresh" class="form-control" />
+                    </div>
+                    <div class="col-md-3 col-md-offset-3">
+                        <input type="button" class="form-control btn-clear-stats" value="Clear" class="form-control" />
+                    </div>
+                </div>
+                <div id="stats-content" class="bottom-padding">
+                </div>
             </div>
         </div>
     </div>
@@ -221,8 +253,8 @@ var refererData = {};
 var countryData = {};
 
 // Datepicker dates
-var datePickerLeftBound = '';
-var datePickerRightBound = '';
+var datePickerLeftBound = '{{ $datePickerLeftBound }}';
+var datePickerRightBound = '{{ $datePickerRightBound }}';
 
 $(document).ready(function() {
     // Set click handlers on buttons
@@ -279,7 +311,7 @@ $(document).ready(function() {
             $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id')) ) !!};
         // Show link stats
         {!! jq('#admin_links_table .show-link-stats')->click(
-            $jaxonStats->showLinkStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
+            $jaxonStats->showStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
         // Enable/disable link
         {!! jq('#admin_links_table .btn-disable-link')->click(
             $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-id'), 0)
@@ -298,7 +330,15 @@ $(document).ready(function() {
             $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id')) ) !!};
         // Show link stats
         {!! jq('#user_links_table .show-link-stats')->click(
-            $jaxonStats->showLinkStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
+            $jaxonStats->showStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
+    });
+    // Refresh the stats
+    {!! jq('#stats-buttons .btn-refresh-stats')->click(
+        $jaxonStats->refreshStats(rq()->form('stats-dates'), rq()->js('polr.stats.short_url')) ) !!};
+    // Clear stats filters
+    $('#stats-buttons .btn-clear-stats').click(function(){
+        polr.stats.short_url = '';
+        $('#stats-filter').html('');
     });
 });
 </script>
