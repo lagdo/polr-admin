@@ -6,6 +6,20 @@ var parseInputDate = function (inputDate) {
     // The short URL whose stats are displayed.
     $scope.short_url = '';
 
+    // Callbacks for Jaxon requests
+    $scope.requestCallbacks = {
+        timers: [],
+        onRequest: function() {
+            $('#stats-buttons .btn-refresh-stats').prepend('<i class="fa fa-spinner fa-spin" />');
+        },
+        onFailure: function() {
+            $('#stats-buttons .btn-refresh-stats i').remove();
+        },
+        onSuccess: function() {
+            $('#stats-buttons .btn-refresh-stats i').remove();
+        }
+    };
+
     $scope.populateEmptyDayData = function () {
         // Populate empty days in $scope.dayData with zeroes
 

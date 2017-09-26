@@ -22,6 +22,11 @@ class IndexController extends Controller
         // Register Jaxon classes
         $jaxon->register();
 
+        // Define callbacks for requests to Stats class
+        $jaxon->registerClass(\Jaxon\App\Stats::class, array(
+            '*' => array('callback' => 'polr.stats.requestCallbacks'),
+        ));
+
         $username = session('username');
         $role = session('role');
 

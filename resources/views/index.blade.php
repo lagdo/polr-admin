@@ -211,10 +211,10 @@
                 </div>
                 <div class="row" id="stats-buttons">
                     <div class="col-md-3">
-                        <input type="button" class="form-control btn-refresh-stats" value="Refresh" class="form-control" />
+                        <button type="button" class="form-control btn-refresh-stats" class="form-control">Refresh</button>
                     </div>
                     <div class="col-md-3 col-md-offset-3">
-                        <input type="button" class="form-control btn-clear-stats" value="Clear" class="form-control" />
+                        <button type="button" class="form-control btn-clear-stats" class="form-control">Clear</button>
                     </div>
                 </div>
                 <div id="stats-content" class="bottom-padding">
