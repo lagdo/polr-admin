@@ -62,7 +62,7 @@ class UserController extends Controller
         }
         else
         {
-            return redirect('showLogin')->with('error', 'Invalid password or inactivated account. Try again.');
+            return redirect()->route('showLogin')->with('error', 'Invalid password or inactivated account. Try again.');
         }
     }
 
