@@ -1,60 +1,69 @@
 <?php
 
-return array(
-    'app' => array(
-        'request' => array(
+return [
+    'app' => [
+        'request' => [
             'route' => 'jaxon',
-        ),
-        'classes' => array(
-            array(
+        ],
+        'classes' => [
+            [
                 'directory' => app_path('Ajax/Classes'),
                 'namespace' => '\\Jaxon\\App',
                 // 'separator' => '', // '.' or '_'
-                // 'protected' => array(),
-            ),
-        ),
-    ),
-    'lib' => array(
-        'core' => array(
+                // 'protected' => [],
+            ],
+        ],
+        'options' => [
+            'classes' => [
+                \Jaxon\App\Stats::class => [
+                    '*' => [
+                        'callback' => 'polr.stats.requestCallbacks',
+                    ]
+                ]
+            ],
+        ],
+    ],
+    'lib' => [
+        'core' => [
             'language' => 'en',
             'encoding' => 'UTF-8',
-            'request' => array(
+            'request' => [
                 // 'uri' => url('jaxon'),
                 'csrf_meta' => 'csrf-token',
-            ),
-            'prefix' => array(
+            ],
+            'prefix' => [
                 'class' => '',
-            ),
-            'debug' => array(
+            ],
+            'debug' => [
                 'on' => false,
                 'verbose' => false,
-            ),
-            'error' => array(
+            ],
+            'error' => [
                 'handle' => false,
-            ),
-        ),
-        'js' => array(
-            'lib' => array(
+            ],
+        ],
+        'js' => [
+            'lib' => [
                 'uri' => 'https://cdn.jaxon-php.org/libs/jaxon/1.2.0',
-            ),
-            'app' => array(
+            ],
+            'app' => [
                 // 'uri' => '',
                 // 'dir' => '',
                 'extern' => false,
                 'minify' => false,
-            ),
-        ),
-        'assets' => array(
-            'include' => array(
+            ],
+        ],
+        'assets' => [
+            'include' => [
                 'all' => true,
-            ),
-        ),
-        'dialogs' => array(
-            'default' => array(
+            ],
+        ],
+        'dialogs' => [
+            'default' => [
                 'modal' => 'bootbox',
                 'alert' => 'noty',
                 'confirm' => 'noty',
-            ),
-        ),
-    ),
-);
+            ],
+        ],
+    ],
+];
