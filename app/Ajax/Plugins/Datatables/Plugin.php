@@ -1,13 +1,7 @@
 <?php
 
 /**
- * Plugin.php - Javascript charts for Jaxon with the Flot library.
- *
- * @package jaxon-flot
- * @author Thierry Feuzeu <thierry.feuzeu@gmail.com>
- * @copyright 2017 Thierry Feuzeu <thierry.feuzeu@gmail.com>
- * @license https://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @link https://github.com/jaxon-php/jaxon-flot
+ * Plugin.php - Datatables plugin for Jaxon.
  */
 
 namespace Jaxon\Ext\Datatables;
@@ -50,7 +44,7 @@ jaxon.command.handler.register("datatables", function(args) {
     }
 
     /**
-     * Draw a Plot in a given HTML element.
+     * Show the Datatables.
      *
      * @return void
      */
