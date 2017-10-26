@@ -6,14 +6,10 @@ use Auth;
 use Datatables;
 use Jaxon\Laravel\Jaxon;
 use Jaxon\Laravel\Http\Controllers\JaxonController;
+use Jaxon\App\Paginator;
 
 class AjaxController extends JaxonController
 {
-    /**
-     * @var Renderer          The Datatables row renderer
-     */
-    protected $dtRenderer;
-
     /**
      * The constructor.
      * 
@@ -23,7 +19,6 @@ class AjaxController extends JaxonController
      */
     public function __construct(Jaxon $jaxon)
     {
-        $this->dtRenderer = new \Jaxon\Ext\Datatables\Renderer();
         parent::__construct($jaxon);
     }
 
@@ -41,10 +36,14 @@ class AjaxController extends JaxonController
         // Dialogs and notifications are implemented by the Dialogs plugin
         $instance->dialog = $this->jaxon->ajaxResponse()->dialog;
         $instance->notify = $this->jaxon->ajaxResponse()->dialog;
-        // The Datatables HTTP request
-        $instance->dtRequest = Datatables::getRequest();
-        // The Datatables row renderer
-        $instance->dtRenderer = $this->dtRenderer;
+        // Save the Datatables renderer and request only in the Paginator object
+        if(is_a($instance, Paginator::class))
+        {
+            // The Datatables HTTP request
+            $instance->dtRequest = Datatables::getRequest();
+            // The Datatables row renderer
+            $instance->dtRenderer = app()->make('jaxon.dt.renderer');
+        }
     }
 
     /**

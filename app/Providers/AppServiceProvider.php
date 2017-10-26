@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // The Datatables row renderer
+	    $this->app->singleton('jaxon.dt.renderer', \Jaxon\Ext\Datatables\Renderer::class);
     }
 }
