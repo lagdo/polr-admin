@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Auth;
+use Datatables;
 use Jaxon\Laravel\Jaxon;
 use Jaxon\Laravel\Http\Controllers\JaxonController;
 
 class AjaxController extends JaxonController
 {
-    /**
-     * @var Request           The HTTP request
-     */
-    protected $request;
-
     /**
      * @var Renderer          The Datatables row renderer
      */
@@ -24,12 +19,10 @@ class AjaxController extends JaxonController
      * 
      * The parameters are automatically populated by Laravel, thanks to its service container.
      * 
-     * @param Request           $request                The HTTP request
      * @param Jaxon             $jaxon                  The Laravel Jaxon plugin
      */
-    public function __construct(Request $request, Jaxon $jaxon)
+    public function __construct(Jaxon $jaxon)
     {
-        $this->request = $request;
         $this->dtRenderer = new \Jaxon\Ext\Datatables\Renderer();
         parent::__construct($jaxon);
     }
@@ -48,9 +41,9 @@ class AjaxController extends JaxonController
         // Dialogs and notifications are implemented by the Dialogs plugin
         $instance->dialog = $this->jaxon->ajaxResponse()->dialog;
         $instance->notify = $this->jaxon->ajaxResponse()->dialog;
-        // The HTTP request
-        $instance->httpRequest = $this->request;
-        // The Datatables pagination renderer
+        // The Datatables HTTP request
+        $instance->dtRequest = Datatables::getRequest();
+        // The Datatables row renderer
         $instance->dtRenderer = $this->dtRenderer;
     }
 

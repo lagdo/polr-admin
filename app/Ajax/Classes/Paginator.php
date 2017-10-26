@@ -28,9 +28,9 @@ class Paginator extends JaxonClass
             return $this->response;
         }
 
-        // Write the input parameters back into the Laravel HTTP Request object.
+        // Write the input parameters back into the Datatables HTTP Request object.
         // The Datatables class needs to have them there.
-        $this->httpRequest->merge($parameters);
+        $this->dtRequest->merge($parameters);
 
         $admin_users = UserModel::select(['username', 'email', 'created_at', 'active',
             'api_key', 'api_active', 'api_quota', 'role', 'id']);
@@ -59,9 +59,9 @@ class Paginator extends JaxonClass
             return $this->response;
         }
 
-        // Write the input parameters back into the Laravel HTTP Request object.
+        // Write the input parameters back into the Datatables HTTP Request object.
         // The Datatables class needs to have them there.
-        $this->httpRequest->merge($parameters);
+        $this->dtRequest->merge($parameters);
 
         $admin_links = LinkModel::select(['id', 'short_url', 'long_url', 'clicks',
             'created_at', 'creator', 'is_disabled']);
@@ -90,9 +90,9 @@ class Paginator extends JaxonClass
             return $this->response;
         }
 
-        // Write the input parameters back into the Laravel HTTP Request object.
+        // Write the input parameters back into the Datatables HTTP Request object.
         // The Datatables class needs to have them there.
-        $this->httpRequest->merge($parameters);
+        $this->dtRequest->merge($parameters);
 
         $username = session('username');
         $user_links = LinkModel::where('creator', $username)
