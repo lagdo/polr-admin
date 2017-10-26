@@ -25,5 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // The Datatables row renderer
 	    $this->app->singleton('jaxon.dt.renderer', \Jaxon\Ext\Datatables\Renderer::class);
+	    // Register an instance of the Datatables plugin
+	    jaxon_register_plugin(new \Jaxon\Ext\Datatables\Plugin());
     }
 }
