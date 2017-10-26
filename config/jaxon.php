@@ -19,6 +19,11 @@ return [
                     '*' => [
                         'callback' => 'polr.stats.requestCallbacks',
                     ]
+                ],
+                \Jaxon\App\Paginator::class => [
+                    '*' => [
+                        'dt' => 'polr.home.jaxon',
+                    ]
                 ]
             ],
         ],
@@ -44,7 +49,7 @@ return [
         ],
         'js' => [
             'lib' => [
-                'uri' => 'https://cdn.jaxon-php.org/libs/jaxon/1.2.0',
+                // 'uri' => 'https://cdn.jaxon-php.org/libs/jaxon/1.2.0',
             ],
             'app' => [
                 // 'uri' => '',

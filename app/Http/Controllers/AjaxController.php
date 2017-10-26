@@ -15,6 +15,11 @@ class AjaxController extends JaxonController
     protected $request;
 
     /**
+     * @var Renderer          The Datatables row renderer
+     */
+    protected $dtRenderer;
+
+    /**
      * The constructor.
      * 
      * The parameters are automatically populated by Laravel, thanks to its service container.
@@ -25,6 +30,7 @@ class AjaxController extends JaxonController
     public function __construct(Request $request, Jaxon $jaxon)
     {
         $this->request = $request;
+        $this->dtRenderer = new \Jaxon\Ext\Datatables\Renderer();
         parent::__construct($jaxon);
     }
 
@@ -44,6 +50,8 @@ class AjaxController extends JaxonController
         $instance->notify = $this->jaxon->ajaxResponse()->dialog;
         // The HTTP request
         $instance->httpRequest = $this->request;
+        // The Datatables pagination renderer
+        $instance->dtRenderer = $this->dtRenderer;
     }
 
     /**

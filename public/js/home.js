@@ -1,6 +1,7 @@
 (function($scope) {
     /* Initialize $scope variables */
     $scope.datatables = {};
+    $scope.jaxon = null;
 
     // Initialise Datatables elements
     $scope.initTables = function() {
@@ -17,7 +18,14 @@
 
         if ($('#admin_users_table').length) {
             $scope.datatables['admin_users_table'] = $('#admin_users_table').DataTable($.extend({
-                "ajax": BASE_API_PATH + 'get_admin_users',
+                "ajax": function(data, callback, settings) {
+                    // Pass the Datatables callback and settings to the Jaxon call
+                    $scope.jaxon = {callback: callback, settings: settings};
+                    Jaxon.App.Paginator.paginateAdminUsers(data);
+                    // Clear the Datatables data after the Jaxon call
+                    $scope.jaxon = null;
+                },
+                // "ajax": BASE_API_PATH + 'get_admin_users',
 
                 "columns": [
                     {className: 'wrap-text', data: 'username', name: 'username'},
@@ -33,7 +41,14 @@
         }
         if ($('#admin_links_table').length) {
             $scope.datatables['admin_links_table'] = $('#admin_links_table').DataTable($.extend({
-                "ajax": BASE_API_PATH + 'get_admin_links',
+                "ajax": function(data, callback, settings) {
+                    // Pass the Datatables callback and settings to the Jaxon call
+                    $scope.jaxon = {callback: callback, settings: settings};
+                    Jaxon.App.Paginator.paginateAdminLinks(data);
+                    // Clear the Datatables data after the Jaxon call
+                    $scope.jaxon = null;
+                },
+                // "ajax": BASE_API_PATH + 'get_admin_links',
 
                 "columns": [
                     {className: 'wrap-text', data: 'short_url', name: 'short_url'},
@@ -50,7 +65,14 @@
         }
 
         $scope.datatables['user_links_table'] = $('#user_links_table').DataTable($.extend({
-            "ajax": BASE_API_PATH + 'get_user_links',
+            "ajax": function(data, callback, settings) {
+                // Pass the Datatables callback and settings to the Jaxon call
+                $scope.jaxon = {callback: callback, settings: settings};
+                Jaxon.App.Paginator.paginateUserLinks(data);
+                // Clear the Datatables data after the Jaxon call
+                $scope.jaxon = null;
+            },
+            // "ajax": BASE_API_PATH + 'get_user_links',
 
             "columns": [
                 {className: 'wrap-text', data: 'short_url', name: 'short_url'},

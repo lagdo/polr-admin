@@ -16,13 +16,6 @@ Route::group(array('middleware' => 'user.guest'), function()
 {
     Route::get('/', array('as' => 'index', 'uses' => 'IndexController@index'));
     Route::get('/logout', array('as' => 'logout', 'uses' => 'UserController@logout'));
-
-    // Pagination routes (for Datatables)
-    Route::group(['prefix' => '/api/v2'], function ($app) {
-        Route::get('get_admin_users', ['as' => 'api_get_admin_users', 'uses' => 'PaginationController@paginateAdminUsers']);
-        Route::get('get_admin_links', ['as' => 'api_get_admin_links', 'uses' => 'PaginationController@paginateAdminLinks']);
-        Route::get('get_user_links', ['as' => 'api_get_user_links', 'uses' => 'PaginationController@paginateUserLinks']);
-    });
 });
 
 // Account creation, user login and password reset

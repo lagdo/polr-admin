@@ -1,29 +1,27 @@
 <?php
 
-namespace App\Http\Controllers;
+/**
+ * Plugin.php - Javascript charts for Jaxon with the Flot library.
+ *
+ * @package jaxon-flot
+ * @author Thierry Feuzeu <thierry.feuzeu@gmail.com>
+ * @copyright 2017 Thierry Feuzeu <thierry.feuzeu@gmail.com>
+ * @license https://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
+ * @link https://github.com/jaxon-php/jaxon-flot
+ */
 
-use Illuminate\Http\Request;
+namespace Jaxon\Ext\Datatables;
 
-use App\Models\Link;
-use App\Models\User;
 use App\Helpers\UserHelper;
 
-use Datatables;
-use Jaxon\Laravel\Jaxon;
-
-class PaginationController extends Controller
+class Renderer
 {
-    /**
-     * Process AJAX Datatables pagination queries from the admin panel.
-     *
-     * @return Response
-     */
-
     /* Cell rendering functions */
 
     public function renderLongUrlCell($link)
     {
-        return '<a target="_blank" title="' . e($link->long_url) . '" href="'. $link->long_url .'">' . str_limit($link->long_url, 50) . '</a>
+        return '<a target="_blank" title="' . e($link->long_url) . '" href="'.
+            $link->long_url .'">' . str_limit($link->long_url, 50) . '</a>
             <a class="btn btn-primary btn-xs edit-long-link-btn"><i class="fa fa-edit edit-link-icon"></i></a>';
     }
 
@@ -106,7 +104,8 @@ class PaginationController extends Controller
             $btn_color_class = ' btn-danger';
         }
 
-        return '<a class="btn btn-sm status-display' . $btn_color_class . $btn_class . '">' . $active_text . '</a>';
+        return '<a class="btn btn-sm status-display' . $btn_color_class .
+            $btn_class . '">' . $active_text . '</a>';
     }
 
     public function renderChangeUserRoleCell($user)
@@ -157,62 +156,5 @@ class PaginationController extends Controller
         }
 
         return '<a class="btn btn-sm ' . $btn_class . '">' . $btn_text . '</a>';
-    }
-
-    /* DataTables bindings */
-
-    public function paginateAdminUsers(Request $request)
-    {
-        self::ensureAdmin();
-
-        $admin_users = User::select(['username', 'email', 'created_at', 'active', 'api_key', 'api_active', 'api_quota', 'role', 'id']);
-        return Datatables::of($admin_users)
-            ->setRowAttr([
-                'data-id' => '{{$id}}',
-                'data-name' => '{{$username}}',
-            ])
-            ->addColumn('api_action', [$this, 'renderAdminApiActionCell'])
-            ->addColumn('toggle_active', [$this, 'renderToggleUserActiveCell'])
-            ->addColumn('change_role', [$this, 'renderChangeUserRoleCell'])
-            ->addColumn('delete', [$this, 'renderDeleteUserCell'])
-            ->escapeColumns(['username', 'email'])
-            ->make(true);
-    }
-
-    public function paginateAdminLinks(Request $request)
-    {
-        self::ensureAdmin();
-
-        $admin_links = Link::select(['id', 'short_url', 'long_url', 'clicks', 'created_at', 'creator', 'is_disabled']);
-        return Datatables::of($admin_links)
-            ->setRowAttr([
-                'data-id' => '{{$id}}',
-                'data-ending' => '{{$short_url}}',
-            ])
-            ->addColumn('disable', [$this, 'renderToggleLinkActiveCell'])
-            ->addColumn('delete', [$this, 'renderDeleteLinkCell'])
-            ->editColumn('clicks', [$this, 'renderClicksCell'])
-            ->editColumn('long_url', [$this, 'renderLongUrlCell'])
-            ->escapeColumns(['short_url', 'creator'])
-            ->make(true);
-    }
-
-    public function paginateUserLinks(Request $request)
-    {
-        self::ensureLoggedIn();
-
-        $username = session('username');
-        $user_links = Link::where('creator', $username)
-            ->select(['id', 'short_url', 'long_url', 'clicks', 'created_at']);
-
-        return Datatables::of($user_links)
-            ->setRowAttr([
-                'data-id' => '{{$id}}',
-                'data-ending' => '{{$short_url}}',
-            ])
-            ->editColumn('clicks', [$this, 'renderClicksCell'])
-            ->editColumn('long_url', [$this, 'renderLongUrlCell'])
-            ->escapeColumns(['short_url'])
-            ->make(true);
     }
 }

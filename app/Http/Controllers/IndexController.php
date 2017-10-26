@@ -42,9 +42,9 @@ class IndexController extends Controller
             'jaxonCss' => $jaxon->css(),
             'jaxonJs' => $jaxon->js(),
             'jaxonScript' => $jaxon->script(),
-            'jaxonUser' => $jaxon->request(\Jaxon\App\User::class), // Jaxon request to the \Jaxon\App\User class
-            'jaxonLink' => $jaxon->request(\Jaxon\App\Link::class), // Jaxon request to the \Jaxon\App\Link class
-            'jaxonStats' => $jaxon->request(\Jaxon\App\Stats::class), // Jaxon request to the \Jaxon\App\Stats class
+            'jaxonUser' => $jaxon->request(\Jaxon\App\User::class), // Ajax request to the \Jaxon\App\User class
+            'jaxonLink' => $jaxon->request(\Jaxon\App\Link::class), // Ajax request to the \Jaxon\App\Link class
+            'jaxonStats' => $jaxon->request(\Jaxon\App\Stats::class), // Ajax request to the \Jaxon\App\Stats class
             'datePickerLeftBound' => Carbon::now()->subDays(\Jaxon\App\Stats::DAYS_TO_FETCH),
             'datePickerRightBound' => Carbon::now(),
         ]);
