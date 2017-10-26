@@ -10,11 +10,7 @@ use Jaxon\Sentry\Armada as JaxonClass;
 
 class Link extends JaxonClass
 {
-    protected function currIsAdmin()
-    {
-        $role = session('role');
-        return ($role == 'admin');
-    }
+    use \Jaxon\Helpers\Session;
 
     public function editLongUrl($link_id)
     {

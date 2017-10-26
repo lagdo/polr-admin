@@ -13,13 +13,9 @@ use Jaxon\Sentry\Armada as JaxonClass;
 
 class Stats extends JaxonClass
 {
-    const DAYS_TO_FETCH = 30;
+    use \Jaxon\Helpers\Session;
 
-    protected function currIsAdmin()
-    {
-        $role = session('role');
-        return ($role == 'admin');
-    }
+    const DAYS_TO_FETCH = 30;
 
     private function checkInputs(array $dates, $short_url)
     {

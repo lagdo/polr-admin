@@ -7,8 +7,6 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
-        "jaxon-php/jaxon-laravel": "~2.0",
-        "jaxon-php/jaxon-dialogs": "~1.2",
         "yajra/laravel-datatables-oracle": "~6.0",
         "vlucas/phpdotenv": "~1.0",
         "paragonie/random_compat": "^1.0.6",
@@ -16,7 +14,9 @@
         "geoip2/geoip2": "^2.4",
         "nesbot/carbon": "^1.22",
         "doctrine/dbal": "^2.5",
-        "google/recaptcha": "~1.1"
+        "google/recaptcha": "~1.1",
+        "jaxon-php/jaxon-laravel": "~2.0",
+        "jaxon-php/jaxon-dialogs": "~1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

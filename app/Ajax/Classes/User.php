@@ -10,11 +10,7 @@ use Jaxon\Sentry\Armada as JaxonClass;
 
 class User extends JaxonClass
 {
-    protected function currIsAdmin()
-    {
-        $role = session('role');
-        return ($role == 'admin');
-    }
+    use \Jaxon\Helpers\Session;
 
     public function generateNewAPIKey($user_id, $fromDev)
     {

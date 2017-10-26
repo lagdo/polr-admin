@@ -10,17 +10,13 @@ use Jaxon\Sentry\Armada as JaxonClass;
 
 class Paginator extends JaxonClass
 {
+    use \Jaxon\Helpers\Session;
+
     /**
      * Process AJAX Datatables pagination queries from the admin panel.
      *
      * @return Response
      */
-
-    protected function currIsAdmin()
-    {
-        $role = session('role');
-        return ($role == 'admin');
-    }
 
     /* DataTables bindings */
 
@@ -88,7 +84,11 @@ class Paginator extends JaxonClass
 
     public function paginateUserLinks($parameters)
     {
-        // self::ensureLoggedIn();
+        if(!$this->isLoggedIn())
+        {
+            $this->notify->error('User is not logged in.', 'Error');
+            return $this->response;
+        }
 
         // Write the input parameters back into the Laravel HTTP Request object.
         // The Datatables class needs to have them there.
