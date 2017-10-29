@@ -49,7 +49,7 @@ class Stats extends JaxonClass
             return false;
         }
 
-        $link_id = 0;
+        $link_id = -1;
         $this->link = null;
         if(($short_url))
         {
