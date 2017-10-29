@@ -46,7 +46,7 @@ class Paginator extends JaxonClass
             ->escapeColumns(['username', 'email'])
             ->make(true);
 
-        $this->response->datatables->show(json_decode($datatables->content()));
+        $this->response->datatables->show($datatables->content());
 
         return $this->response;
     }
@@ -77,7 +77,7 @@ class Paginator extends JaxonClass
             ->escapeColumns(['short_url', 'creator'])
             ->make(true);
 
-        $this->response->datatables->show(json_decode($datatables->content()));
+        $this->response->datatables->show($datatables->content());
 
         return $this->response;
     }
@@ -108,7 +108,7 @@ class Paginator extends JaxonClass
             ->escapeColumns(['short_url'])
             ->make(true);
 
-        $this->response->datatables->show(json_decode($datatables->content()));
+        $this->response->datatables->show($datatables->content());
 
         return $this->response;
     }

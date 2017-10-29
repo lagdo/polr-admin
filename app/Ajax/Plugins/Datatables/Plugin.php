@@ -50,6 +50,10 @@ jaxon.command.handler.register("datatables", function(args) {
      */
     public function show($datatables)
     {
+        if(is_string($datatables))
+        {
+            $datatables = json_decode($datatables);
+        }
         $this->addCommand(array('cmd' => 'datatables'), $datatables);
     }
 }
