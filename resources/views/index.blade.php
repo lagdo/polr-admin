@@ -19,16 +19,16 @@
     <div class='col-md-2'>
         <ul class='nav nav-pills nav-stacked admin-nav' role='tablist'>
             <li role='presentation' aria-controls="home" class='admin-nav-item active'><a href='#home'>Home</a></li>
-            <li role='presentation' aria-controls="settings" class='admin-nav-item'><a href='#settings'>Settings</a></li>
+            <li role='presentation' aria-controls="settings" class='admin-nav-item'><a href='#endpoints'>Endpoints</a></li>
             <li role='presentation' aria-controls="links" class='admin-nav-item'><a href='#my-links'>My links</a></li>
 
             @if ($role == $admin_role)
             <li role='presentation' class='admin-nav-item'><a href='#all-links'>All links</a></li>
-            <li role='presentation' class='admin-nav-item'><a href='#users'>Users</a></li>
+            <!-- <li role='presentation' class='admin-nav-item'><a href='#users'>Users</a></li> -->
             @endif
 
             @if ($api_active == 1)
-            <li role='presentation' class='admin-nav-item'><a href='#developer'>Developer</a></li>
+            <!-- <li role='presentation' class='admin-nav-item'><a href='#developer'>Developer</a></li> -->
             @endif
             <li role='presentation' class='admin-nav-item stats'><a href='#stats'>Stats</a></li>
         </ul>
@@ -38,9 +38,10 @@
             <div role="tabpanel" class="tab-pane active" id="home">
                 <h2>Welcome to your {{env('APP_NAME')}} dashboard!</h2>
                 <p>Use the links on the left hand side to navigate your {{env('APP_NAME')}} dashboard.</p>
+                <div><h4>Your current Polr endpoint is : {{ $endpoints['current']['name'] }} </h4></div>
 
                 @if (env('SETTING_SHORTEN_PERMISSION', false))
-                <h3>Create a short URL</h3>
+                <h4>Create a short URL</h4>
                 <div class="" style="text-align: center;">
                     <form method='POST' id='shorten-form' role='form'>
                         <input type='url' autocomplete='off' class='form-control long-link-input'
@@ -83,6 +84,12 @@
                 @endif
             </div>
 
+            <div role="tabpanel" class="tab-pane" id="endpoints">
+                <h3>Your current Polr endpoint is : {{ $endpoints['current']['name'] }} </h3>
+
+                @include('shorten.endpoints', ['endpoints' => $endpoints])
+            </div>
+
             <div role="tabpanel" class="tab-pane" id="my-links">
                 <h3>My links</h3>
                 @include('snippets.link_table', [
@@ -90,7 +97,7 @@
                 ])
             </div>
 
-            <div role="tabpanel" class="tab-pane" id="settings">
+            <!-- <div role="tabpanel" class="tab-pane" id="settings">
                 <h3>Change Password</h3>
                 <form method='POST' id="change-password-form">
                     Old Password: <input class="form-control password-box" type='password' name='old_password' />
@@ -99,7 +106,7 @@
                     <input type="hidden" name='_token' value='{{csrf_token()}}' />
                     <input type='button' class='btn btn-success change-password-btn' value="Change" />
                 </form>
-            </div>
+            </div> -->
 
             @if ($role == $admin_role)
             <div role="tabpanel" class="tab-pane" id="all-links">
@@ -109,7 +116,7 @@
                 ])
             </div>
 
-            <div role="tabpanel" class="tab-pane" id="users">
+            <!-- <div role="tabpanel" class="tab-pane" id="users">
                 <h3 class="users-heading">Users</h3>
                 <a class="btn btn-primary btn-sm status-display new-user-add">New</a>
 
@@ -147,11 +154,11 @@
                     'table_id' => 'admin_users_table'
                 ])
 
-            </div>
+            </div> -->
             @endif
 
             @if ($api_active == 1)
-            <div role="tabpanel" class="tab-pane" id="developer">
+            <!-- <div role="tabpanel" class="tab-pane" id="developer">
                 <h3>Developer</h3>
 
                 <p>API keys and documentation for developers.</p>
@@ -180,7 +187,7 @@
                     @endif
                 </h2>
                 <span> requests per minute</span>
-            </div>
+            </div> -->
             @endif
 
             <div role="tabpanel" class="tab-pane" id="stats">
@@ -308,26 +315,26 @@ $(document).ready(function() {
     $('#admin_links_table').on('draw.dt', function() {
         // Edit long URL
         {!! jq('#admin_links_table .edit-long-link-btn')->click(
-            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id')) ) !!};
+            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-ending')) ) !!};
         // Show link stats
         {!! jq('#admin_links_table .show-link-stats')->click(
             $jaxonStats->showStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
         // Enable/disable link
         {!! jq('#admin_links_table .btn-disable-link')->click(
-            $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-id'), 0)
+            $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-ending'), 0)
                 ->confirm('Disable link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
         {!! jq('#admin_links_table .btn-enable-link')->click(
-            $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-id'), 1)
+            $jaxonLink->setLinkStatus(jq()->parent()->parent()->attr('data-ending'), 1)
                 ->confirm('Enable link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
         // Delete link
         {!! jq('#admin_links_table .btn-delete-link')->click(
-            $jaxonLink->deleteLink(jq()->parent()->parent()->attr('data-id'))
+            $jaxonLink->deleteLink(jq()->parent()->parent()->attr('data-ending'))
                 ->confirm('Delete link with ending {1}?', jq()->parent()->parent()->attr('data-ending')) ) !!};
     });
     $('#user_links_table').on('draw.dt', function() {
         // Edit long URL
         {!! jq('#user_links_table .edit-long-link-btn')->click(
-            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-id')) ) !!};
+            $jaxonLink->editLongUrl(jq()->parent()->parent()->attr('data-ending')) ) !!};
         // Show link stats
         {!! jq('#user_links_table .show-link-stats')->click(
             $jaxonStats->showStats(jq()->parent()->parent()->attr('data-ending')) ) !!};
@@ -339,6 +346,10 @@ $(document).ready(function() {
     $('#stats-buttons .btn-clear-stats').click(function(){
         polr.stats.short_url = '';
         $('#stats-filter').html('');
+    });
+    // Polr Endpoint selection button
+    $('#btn-change-endpoint').click(function(){
+        {!! $jaxonUser->selectEndpoint(rq()->select('select-endpoint')) !!};
     });
 });
 </script>

@@ -3,6 +3,7 @@
 namespace Jaxon\App;
 
 use Hash;
+use Validator;
 use App\Helpers\UserHelper;
 use App\Helpers\CryptoHelper;
 use App\Factories\UserFactory;
@@ -11,6 +12,28 @@ use Jaxon\Sentry\Armada as JaxonClass;
 class User extends JaxonClass
 {
     use \Jaxon\Helpers\Session;
+
+    public function selectEndpoint($endpoint)
+    {
+        // Validate the new endpoint
+        $values = [
+            'endpoint' => trim($endpoint),
+        ];
+        $rules = array(
+            'endpoint' => 'alpha_dash',
+        );
+        $validator = Validator::make($values, $rules);
+        if($validator->fails())
+        {
+            $this->notify->error('The endpoint id is not valid.', 'Error');
+            return $this->response;
+        }
+
+        session()->set('polr.endpoint', $endpoint);
+        $this->response->redirect(url());
+
+        return $this->response;
+    }
 
     protected function generateNewAPIKey($user_id, $fromDev)
     {

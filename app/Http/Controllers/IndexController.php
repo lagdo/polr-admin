@@ -31,6 +31,25 @@ class IndexController extends Controller
             return redirect(route('showLogin'))->with('error', 'Invalid or disabled account.');
         }
 
+        // Get Polr endpoints from config
+        if(!session()->has('polr.endpoint'))
+        {
+            $current = config('polr.default', '');
+            session()->set('polr.endpoint', $current);
+        }
+        else
+        {
+            $current = session()->get('polr.endpoint');
+        }
+        $endpoints = [
+            'current' => ['id' => $current, 'name' => config('polr.endpoints.' . $current . '.name')],
+            'names' => [],
+        ];
+        foreach(config('polr.endpoints') as $id => $endpoint)
+        {
+            $endpoints['names'][$id] = $endpoint['name'];
+        }
+
         return view('index', [
             'role' => $role,
             'admin_role' => UserHelper::$USER_ROLES['admin'],
@@ -45,8 +64,10 @@ class IndexController extends Controller
             'jaxonUser' => $jaxon->request(\Jaxon\App\User::class), // Ajax request to the \Jaxon\App\User class
             'jaxonLink' => $jaxon->request(\Jaxon\App\Link::class), // Ajax request to the \Jaxon\App\Link class
             'jaxonStats' => $jaxon->request(\Jaxon\App\Stats::class), // Ajax request to the \Jaxon\App\Stats class
+            'jaxonEndPoint' => $jaxon->request(\Jaxon\App\EndPoint::class), // Ajax request to the \Jaxon\App\EndPoint class
             'datePickerLeftBound' => Carbon::now()->subDays(\Jaxon\App\Stats::DAYS_TO_FETCH),
             'datePickerRightBound' => Carbon::now(),
+            'endpoints' => $endpoints,
         ]);
     }
 }

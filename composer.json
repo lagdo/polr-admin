@@ -15,6 +15,7 @@
         "nesbot/carbon": "^1.22",
         "doctrine/dbal": "^2.5",
         "google/recaptcha": "~1.1",
+        "guzzlehttp/guzzle": "~6.0",
         "jaxon-php/jaxon-laravel": "~2.0",
         "jaxon-php/jaxon-dialogs": "~1.2"
     },
