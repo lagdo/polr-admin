@@ -59,13 +59,21 @@ class Paginator extends JaxonClass
             return $this->response;
         }
 
+        // Fetch the users from the Polr instance
+        $parameters['key'] = $this->apiKey;
+        $apiResponse = $this->apiClient->get('links', ['query' => $parameters]);
+
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $links = collect($jsonResponse->result->data);
+
         // Write the input parameters back into the Datatables HTTP Request object.
         // The Datatables class needs to have them there.
-        $this->dtRequest->merge($parameters);
+        /*$this->dtRequest->merge($parameters);
 
-        $admin_links = LinkModel::select(['id', 'short_url', 'long_url', 'clicks',
-            'created_at', 'creator', 'is_disabled']);
-        $datatables = Datatables::of($admin_links)
+        $links = LinkModel::select(['id', 'short_url', 'long_url', 'clicks',
+            'created_at', 'creator', 'is_disabled']);*/
+
+        $datatables = Datatables::of($links)
             ->setRowAttr([
                 'data-id' => '{{$id}}',
                 'data-ending' => '{{$short_url}}',
@@ -77,7 +85,8 @@ class Paginator extends JaxonClass
             ->escapeColumns(['short_url', 'creator'])
             ->make(true);
 
-        $this->response->datatables->show($datatables->content());
+        $this->response->datatables->show($datatables,
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);
 
         return $this->response;
     }
@@ -90,15 +99,22 @@ class Paginator extends JaxonClass
             return $this->response;
         }
 
+        // Fetch the users from the Polr instance
+        $parameters['key'] = $this->apiKey;
+        $apiResponse = $this->apiClient->get('user/links', ['query' => $parameters]);
+
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $links = collect($jsonResponse->result->data);
+
         // Write the input parameters back into the Datatables HTTP Request object.
         // The Datatables class needs to have them there.
-        $this->dtRequest->merge($parameters);
+        /*$this->dtRequest->merge($parameters);
 
         $username = session('username');
-        $user_links = LinkModel::where('creator', $username)
-            ->select(['id', 'short_url', 'long_url', 'clicks', 'created_at']);
+        $links = LinkModel::where('creator', $username)
+            ->select(['id', 'short_url', 'long_url', 'clicks', 'created_at']);*/
 
-        $datatables = Datatables::of($user_links)
+        $datatables = Datatables::of($links)
             ->setRowAttr([
                 'data-id' => '{{$id}}',
                 'data-ending' => '{{$short_url}}',
@@ -108,7 +124,8 @@ class Paginator extends JaxonClass
             ->escapeColumns(['short_url'])
             ->make(true);
 
-        $this->response->datatables->show($datatables->content());
+        $this->response->datatables->show($datatables,
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);
 
         return $this->response;
     }

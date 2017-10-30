@@ -4,7 +4,6 @@ namespace Jaxon\App;
 
 use Carbon\Carbon;
 
-use App\Models\Clicks;
 use App\Helpers\LinkHelper;
 use App\Helpers\StatsHelper;
 use Illuminate\Support\Facades\DB;
@@ -49,29 +48,45 @@ class Stats extends JaxonClass
             return false;
         }
 
-        $link_id = -1;
+        $this->short_url = trim($short_url);
+        // $this->link_id = -1;
         $this->link = null;
-        if(($short_url))
+        if($this->short_url !== '')
         {
-            $this->link = LinkHelper::getLinkByShortUrl($short_url);
+            // $this->link = LinkHelper::getLinkByShortUrl($this->short_url);
+            // Fetch the link from the Polr instance
+            $apiResponse = $this->apiClient->get('links/' . $this->short_url,
+                ['query' => ['key' => $this->apiKey]]);
+            $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+            $this->link = $jsonResponse->result;
             if ($this->link == null)
             {
                 $this->notify->error('Cannot show stats for nonexistent link.', 'Error');
                 return false;
             }
-            $link_id = $this->link->id;
+            $this->short_url = $short_url;
+            // $this->link_id = $this->link->id;
         }
 
-        if(!$this->currIsAdmin() && (!$this->link || session('username') != $this->link->creator))
+        /*if(!$this->currIsAdmin() && (!$this->link || session('username') != $this->link->creator))
         {
             $this->notify->error('You do not have permission to view stats for this link.', 'Error');
             return false;
-        }
+        }*/
 
-        try
+        return true;
+    }
+
+    private function getAllStats()
+    {
+    }
+
+    private function showStatsContent()
+    {
+        /*try
         {
             // Initialize StatHelper
-            $this->stats = new StatsHelper($link_id, $this->left_bound, $this->right_bound);
+            $stats = new StatsHelper($this->link_id, $this->left_bound, $this->right_bound);
         }
         catch (\Exception $e)
         {
@@ -79,14 +94,34 @@ class Stats extends JaxonClass
             return false;
         }
 
-        return true;
-    }
+        $day_stats = $stats->getDayStats();
+        $country_stats = $stats->getCountryStats();
+        $referer_stats = $stats->getRefererStats();*/
 
-    private function showStatsContent()
-    {
-        $day_stats = $this->stats->getDayStats();
-        $country_stats = $this->stats->getCountryStats();
-        $referer_stats = $this->stats->getRefererStats();
+        $path = ($this->short_url === '' ? 'stats' : 'links/' . $this->short_url . '/stats');
+        $parameters = [
+            'key' => $this->apiKey,
+            'left_bound' => (string)$this->left_bound,
+            'right_bound' => (string)$this->right_bound,
+        ];
+
+        // Fetch the stats from the Polr instance
+        $parameters['type'] = 'day';
+        $apiResponse = $this->apiClient->get($path, ['query' => $parameters]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $day_stats = $jsonResponse->result;
+
+        // Fetch the stats from the Polr instance
+        $parameters['type'] = 'country';
+        $apiResponse = $this->apiClient->get($path, ['query' => $parameters]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $country_stats = $jsonResponse->result;
+
+        // Fetch the stats from the Polr instance
+        $parameters['type'] = 'referer';
+        $apiResponse = $this->apiClient->get($path, ['query' => $parameters]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $referer_stats = $jsonResponse->result;
 
         $clicks = 0;
         foreach($referer_stats as $stats)

@@ -12,7 +12,7 @@ class User extends JaxonClass
 {
     use \Jaxon\Helpers\Session;
 
-    public function generateNewAPIKey($user_id, $fromDev)
+    protected function generateNewAPIKey($user_id, $fromDev)
     {
         /**
          * If user is an admin, allow resetting of any API key
@@ -83,7 +83,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function changePassword(array $formValues)
+    protected function changePassword(array $formValues)
     {
         $username = session('username');
         $old_password = $formValues['old_password'];
@@ -126,7 +126,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function addNewUser(array $formValues)
+    protected function addNewUser(array $formValues)
     {
         if(!$this->currIsAdmin())
         {
@@ -153,7 +153,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function deleteUser($user_id)
+    protected function deleteUser($user_id)
     {
         if(!$this->currIsAdmin())
         {
@@ -178,7 +178,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function showAPIInfo($user_id)
+    protected function showAPIInfo($user_id)
     {
         if(!$this->currIsAdmin())
         {
@@ -218,7 +218,7 @@ class User extends JaxonClass
         return $this->response;
     }
     
-    public function toggleAPIActive($user_id)
+    protected function toggleAPIActive($user_id)
     {
         if(!$this->currIsAdmin())
         {
@@ -248,7 +248,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function editAPIQuota($user_id, $new_quota)
+    protected function editAPIQuota($user_id, $new_quota)
     {
         /**
          * If user is an admin, allow the user to edit the per minute API quota of
@@ -277,7 +277,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function setUserStatus($user_id, $status)
+    protected function setUserStatus($user_id, $status)
     {
         if(!$this->currIsAdmin())
         {
@@ -306,7 +306,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function changeUserRole($user_id, $role)
+    protected function changeUserRole($user_id, $role)
     {
         if(!$this->currIsAdmin())
         {

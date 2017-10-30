@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Auth;
 use Datatables;
 use Jaxon\Laravel\Jaxon;
 use Jaxon\Laravel\Http\Controllers\JaxonController;
 use Jaxon\App\Paginator;
+
+use GuzzleHttp\Client as RestClient;
 
 class AjaxController extends JaxonController
 {
@@ -15,11 +18,23 @@ class AjaxController extends JaxonController
      * 
      * The parameters are automatically populated by Laravel, thanks to its service container.
      * 
+     * @param Request           $request                The HTTP request
      * @param Jaxon             $jaxon                  The Laravel Jaxon plugin
      */
-    public function __construct(Jaxon $jaxon)
+    public function __construct(Request $request, Jaxon $jaxon)
     {
         parent::__construct($jaxon);
+
+        // The HTTP request
+        $this->httpRequest = $request;
+
+        // Polr API Client
+        $instance = 'polr.instances.incoming';
+        // $instance = 'polr.instances.outgoing';
+        $this->apiKey = config($instance . '.key');
+        $this->apiClient = new RestClient([
+            'base_uri' => rtrim(config($instance . '.url'), '/') . '/',
+        ]);
     }
 
     /**
@@ -36,6 +51,14 @@ class AjaxController extends JaxonController
         // Dialogs and notifications are implemented by the Dialogs plugin
         $instance->dialog = $this->jaxon->ajaxResponse()->dialog;
         $instance->notify = $this->jaxon->ajaxResponse()->dialog;
+
+        // The HTTP request
+        $instance->httpRequest = $this->httpRequest;
+
+        // Save the HTTP REST client
+        $instance->apiKey = $this->apiKey;
+        $instance->apiClient = $this->apiClient;
+
         // Save the Datatables renderer and request only in the Paginator object
         if(is_a($instance, Paginator::class))
         {

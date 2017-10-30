@@ -48,12 +48,17 @@ jaxon.command.handler.register("datatables", function(args) {
      *
      * @return void
      */
-    public function show($datatables)
+    public function show($datatables, $total = 0, $filtered = 0)
     {
-        if(is_string($datatables))
+        $content = json_decode($datatables->content());
+        if($total > 0)
         {
-            $datatables = json_decode($datatables);
+            $content->recordsTotal = $total;
         }
-        $this->addCommand(array('cmd' => 'datatables'), $datatables);
+        if($filtered > 0)
+        {
+            $content->recordsFiltered = $filtered;
+        }
+        $this->addCommand(array('cmd' => 'datatables'), $content);
     }
 }
