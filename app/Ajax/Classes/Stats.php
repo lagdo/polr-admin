@@ -12,18 +12,10 @@ use Jaxon\Sentry\Armada as JaxonClass;
 
 class Stats extends JaxonClass
 {
-    use \Jaxon\Helpers\Session;
-
     const DAYS_TO_FETCH = 30;
 
     private function checkInputs(array $dates, $short_url)
     {
-        if(!env('SETTING_ADV_ANALYTICS'))
-        {
-            $this->notify->error('Please enable advanced analytics to view link stats.', 'Error');
-            return false;
-        }
-
         $validator = \Validator::make($dates, [
             'left_bound' => 'date',
             'right_bound' => 'date'
@@ -49,11 +41,9 @@ class Stats extends JaxonClass
         }
 
         $this->short_url = trim($short_url);
-        // $this->link_id = -1;
         $this->link = null;
         if($this->short_url !== '')
         {
-            // $this->link = LinkHelper::getLinkByShortUrl($this->short_url);
             // Fetch the link from the Polr instance
             $apiResponse = $this->apiClient->get('links/' . $this->short_url,
                 ['query' => ['key' => $this->apiKey]]);
@@ -65,14 +55,7 @@ class Stats extends JaxonClass
                 return false;
             }
             $this->short_url = $short_url;
-            // $this->link_id = $this->link->id;
         }
-
-        /*if(!$this->currIsAdmin() && (!$this->link || session('username') != $this->link->creator))
-        {
-            $this->notify->error('You do not have permission to view stats for this link.', 'Error');
-            return false;
-        }*/
 
         return true;
     }
@@ -83,21 +66,6 @@ class Stats extends JaxonClass
 
     private function showStatsContent()
     {
-        /*try
-        {
-            // Initialize StatHelper
-            $stats = new StatsHelper($this->link_id, $this->left_bound, $this->right_bound);
-        }
-        catch (\Exception $e)
-        {
-            $this->notify->error('Invalid date bounds. The right date bound must be more recent than the left bound.', 'Error');
-            return false;
-        }
-
-        $day_stats = $stats->getDayStats();
-        $country_stats = $stats->getCountryStats();
-        $referer_stats = $stats->getRefererStats();*/
-
         $path = ($this->short_url === '' ? 'stats' : 'links/' . $this->short_url . '/stats');
         $parameters = [
             'key' => $this->apiKey,

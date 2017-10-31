@@ -11,8 +11,6 @@ use Jaxon\Sentry\Armada as JaxonClass;
 
 class User extends JaxonClass
 {
-    use \Jaxon\Helpers\Session;
-
     public function selectEndpoint($endpoint)
     {
         // Validate the new endpoint

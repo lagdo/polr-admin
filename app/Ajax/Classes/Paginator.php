@@ -10,11 +10,9 @@ use Jaxon\Sentry\Armada as JaxonClass;
 
 class Paginator extends JaxonClass
 {
-    use \Jaxon\Helpers\Session;
-
     protected function datatableParameters($parameters)
     {
-        // The boolean parameters sent by Guzzle in a HTTP request re not recognized
+        // The boolean parameters sent by Guzzle in a HTTP request are not recognized
         // by Datatables. So we need to convert them to strings "true" or "false".
         foreach($parameters['columns'] as &$column)
         {
@@ -59,25 +57,12 @@ class Paginator extends JaxonClass
 
     public function paginateAdminLinks($parameters)
     {
-        if(!$this->currIsAdmin())
-        {
-            $this->notify->error('User is not admin.', 'Error');
-            return $this->response;
-        }
-
-        // Fetch the users from the Polr instance
+        // Fetch the links from the Polr instance
         $apiResponse = $this->apiClient->get('links', [
             'query' => $this->datatableParameters($parameters)
         ]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $links = collect($jsonResponse->result->data);
-
-        // Write the input parameters back into the Datatables HTTP Request object.
-        // The Datatables class needs to have them there.
-        /*$this->dtRequest->merge($parameters);
-
-        $links = LinkModel::select(['id', 'short_url', 'long_url', 'clicks',
-            'created_at', 'creator', 'is_disabled']);*/
 
         $datatables = Datatables::of($links)
             ->setRowAttr([
@@ -97,45 +82,9 @@ class Paginator extends JaxonClass
         return $this->response;
     }
 
-    public function _paginateUserLinks($parameters)
-    {
-        if(!$this->isLoggedIn())
-        {
-            $this->notify->error('User is not logged in.', 'Error');
-            return $this->response;
-        }
-
-        // Write the input parameters back into the Datatables HTTP Request object.
-        // The Datatables class needs to have them there.
-        $this->dtRequest->merge($parameters);
-        $username = session('username');
-        $links = LinkModel::where('creator', $username)
-            ->select(['id', 'short_url', 'long_url', 'clicks', 'created_at']);
-
-        $datatables = Datatables::of($links)
-            ->setRowAttr([
-                'data-id' => '{{$id}}',
-                'data-ending' => '{{$short_url}}',
-            ])
-            ->editColumn('clicks', [$this->dtRenderer, 'renderClicksCell'])
-            ->editColumn('long_url', [$this->dtRenderer, 'renderLongUrlCell'])
-            ->escapeColumns(['short_url'])
-            ->make(true);
-
-        $this->response->datatables->show($datatables);
-
-        return $this->response;
-    }
-
     public function paginateUserLinks($parameters)
     {
-        if(!$this->isLoggedIn())
-        {
-            $this->notify->error('User is not logged in.', 'Error');
-            return $this->response;
-        }
-
-        // Fetch the users from the Polr instance
+        // Fetch the links from the Polr instance
         $apiResponse = $this->apiClient->get('user/links', [
             'query' => $this->datatableParameters($parameters)
         ]);
