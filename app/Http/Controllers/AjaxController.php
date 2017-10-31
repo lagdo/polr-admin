@@ -29,12 +29,10 @@ class AjaxController extends JaxonController
         $this->httpRequest = $request;
 
         // Polr API Client
-        // $endpoint = 'polr.endpoints.incoming';
-        // $endpoint = 'polr.endpoints.outgoing';
-        $endpoint = 'polr.endpoints.' . session()->get('polr.endpoint');
-        $this->apiKey = config($endpoint . '.key');
+        $cfgKey = 'polr.endpoints.' . session()->get('polr.endpoint');
+        $this->apiKey = config($cfgKey . '.key');
         $this->apiClient = new RestClient([
-            'base_uri' => rtrim(config($endpoint . '.url'), '/') . '/',
+            'base_uri' => rtrim(config($cfgKey . '.url'), '/') . '/',
         ]);
     }
 

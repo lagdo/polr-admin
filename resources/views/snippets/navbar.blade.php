@@ -11,6 +11,11 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="{{ route('index') }}">{{env('APP_NAME')}}</a>
         </div>
+        @if (($endpoints))
+        <div class="navbar-header">
+            <h5 style="line-height:22px;">:: {{ $endpoints['current']['name'] }} </h5>
+        </div>
+        @endif
 
         <ul id="navbar" class="nav navbar-collapse collapse navbar-nav" id="nbc">
 

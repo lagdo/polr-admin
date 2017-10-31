@@ -27,27 +27,9 @@ class IndexController extends Controller
 
         $user = UserHelper::getUserByUsername($username);
 
-        if (!$user) {
+        if (!$user)
+        {
             return redirect(route('showLogin'))->with('error', 'Invalid or disabled account.');
-        }
-
-        // Get Polr endpoints from config
-        if(!session()->has('polr.endpoint'))
-        {
-            $current = config('polr.default', '');
-            session()->set('polr.endpoint', $current);
-        }
-        else
-        {
-            $current = session()->get('polr.endpoint');
-        }
-        $endpoints = [
-            'current' => ['id' => $current, 'name' => config('polr.endpoints.' . $current . '.name')],
-            'names' => [],
-        ];
-        foreach(config('polr.endpoints') as $id => $endpoint)
-        {
-            $endpoints['names'][$id] = $endpoint['name'];
         }
 
         return view('index', [
@@ -67,7 +49,6 @@ class IndexController extends Controller
             'jaxonEndPoint' => $jaxon->request(\Jaxon\App\EndPoint::class), // Ajax request to the \Jaxon\App\EndPoint class
             'datePickerLeftBound' => Carbon::now()->subDays(\Jaxon\App\Stats::DAYS_TO_FETCH),
             'datePickerRightBound' => Carbon::now(),
-            'endpoints' => $endpoints,
         ]);
     }
 }

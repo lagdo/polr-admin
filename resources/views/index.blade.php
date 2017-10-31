@@ -19,7 +19,7 @@
     <div class='col-md-2'>
         <ul class='nav nav-pills nav-stacked admin-nav' role='tablist'>
             <li role='presentation' aria-controls="home" class='admin-nav-item active'><a href='#home'>Home</a></li>
-            <li role='presentation' aria-controls="settings" class='admin-nav-item'><a href='#endpoints'>Endpoints</a></li>
+            <li role='presentation' aria-controls="settings" class='admin-nav-item'><a href='#settings'>Settings</a></li>
             <li role='presentation' aria-controls="links" class='admin-nav-item'><a href='#my-links'>My links</a></li>
 
             @if ($role == $admin_role)
@@ -38,7 +38,6 @@
             <div role="tabpanel" class="tab-pane active" id="home">
                 <h2>Welcome to your {{env('APP_NAME')}} dashboard!</h2>
                 <p>Use the links on the left hand side to navigate your {{env('APP_NAME')}} dashboard.</p>
-                <div><h4>Your current Polr endpoint is : {{ $endpoints['current']['name'] }} </h4></div>
 
                 @if (env('SETTING_SHORTEN_PERMISSION', false))
                 <h4>Create a short URL</h4>
@@ -84,10 +83,19 @@
                 @endif
             </div>
 
-            <div role="tabpanel" class="tab-pane" id="endpoints">
-                <h3>Your current Polr endpoint is : {{ $endpoints['current']['name'] }} </h3>
+            <div role="tabpanel" class="tab-pane" id="settings">
+                <h3>Polr endpoints</h3>
 
                 @include('shorten.endpoints', ['endpoints' => $endpoints])
+
+                <!-- <h3>Change Password</h3>
+                <form method='POST' id="change-password-form">
+                    Old Password: <input class="form-control password-box" type='password' name='old_password' />
+                    New Password: <input class="form-control password-box" type='password' name='new_password' />
+                    Confirm Password: <input class="form-control password-box" type='password' name='new_password_confirmation' />
+                    <input type="hidden" name='_token' value='{{csrf_token()}}' />
+                    <input type='button' class='btn btn-success change-password-btn' value="Change" />
+                </form> -->
             </div>
 
             <div role="tabpanel" class="tab-pane" id="my-links">
@@ -96,17 +104,6 @@
                     'table_id' => 'user_links_table'
                 ])
             </div>
-
-            <!-- <div role="tabpanel" class="tab-pane" id="settings">
-                <h3>Change Password</h3>
-                <form method='POST' id="change-password-form">
-                    Old Password: <input class="form-control password-box" type='password' name='old_password' />
-                    New Password: <input class="form-control password-box" type='password' name='new_password' />
-                    Confirm Password: <input class="form-control password-box" type='password' name='new_password_confirmation' />
-                    <input type="hidden" name='_token' value='{{csrf_token()}}' />
-                    <input type='button' class='btn btn-success change-password-btn' value="Change" />
-                </form>
-            </div> -->
 
             @if ($role == $admin_role)
             <div role="tabpanel" class="tab-pane" id="all-links">
