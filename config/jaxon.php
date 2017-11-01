@@ -7,22 +7,25 @@ return [
         ],
         'classes' => [
             [
-                'directory' => app_path('Ajax/Classes'),
-                'namespace' => '\\Jaxon\\App',
+                'directory' => realpath(__DIR__ . '/../src/Ajax/Classes'),
+                'namespace' => '\\Lagdo\\Polr\\Admin\\App',
                 // 'separator' => '', // '.' or '_'
                 // 'protected' => [],
             ],
         ],
         'options' => [
             'classes' => [
-                \Jaxon\App\Stats::class => [
+                \Lagdo\Polr\Admin\App\Stats::class => [
                     '*' => [
                         'callback' => 'polr.stats.requestCallbacks',
                     ]
                 ],
-                \Jaxon\App\Paginator::class => [
-                    '*' => [
-                        'dt' => 'polr.home.jaxon',
+                \Lagdo\Polr\Admin\App\Link::class => [
+                    'adminLinks' => [
+                        'datatables' => 'polr.home.jaxon',
+                    ],
+                    'userLinks' => [
+                        'datatables' => 'polr.home.jaxon',
                     ]
                 ]
             ],
@@ -49,7 +52,7 @@ return [
         ],
         'js' => [
             'lib' => [
-                // 'uri' => 'https://cdn.jaxon-php.org/libs/jaxon/1.2.0',
+                // 'uri' => '',
             ],
             'app' => [
                 // 'uri' => '',

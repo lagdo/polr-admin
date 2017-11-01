@@ -5,6 +5,8 @@ An alternative admin dashboard for the Polr URL shortener.
 
 Our goal is to provide a dashboard with advanced features for managing multiple Polr instances.
 
+This branch is packaged as a Laravel extension.
+
 Features
 --------
 
@@ -13,7 +15,7 @@ The features are mostly the same as in the Polr Admin section, but with few diff
 - The dashboard is based on Laravel instead of Lumen.
 - AngularJS is dropped in favor of Jaxon [https://www.jaxon-php.org](https://www.jaxon-php.org).
 - A `Confirm Password` field is added to the `Change Password` form.
-- The `Settings` tab allows to choose a Polr instance.
+- The `Settings` tab allows to choose a Polr instance from a dropdown list.
 - The dashboard can display stats for all links.
 - The URL shortening and link stats features are fully implemented with Ajax, using Jaxon.
 - The link redirection feature is not included.
@@ -21,19 +23,57 @@ The features are mostly the same as in the Polr Admin section, but with few diff
 Installation
 ------------
 
-Clone this repository to a local directory.
+Add the Github repository and package in the `composer.json` file.
 
-Get into the installed directory and run `composer install` to install the dependencies.
+```json
+{
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/lagdo/polr-admin"
+        }
+    ],
+    "require": {
+        "lagdo/polr-admin": "dev-extension"
+    }
+}
+```
 
-Fill the `env.example` file with the same parameters as your Polr installation, and rename to `.env`.
+Add entries for `Jaxon`, `Datatables` and `Polr Admin` in `app.php`.
 
-Setup your web server to serve the application from the `public` directory.
-See the `Running Polr on...` section in the [Polr installation guide](https://docs.polrproject.org/en/latest/user-guide/installation/) to learn how to configure your prefered web server.
+```php
+    'providers' => [
+        // Jaxon Ajax library
+        Jaxon\Laravel\JaxonServiceProvider::class,
+        // Datatables
+        Yajra\Datatables\DatatablesServiceProvider::class,
+        // Polr Admin
+        Lagdo\Polr\Admin\PolrAdminServiceProvider::class,
+    ],
+
+    'aliases' => [
+        // Datatables
+        'Datatables'   => Yajra\Datatables\Facades\Datatables::class,
+    ],
+```
+
+Publish the public files.
+
+```bash
+php artisan vendor:publish --tag=public --force
+```
+
+Publish the config files.
+This will copy the `jaxon.php` and `polr.php` files in the `config` dir.
+
+```bash
+php artisan vendor:publish --provider="Lagdo\Polr\Admin\PolrAdminServiceProvider" --tag="config"
+```
 
 Configuration
 -------------
 
-Create a `polr.php` config file, where your Polr intances are defined.
+Edit `config/polr.php` config file, and list your Polr intances.
 
 ```php
 <?php
