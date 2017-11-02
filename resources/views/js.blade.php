@@ -26,9 +26,9 @@ var datePickerRightBound = '{{ $datePickerRightBound }}';
 <script type="text/javascript">
 $(document).ready(function() {
     // Set click handlers on buttons
-    $('#change-password-form .change-password-btn').click(function() {
+    /*$('#change-password-form .change-password-btn').click(function() {
         {!! $jaxonUser->changePassword(rq()->form('change-password-form'))->confirm('Save the new password?') !!};
-    });
+    });*/
     // URL shortening
     $('#check-link-availability').click(function() {
         {!! $jaxonLink->checkAvailability(jq('.custom-url-field')->val()) !!};
@@ -37,7 +37,7 @@ $(document).ready(function() {
         {!! $jaxonLink->shorten(rq()->form('shorten-form')) !!};
     });
     // New user
-    $('#users .new-user-add').click(function() {
+    /*$('#users .new-user-add').click(function() {
         $('#new-user-form input.form-control').val('');
         $('.new-user-fields').show();
     });
@@ -47,7 +47,7 @@ $(document).ready(function() {
     });
     $('#users .new-user-save').click(function() {
         {!! $jaxonUser->addNewUser(rq()->form('new-user-form'))->confirm('Save the new user?') !!};
-    });
+    });*/
     // Events on datatables
     // Theses handlers are called anytime a new page is printed in a datatable
     $('#admin_users_table').on('draw.dt', function() {
@@ -70,10 +70,10 @@ $(document).ready(function() {
             {!! $jaxonUser->showAPIInfo(jq()->parent()->parent()->attr('data-id'), jq()->val()) !!};
         });
         // Delete user
-        $('#admin_users_table .btn-delete-user').click(function(){
+        /*$('#admin_users_table .btn-delete-user').click(function(){
             {!! $jaxonUser->deleteUser(jq()->parent()->parent()->attr('data-id'))
                 ->confirm('Delete user {1}?', jq()->parent()->parent()->attr('data-name')) !!};
-        });
+        });*/
     });
     $('#admin_links_table').on('draw.dt', function() {
         // Edit long URL

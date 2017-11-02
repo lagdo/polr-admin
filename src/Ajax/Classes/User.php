@@ -35,56 +35,22 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    protected function generateNewAPIKey($user_id, $fromDev)
+    public function generateNewKey($user_id, $fromDev)
     {
-        /**
-         * If user is an admin, allow resetting of any API key
-         *
-         * If user is not an admin, allow resetting of own key only, and only if
-         * API is enabled for the account.
-         * @return string; new API key
-         */
-        $user = UserHelper::getUserById($user_id);
-
-        $username_user_requesting = session('username');
-        $user_requesting = UserHelper::getUserByUsername($username_user_requesting);
-
-        if(!$user)
+        $validator = \Validator::make(['id' => $user_id], [
+            'id' => 'required|numeric',
+        ]);
+        if ($validator->fails())
         {
-            $this->notify->error('User not found.', 'Error');
+            $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
-        if($user != $user_requesting)
-        {
-            // if user is attempting to reset another user's API key,
-            // ensure they are an admin
-            if(!$this->currIsAdmin())
-            {
-                $this->notify->error('User is not admin.', 'Error');
-                return $this->response;
-            }
-        }
-        else
-        {
-            // user is attempting to reset own key
-            // ensure that user is permitted to access the API
-            $user_api_enabled = $user->api_active;
-            if(!$user_api_enabled)
-            {
-                // if the user does not have API access toggled on,
-                // allow only if user is an admin
-                if(!$this->currIsAdmin())
-                {
-                    $this->notify->error('User is not admin.', 'Error');
-                    return $this->response;
-                }
-            }
-        }
-
-        $new_api_key = CryptoHelper::generateRandomHex(env('_API_KEY_LENGTH'));
-        $user->api_key = $new_api_key;
-        $user->save();
+        // Generate the new key on the Polr instance
+        $apiResponse = $this->apiClient->post('users/' . $user_id . '/api',
+            ['query' => ['key' => $this->apiKey]]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $user = $jsonResponse->result;
 
         if(($fromDev))
         {
@@ -97,7 +63,7 @@ class User extends JaxonClass
         else
         {
             // Update the dialog with the new status
-            $this->jq('#edit-user-api-key .status-display')->html($new_api_key);
+            $this->jq('#edit-user-api-key .status-display')->html($user->api_key);
 
             // Show a confirmation message
             $this->notify->info("New API key for user {$user->username} successfully generated.", 'Success');
@@ -106,9 +72,9 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    protected function changePassword(array $formValues)
+    /*public function changePassword(array $formValues)
     {
-        $username = session('username');
+        $username = '';
         $old_password = $formValues['old_password'];
         $new_password = $formValues['new_password'];
 
@@ -128,17 +94,6 @@ class User extends JaxonClass
             $this->notify->error($validator->errors()->first(), 'Error');
             return $this->response;
         }
-        if(UserHelper::checkCredentials($username, $old_password) == false)
-        {
-            // Invalid credentials
-            $this->notify->error('Current password is invalid. Try again.', 'Error');
-            return $this->response;
-        }
-
-        // Credentials are correct
-        $user = UserHelper::getUserByUsername($username);
-        $user->password = Hash::make($new_password);
-        $user->save();
 
         // Clear the form
         $this->jq('#change-password-form .password-box')->val('');
@@ -147,24 +102,10 @@ class User extends JaxonClass
         $this->notify->info("Password successfully changed.", 'Success');
 
         return $this->response;
-    }
+    }*/
 
-    protected function addNewUser(array $formValues)
+    /*public function addNewUser(array $formValues)
     {
-        if(!$this->currIsAdmin())
-        {
-            $this->notify->error('User is not admin.', 'Error');
-            return $this->response;
-        }
-
-        $ip = $this->httpRequest->ip();
-        $username = $formValues['username'];
-        $user_password = $formValues['user_password'];
-        $user_email = $formValues['user_email'];
-        $user_role = $formValues['user_role'];
-
-        UserFactory::createUser($username, $user_email, $user_password, 1, $ip, false, 0, $user_role);
-
         // Clear and hide the form
         $this->jq('#new-user-form input.form-control')->val('');
         $this->jq('.new-user-fields')->hide();
@@ -174,47 +115,39 @@ class User extends JaxonClass
         $this->notify->info("User successfully created.", 'Success');
 
         return $this->response;
-    }
+    }*/
 
-    protected function deleteUser($user_id)
+    /*public function deleteUser($user_id)
     {
-        if(!$this->currIsAdmin())
-        {
-            $this->notify->error('User is not admin.', 'Error');
-            return $this->response;
-        }
-
-        $user = UserHelper::getUserById($user_id, true);
-        if(!$user)
-        {
-            $this->notify->error('User not found.', 'Error');
-            return $this->response;
-        }
-
-        $user->delete();
-
         // Reload the datatable
         $this->response->script("polr.home.reloadUserTables()");
         // Show a confirmation message
         $this->notify->info("User successfully deleted.", 'Success');
 
         return $this->response;
-    }
+    }*/
 
-    protected function showAPIInfo($user_id)
+    public function showAPIInfo($user_id)
     {
-        if(!$this->currIsAdmin())
+        $validator = \Validator::make(['id' => $user_id], [
+            'id' => 'required|numeric',
+        ]);
+        if ($validator->fails())
         {
-            $this->notify->error('User is not admin.', 'Error');
+            $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
-        $user = UserHelper::getUserById($user_id, true);
-        if(!$user)
+        // Get the user on the Polr instance
+        $apiResponse = $this->apiClient->get('users/' . $user_id,
+            ['query' => ['key' => $this->apiKey]]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $user = $jsonResponse->result;
+        /*if(!$user)
         {
             $this->notify->error('User not found.', 'Error');
             return $this->response;
-        }
+        }*/
         if(!$user->active)
         {
             $this->notify->error('User not active.', 'Error');
@@ -226,7 +159,7 @@ class User extends JaxonClass
         $buttons = [
             [
                 'title' => 'Close',
-                'class' => 'btn btn-danger btn-xs',
+                'class' => 'btn btn-danger btn-sm',
                 'click' => 'close',
             ]
         ];
@@ -234,132 +167,119 @@ class User extends JaxonClass
         $this->dialog->show($title, $content, $buttons);
         // Set event handlers on buttons
         $this->jq('#edit-user-api-active a.btn')->click($this->rq()->toggleAPIActive($user->id));
-        $this->jq('#edit-user-api-key a.btn')->click($this->rq()->generateNewAPIKey($user->id, false));
+        $this->jq('#edit-user-api-key a.btn')->click($this->rq()->generateNewKey($user->id, false));
         $this->jq('#edit-user-api-quota a.btn')->click($this->rq()->editAPIQuota($user->id,
             jq('#edit-user-api-quota input.api-quota')->val()));
 
         return $this->response;
     }
     
-    protected function toggleAPIActive($user_id)
+    public function toggleAPIActive($user_id)
     {
-        if(!$this->currIsAdmin())
+        $validator = \Validator::make(['id' => $user_id], [
+            'id' => 'required|numeric',
+        ]);
+        if ($validator->fails())
         {
-            $this->notify->error('User is not admin.', 'Error');
+            $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
-        $user = UserHelper::getUserById($user_id);
-        if(!$user)
-        {
-            $this->notify->error('User not found.', 'Error');
-            return $this->response;
-        }
-
-        $current_status = $user->api_active;
-        $new_status = ($current_status == 1) ? 0 : 1;
-
-        $user->api_active = $new_status;
-        $user->save();
+        // Toogle the user API status on the Polr instance
+        $apiResponse = $this->apiClient->put('users/' . $user_id . '/api',
+            ['query' => ['key' => $this->apiKey, 'status' => 'toggle']]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $user = $jsonResponse->result;
 
         // Update the dialog with the new status
-        $this->jq('#edit-user-api-active .status-display')->html(($new_status == 1) ? 'True' : 'False');
+        $this->jq('#edit-user-api-active .status-display')->html(($user->api_active == 1) ? 'True' : 'False');
         // Show a confirmation message
-        $status = ($new_status == 1) ? 'active' : 'inactive';
+        $status = ($user->api_active == 1) ? 'active' : 'inactive';
         $this->notify->info("API status of user {$user->username} successfully changed to $status.", 'Success');
 
         return $this->response;
     }
 
-    protected function editAPIQuota($user_id, $new_quota)
+    public function editAPIQuota($user_id, $new_quota)
     {
-        /**
-         * If user is an admin, allow the user to edit the per minute API quota of
-         * any user.
-         */
-    
-        if(!$this->currIsAdmin())
+        $validator = \Validator::make(['id' => $user_id, 'quota' => $new_quota], [
+            'id' => 'required|numeric',
+            'quota' => 'required|numeric',
+        ]);
+        if ($validator->fails())
         {
-            $this->notify->error('User is not admin.', 'Error');
+            $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
     
-        $user = UserHelper::getUserById($user_id);
-        if(!$user)
-        {
-            $this->notify->error('User not found.', 'Error');
-            return $this->response;
-        }
-        
-        $user->api_quota = $new_quota;
-        $user->save();
+        // Change the user API quota on the Polr instance
+        $apiResponse = $this->apiClient->put('users/' . $user_id . '/api',
+            ['query' => ['key' => $this->apiKey, 'quota' => $new_quota]]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $user = $jsonResponse->result;
 
         // Show a confirmation message
-        $this->notify->info("Quota of user {$user->username} successfully changed to $new_quota.", 'Success');
+        $this->notify->info("Quota of user {$user->username} successfully changed to {$user->api_quota}.", 'Success');
 
         return $this->response;
     }
 
-    protected function setUserStatus($user_id, $status)
+    public function setUserStatus($user_id, $status)
     {
-        if(!$this->currIsAdmin())
+        $validator = \Validator::make(['id' => $user_id, 'status' => $status], [
+            'id' => 'required|numeric',
+            'status' => 'required|numeric|in:0,1',
+        ]);
+        if ($validator->fails())
         {
-            $this->notify->error('User is not admin.', 'Error');
+            $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
-        $user = UserHelper::getUserById($user_id, true);
-        if(!$user)
-        {
-            $this->notify->error('User not found.', 'Error');
-            return $this->response;
-        }
-
-        $new_status = !($status) ? 0 : 1;
-
-        $user->active = $new_status;
-        $user->save();
+        // Change the user status on the Polr instance
+        $status = ($status == 1) ? 'enable' : 'disable';
+        $apiResponse = $this->apiClient->put('users/' . $user_id,
+            ['query' => ['key' => $this->apiKey, 'status' => $status]]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $user = $jsonResponse->result;
 
         // Reload the datatable
+        $status = ($user->active == 1) ? 'active' : 'inactive';
         $this->response->script("polr.home.reloadUserTables()");
         // Show a confirmation message
-        $status = ($new_status == 1) ? 'active' : 'inactive';
         $this->notify->info("Status of user {$user->username} successfully changed to $status.", 'Success');
 
         return $this->response;
     }
 
-    protected function changeUserRole($user_id, $role)
+    public function changeUserRole($user_id, $role)
     {
-        if(!$this->currIsAdmin())
+        $validator = \Validator::make(['id' => $user_id, 'role' => $role], [
+            'id' => 'required|numeric',
+        	'role' => 'required|between:1,16|alpha_num',
+        ]);
+        if ($validator->fails())
         {
-            $this->notify->error('User is not admin.', 'Error');
+            $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
-        $user = UserHelper::getUserById($user_id, true);
-        if(!$user)
-        {
-            $this->notify->error('User not found.', 'Error');
-            return $this->response;
-        }
-
-        $user->role = $role;
-        $user->save();
+        // Change the user role on the Polr instance
+        $apiResponse = $this->apiClient->put('users/' . $user_id,
+            ['query' => ['key' => $this->apiKey, 'role' => $role]]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $user = $jsonResponse->result;
 
         // Reload the datatable
         $this->response->script("polr.home.reloadUserTables()");
         // Show a confirmation message
-        if(!$role)
-        {
-            $role = 'default';
-        }
+        $role = ($user->role) ? : 'default';
         $this->notify->info("Role of user {$user->username} successfully changed to $role.", 'Success');
 
         return $this->response;
     }
 
-    protected function datatableParameters($parameters)
+    public function datatableParameters($parameters)
     {
         // The boolean parameters sent by Guzzle in a HTTP request are not recognized
         // by Datatables. So we need to convert them to strings "true" or "false".
@@ -374,21 +294,21 @@ class User extends JaxonClass
         return $parameters;
     }
 
-    public function paginateAdminUsers($parameters)
+    public function getUsers($parameters)
     {
-        /*if(!$this->currIsAdmin())
-        {
-            $this->notify->error('User is not admin.', 'Error');
-            return $this->response;
-        }
+        // Fetch the users from the Polr instance
+        $apiResponse = $this->apiClient->get('users', [
+            'query' => $this->datatableParameters($parameters)
+        ]);
+        $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $this->dtRenderer->settings = $jsonResponse->settings;
+        $users = collect($jsonResponse->result->data);
 
-        // Write the input parameters back into the Datatables HTTP Request object.
-        // The Datatables class needs to have them there.
-        $this->dtRequest->merge($parameters);
+        // Fill user roles dropdown
+        $this->response->html('user-roles', view('snippets.select-roles',
+            ['roles' => $jsonResponse->settings->roles]));
 
-        $admin_users = UserModel::select(['username', 'email', 'created_at', 'active',
-            'api_key', 'api_active', 'api_quota', 'role', 'id']);
-        $datatables = Datatables::of($admin_users)
+        $datatables = Datatables::of($users)
             ->setRowAttr([
                 'data-id' => '{{$id}}',
                 'data-name' => '{{$username}}',
@@ -400,7 +320,8 @@ class User extends JaxonClass
             ->escapeColumns(['username', 'email'])
             ->make(true);
 
-        $this->response->datatables->show($datatables->content());*/
+        $this->response->datatables->show($datatables,
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);
 
         return $this->response;
     }

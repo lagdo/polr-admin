@@ -40,7 +40,7 @@ class Renderer
     public function renderDeleteUserCell($user)
     {
         // Add "Delete" action button
-        $btn_class = '';
+        /*$btn_class = '';
         if (($this->settings) && $this->settings->username === $user->username)
         {
             $btn_class = 'disabled';
@@ -48,7 +48,9 @@ class Renderer
         else
         {
             $btn_class = 'btn-delete-user';
-        }
+        }*/
+        // This feature is disabled
+        $btn_class = 'disabled';
         return '<a class="btn btn-sm btn-danger ' . $btn_class . '">Delete</a>';
     }
 
@@ -119,7 +121,7 @@ class Renderer
         foreach ($userRoles as $role_text => $role_val)
         {
             // Iterate over each available role and output option
-            $select_role .= '<option value="' . e($role_val) . '"';
+            $select_role .= '<option value="' . e(($role_val) ?: 'default') . '"';
 
             if ($user->role === $role_val)
             {

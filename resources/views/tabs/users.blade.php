@@ -1,5 +1,5 @@
                 <h3 class="users-heading">Users</h3>
-                <a class="btn btn-primary btn-sm status-display new-user-add">New</a>
+                <!-- <a class="btn btn-primary btn-sm status-display new-user-add">New</a> -->
 
                 <div class="new-user-fields well">
                     <table class="table">
@@ -14,12 +14,7 @@
                             <td><input type="text" class="form-control" name="username"></td>
                             <td><input type="password" class="form-control" name="user_password"></td>
                             <td><input type="email" class="form-control" name="user_email"></td>
-                            <td>
-                                <select class="form-control new-user-role" name="user_role">
-                                    @foreach  ($user_roles as $role_text => $role_val)
-                                        <option value="{{$role_val}}">{{$role_text}}</option>
-                                    @endforeach
-                                </select>
+                            <td id="user-roles">
                             </td>
                             <td>
                                 <a class="btn btn-primary btn-sm status-display new-user-save">Save</a>

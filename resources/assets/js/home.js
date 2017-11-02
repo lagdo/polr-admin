@@ -21,7 +21,7 @@
                 "ajax": function(data, callback, settings) {
                     // Pass the Datatables callback and settings to the Jaxon call
                     $scope.jaxon = {callback: callback, settings: settings};
-                    Lagdo.Polr.Admin.App.User.adminUsers(data);
+                    Lagdo.Polr.Admin.App.User.getUsers(data);
                     // Clear the Datatables data after the Jaxon call
                     $scope.jaxon = null;
                 },
@@ -44,7 +44,7 @@
                 "ajax": function(data, callback, settings) {
                     // Pass the Datatables callback and settings to the Jaxon call
                     $scope.jaxon = {callback: callback, settings: settings};
-                    Lagdo.Polr.Admin.App.Link.adminLinks(data);
+                    Lagdo.Polr.Admin.App.Link.getAdminLinks(data);
                     // Clear the Datatables data after the Jaxon call
                     $scope.jaxon = null;
                 },
@@ -68,7 +68,7 @@
             "ajax": function(data, callback, settings) {
                 // Pass the Datatables callback and settings to the Jaxon call
                 $scope.jaxon = {callback: callback, settings: settings};
-                Lagdo.Polr.Admin.App.Link.userLinks(data);
+                Lagdo.Polr.Admin.App.Link.getUserLinks(data);
                 // Clear the Datatables data after the Jaxon call
                 $scope.jaxon = null;
             },

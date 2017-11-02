@@ -11,9 +11,9 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="{{ route('index') }}">{{env('APP_NAME')}}</a>
         </div>
-        @if (($endpoints))
+        @if (isset($endpoint))
         <div class="navbar-header">
-            <h5 style="line-height:22px;">:: {{ $endpoints['current']['name'] }} </h5>
+            <h5 style="line-height:22px;">:: {{ $endpoint }} </h5>
         </div>
         @endif
 

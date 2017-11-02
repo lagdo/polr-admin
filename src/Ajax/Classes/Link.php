@@ -217,7 +217,7 @@ class Link extends JaxonClass
         return $parameters;
     }
 
-    public function adminLinks($parameters)
+    public function getAdminLinks($parameters)
     {
         // Fetch the links from the Polr instance
         $apiResponse = $this->apiClient->get('links', [
@@ -245,7 +245,7 @@ class Link extends JaxonClass
         return $this->response;
     }
 
-    public function userLinks($parameters)
+    public function getUserLinks($parameters)
     {
         // Fetch the links from the Polr instance
         $apiResponse = $this->apiClient->get('user/links', [

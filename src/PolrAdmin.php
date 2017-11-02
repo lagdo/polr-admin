@@ -46,12 +46,12 @@ class PolrAdmin
                 'title' => 'Admin Links',
                 'active' => false,
             ],
-            /*(object)[
+            (object)[
                 'id' => 'users',
                 'view' => null,
-                'title' => 'User',
+                'title' => 'Users',
                 'active' => false,
-            ],*/
+            ],
             (object)[
                 'id' => 'stats',
                 'view' => null,
