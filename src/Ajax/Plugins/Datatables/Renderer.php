@@ -10,6 +10,11 @@ use App\Helpers\UserHelper;
 
 class Renderer
 {
+    /**
+     * Settings received in the response from Polr
+     */
+    public $settings = null;
+
     /* Cell rendering functions */
 
     public function renderLongUrlCell($link)
@@ -21,15 +26,7 @@ class Renderer
 
     public function renderClicksCell($link)
     {
-        /*if (env('SETTING_ADV_ANALYTICS')) {
-            return $link->clicks . ' <a target="_blank" class="stats-icon" href="/stats/' . e($link->short_url) . '">
-                <i class="fa fa-area-chart" aria-hidden="true"></i>
-            </a>';
-        }
-        else {
-            return $link->clicks;
-        }*/
-        if (env('SETTING_ADV_ANALYTICS'))
+        if(($this->settings) && ($this->settings->analytics))
         {
             return $link->clicks . ' <a class="stats-icon show-link-stats" href="javascript:void(0)">' .
                 '<i class="fa fa-area-chart" aria-hidden="true"></i></a>';
@@ -44,7 +41,7 @@ class Renderer
     {
         // Add "Delete" action button
         $btn_class = '';
-        if (session('username') === $user->username)
+        if (($this->settings) && $this->settings->username === $user->username)
         {
             $btn_class = 'disabled';
         }
@@ -64,7 +61,7 @@ class Renderer
     public function renderAdminApiActionCell($user)
     {
         // Add "API Info" action button
-        if (session('username') === $user->username)
+        if (($this->settings) && $this->settings->username === $user->username)
         {
             $btn_class = 'disabled';
         }
@@ -78,7 +75,7 @@ class Renderer
     public function renderToggleUserActiveCell($user)
     {
         // Add user account active state toggle buttons
-        if (session('username') === $user->username)
+        if (($this->settings) && $this->settings->username === $user->username)
         {
             $btn_class = ' disabled';
         }
@@ -108,7 +105,7 @@ class Renderer
         // <select> field does not use Angular bindings
         // because of an issue affecting fields with duplicate names.
 
-        if (session('username') === $user->username)
+        if (($this->settings) && $this->settings->username === $user->username)
         {
             // Do not allow user to change own role
             $select_role = '<select class="form-control" disabled>';
@@ -118,7 +115,8 @@ class Renderer
             $select_role = '<select class="form-control change-user-role">';
         }
 
-        foreach (UserHelper::$USER_ROLES as $role_text => $role_val)
+        $userRoles = ($this->settings) ? $this->settings->roles : [];
+        foreach ($userRoles as $role_text => $role_val)
         {
             // Iterate over each available role and output option
             $select_role .= '<option value="' . e($role_val) . '"';

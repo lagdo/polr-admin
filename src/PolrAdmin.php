@@ -2,7 +2,6 @@
 
 namespace Lagdo\Polr\Admin;
 
-use Illuminate\Contracts\Auth\Guard;
 use Carbon\Carbon;
 
 use Jaxon\Laravel\Jaxon;
@@ -18,9 +17,9 @@ class PolrAdmin
      *
      * @var array
      */
-    protected $endpoints;
+    protected $endpoints = [];
 
-    public function __construct(Jaxon $jaxon, Guard $auth)
+    public function __construct(Jaxon $jaxon)
     {
         $this->tabs = [
             (object)[
@@ -31,34 +30,74 @@ class PolrAdmin
             ],
             (object)[
                 'id' => 'settings',
+                'view' => null,
                 'title' => 'Settings',
                 'active' => false,
             ],
             (object)[
                 'id' => 'user-links',
+                'view' => null,
                 'title' => 'User Links',
                 'active' => false,
             ],
             (object)[
                 'id' => 'admin-links',
+                'view' => null,
                 'title' => 'Admin Links',
                 'active' => false,
             ],
             /*(object)[
                 'id' => 'users',
+                'view' => null,
                 'title' => 'User',
                 'active' => false,
             ],*/
             (object)[
                 'id' => 'stats',
+                'view' => null,
                 'title' => 'Stats',
                 'active' => false,
             ],
         ];
 
         $this->jaxon = $jaxon;
+    }
 
-        $this->auth = $auth;
+    protected function init()
+    {
+        // Get Polr endpoints from the config
+        if(count($this->endpoints) == 0)
+        {
+            if(!session()->has('polr.endpoint'))
+            {
+                $current = config('polr.default', '');
+                session()->set('polr.endpoint', $current);
+            }
+            else
+            {
+                $current = session()->get('polr.endpoint');
+            }
+            $this->endpoints = [
+                'current' => [
+                    'id' => $current,
+                    'url' => config('polr.endpoints.' . $current . '.url'),
+                    'name' => config('polr.endpoints.' . $current . '.name'),
+                ],
+                'names' => [],
+            ];
+            foreach(config('polr.endpoints') as $id => $endpoint)
+            {
+                $this->endpoints['names'][$id] = $endpoint['name'];
+            }
+        }
+        // Set the tabs content
+        if($this->tabs[0]->view == null)
+        {
+            foreach($this->tabs as &$tab)
+            {
+                $tab->view = view('polr_admin::tabs.' . $tab->id, ['endpoints' => $this->endpoints]);
+            }
+        }
     }
 
     public function tabs()
@@ -67,51 +106,10 @@ class PolrAdmin
         return $this->tabs;
     }
 
-    protected function init()
-    {
-        if($this->tabs[0]->view == null)
-        {
-            // Get the Polr endpoints from the config
-            if($this->auth->check())
-            {
-                // Get Polr endpoints from config
-                if(!session()->has('polr.endpoint'))
-                {
-                    $current = config('polr.default', '');
-                    session()->set('polr.endpoint', $current);
-                }
-                else
-                {
-                    $current = session()->get('polr.endpoint');
-                }
-                $endpoints = [
-                    'current' => [
-                        'id' => $current,
-                        'url' => config('polr.endpoints.' . $current . '.url'),
-                        'name' => config('polr.endpoints.' . $current . '.name'),
-                    ],
-                    'names' => [],
-                ];
-                foreach(config('polr.endpoints') as $id => $endpoint)
-                {
-                    $endpoints['names'][$id] = $endpoint['name'];
-                }
-                foreach($this->tabs as &$tab)
-                {
-                    $tab->view = view('polr_admin::tabs.' . $tab->id, ['endpoints' => $endpoints]);
-                }
-            }
-            else
-            {
-                $endpoints = null;
-            }
-        }
-    }
-
-    public function endpoint($endpoint = null)
+    public function endpoint()
     {
         $this->init();
-        if(!is_array($this->endpoints))
+        if(count($this->endpoints) == 0)
         {
             return '';
         }

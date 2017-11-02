@@ -224,6 +224,7 @@ class Link extends JaxonClass
             'query' => $this->datatableParameters($parameters)
         ]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $this->dtRenderer->settings = $jsonResponse->settings;
         $links = collect($jsonResponse->result->data);
 
         $datatables = Datatables::of($links)
@@ -251,6 +252,7 @@ class Link extends JaxonClass
             'query' => $this->datatableParameters($parameters)
         ]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
+        $this->dtRenderer->settings = $jsonResponse->settings;
         $links = collect($jsonResponse->result->data);
 
         $datatables = Datatables::of($links)
