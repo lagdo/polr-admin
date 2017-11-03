@@ -20,11 +20,10 @@ var datePickerRightBound = '{{ $datePickerRightBound }}';
 <script src="{{ url('lagdo/polr/admin') }}/js/moment.min.js"></script>
 <script src="{{ url('lagdo/polr/admin') }}/js/bootstrap-datetimepicker.min.js"></script>
 <script src="{{ url('lagdo/polr/admin') }}/js/home.js"></script>
-<script src="{{ url('lagdo/polr/admin') }}/js/index.js"></script>
 <script src="{{ url('lagdo/polr/admin') }}/js/stats.js"></script>
 
 <script type="text/javascript">
-$(document).ready(function() {
+polr.home.setHandlers = function(){
     // Set click handlers on buttons
     /*$('#change-password-form .change-password-btn').click(function() {
         {!! $jaxonUser->changePassword(rq()->form('change-password-form'))->confirm('Save the new password?') !!};
@@ -122,5 +121,9 @@ $(document).ready(function() {
     $('#btn-change-endpoint').click(function(){
         {!! $jaxonUser->selectEndpoint(rq()->select('select-endpoint')) !!};
     });
+};
+$(document).ready(function() {
+    if(!polr.ajax)
+        polr.home.setHandlers();
 });
 </script>

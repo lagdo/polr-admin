@@ -21,57 +21,22 @@ return [
                     ]
                 ],
                 \Lagdo\Polr\Admin\App\Link::class => [
-                    'adminLinks' => [
+                    'getAdminLinks' => [
                         'datatables' => 'polr.home.jaxon',
                     ],
-                    'userLinks' => [
+                    'getUserLinks' => [
                         'datatables' => 'polr.home.jaxon',
                     ]
-                ]
+                ],
+                \Lagdo\Polr\Admin\App\User::class => [
+                    'getUsers' => [
+                        'datatables' => 'polr.home.jaxon',
+                    ]
+                ],
             ],
         ],
     ],
     'lib' => [
-        'core' => [
-            'language' => 'en',
-            'encoding' => 'UTF-8',
-            'request' => [
-                // 'uri' => url('jaxon'),
-                'csrf_meta' => 'csrf-token',
-            ],
-            'prefix' => [
-                'class' => '',
-            ],
-            'debug' => [
-                'on' => false,
-                'verbose' => false,
-            ],
-            'error' => [
-                'handle' => false,
-            ],
-        ],
-        'js' => [
-            'lib' => [
-                // 'uri' => '',
-            ],
-            'app' => [
-                // 'uri' => '',
-                // 'dir' => '',
-                'extern' => false,
-                'minify' => false,
-            ],
-        ],
-        'assets' => [
-            'include' => [
-                'all' => true,
-            ],
-        ],
-        'dialogs' => [
-            'default' => [
-                'modal' => 'bootbox',
-                'alert' => 'noty',
-                'confirm' => 'noty',
-            ],
-        ],
+        // No config options for the Jaxon library
     ],
 ];

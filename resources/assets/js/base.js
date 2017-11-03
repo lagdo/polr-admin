@@ -15,11 +15,11 @@ jQuery.fn.clearForm = function() {
 
 $(document).ready(function() {
     // AJAX settings
-    if((csrfToken = $('meta[name="csrf-token"]').attr('content')))
+    /*if((csrfToken = $('meta[name="csrf-token"]').attr('content')))
     {
         // Add the CSRF token to all Ajax requests
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': csrfToken}});
-    }
+    }*/
 });
 
 // Output helpful console message
@@ -29,6 +29,7 @@ console.log('%cDocs: https://docs.polr.me', 'color:blue');
 
 //Set up the Polr object
 var polr = {
+    ajax: false, // Init the page with ajax or not
     home: {},
     stats: {}
 };

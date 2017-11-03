@@ -39,7 +39,7 @@ Add the Github repository and package in the `composer.json` file.
 }
 ```
 
-Add entries for `Jaxon`, `Datatables` and `Polr Admin` in `app.php`.
+Add `Jaxon`, `Datatables` and `Polr Admin` to the `providers` and `aliases` entries in `app.php`.
 
 ```php
     'providers' => [
@@ -89,3 +89,8 @@ return [
     ],
 ];
 ```
+
+Usage
+-----
+
+Coming soon.

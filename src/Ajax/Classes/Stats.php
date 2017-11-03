@@ -56,10 +56,6 @@ class Stats extends JaxonClass
         return true;
     }
 
-    private function getAllStats()
-    {
-    }
-
     private function showStatsContent()
     {
         $path = ($this->short_url === '' ? 'stats' : 'links/' . $this->short_url . '/stats');

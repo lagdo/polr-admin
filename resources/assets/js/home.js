@@ -97,10 +97,47 @@
         $scope.datatables['admin_users_table'].ajax.reload(null, false);
     };
 
+    function setTip(tip) {
+        $("#tips").html(tip);
+    }
+
+    function changeTips(tcase) {
+        switch (tcase) {
+            case 1:
+                setTip('Create an account to keep track of your links');
+                break;
+            case 2:
+                setTip('Did you know you can change the URL ending by clicking on "Link Options"?');
+                i = 1;
+                break;
+        }
+    }
+
     /*
         Initialisation
     */
     $scope.init = function() {
+        var optionsButton = $('#show-link-options');
+        $('#options').hide();
+        var slide = 0;
+        optionsButton.click(function() {
+            if (slide === 0) {
+                $("#options").slideDown();
+                slide = 1;
+            } else {
+                $("#options").slideUp();
+                slide = 0;
+            }
+        });
+        min = 1;
+        max = 2;
+        var i = Math.floor(Math.random() * (max - min + 1)) + min;
+        changeTips(i);
+        var tipstimer = setInterval(function() {
+            changeTips(i);
+            i++;
+        }, 8000);
+
         $('.admin-nav a').click(function(e) {
             e.preventDefault();
             $(this).tab('show');
@@ -115,5 +152,6 @@
 
 $(document).ready(function() {
     // Init the datatables
-    polr.home.init();
+    if(!polr.ajax)
+        polr.home.init();
 });

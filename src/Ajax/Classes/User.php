@@ -279,7 +279,7 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function datatableParameters($parameters)
+    protected function datatableParameters($parameters)
     {
         // The boolean parameters sent by Guzzle in a HTTP request are not recognized
         // by Datatables. So we need to convert them to strings "true" or "false".
@@ -305,7 +305,7 @@ class User extends JaxonClass
         $users = collect($jsonResponse->result->data);
 
         // Fill user roles dropdown
-        $this->response->html('user-roles', view('snippets.select-roles',
+        $this->response->html('user-roles', view('polr_admin::snippets.select-roles',
             ['roles' => $jsonResponse->settings->roles]));
 
         $datatables = Datatables::of($users)

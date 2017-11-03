@@ -203,5 +203,6 @@ var parseInputDate = function (inputDate) {
 
 $(document).ready(function() {
     // Init the date pickers
-    polr.stats.initDatePickers();
+    if(!polr.ajax)
+        polr.stats.initDatePickers();
 });

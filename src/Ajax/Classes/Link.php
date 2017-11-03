@@ -36,7 +36,7 @@ class Link extends JaxonClass
 
         return $this->response;
     }
-    
+
     public function saveLongUrl($ending, array $values)
     {
         // Validate the new URL
