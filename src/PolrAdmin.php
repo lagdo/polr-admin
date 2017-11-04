@@ -38,7 +38,7 @@ class PolrAdmin
             // Get Polr endpoints from the config
             if(!session()->has('polr.endpoint'))
             {
-                $current = config('polr.default', '');
+                $current = config('polradmin.default', '');
                 session()->set('polr.endpoint', $current);
             }
             else
@@ -46,14 +46,14 @@ class PolrAdmin
                 $current = session()->get('polr.endpoint');
             }
             $this->endpoints = [
-                'current' => (object)config('polr.endpoints.' . $current, null),
+                'current' => (object)config('polradmin.endpoints.' . $current, null),
                 'names' => [],
             ];
             if($this->endpoints['current'] != null)
             {
                 $this->endpoints['current']->id = $current;
             }
-            foreach(config('polr.endpoints') as $id => $endpoint)
+            foreach(config('polradmin.endpoints') as $id => $endpoint)
             {
                 $this->endpoints['names'][$id] = $endpoint['name'];
             }
@@ -126,13 +126,13 @@ class PolrAdmin
 
     public function css()
     {
-        $template = config('polr.templates.css', 'polr_admin::css');
+        $template = config('polradmin.templates.css', 'polr_admin::css');
         return view($template);
     }
 
     public function js()
     {
-        $template = config('polr.templates.js', 'polr_admin::js');
+        $template = config('polradmin.templates.js', 'polr_admin::js');
         $js = view($template);
         return view('polr_admin::code', [
             'js' => $js,
@@ -151,7 +151,7 @@ class PolrAdmin
 
     public function html()
     {
-        $template = config('polr.templates.html', 'polr_admin::default');
+        $template = config('polradmin.templates.html', 'polr_admin::default');
         return view($template)->with('tabs', $this->tabs());
     }
 }

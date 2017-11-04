@@ -36,7 +36,7 @@ class PolrAdminServiceProvider extends ServiceProvider
 
         // Publish package config
         $this->publishes([
-            __DIR__ . '/../config/polr.php' => config_path('polr.php'),
+            __DIR__ . '/../config/polr.php' => config_path('polradmin.php'),
         ], 'config');
 
 	    // Register an instance of the Datatables plugin
@@ -62,7 +62,7 @@ class PolrAdminServiceProvider extends ServiceProvider
                 // Polr API Client
                 if($this->apiClient == null)
                 {
-                    $cfgKey = 'polr.endpoints.' . session()->get('polr.endpoint');
+                    $cfgKey = 'polradmin.endpoints.' . session()->get('polr.endpoint');
                     $this->apiKey = config($cfgKey . '.key');
                     $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
                         trim(config($cfgKey . '.api'), '/') . '/';
