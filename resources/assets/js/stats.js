@@ -200,9 +200,3 @@ var parseInputDate = function (inputDate) {
     // $scope.init();
 
 })(polr.stats);
-
-$(document).ready(function() {
-    // Init the date pickers
-    if(!polr.ajax)
-        polr.stats.initDatePickers();
-});

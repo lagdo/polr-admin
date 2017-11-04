@@ -149,9 +149,3 @@
 
     // $scope.init();
 })(polr.home);
-
-$(document).ready(function() {
-    // Init the datatables
-    if(!polr.ajax)
-        polr.home.init();
-});

@@ -13,6 +13,13 @@ use Lagdo\Polr\Admin\App\User;
 class PolrAdmin
 {
     /**
+     * The Polr page tabs
+     *
+     * @var array
+     */
+    protected $tabs = null;
+
+    /**
      * The Polr endpoints, read from the config
      *
      * @var array
@@ -21,59 +28,14 @@ class PolrAdmin
 
     public function __construct(Jaxon $jaxon)
     {
-        $this->tabs = [
-            (object)[
-                'id' => 'home',
-                'view' => null,
-                'title' => 'Home',
-                'class' => '',
-                'active' => true,
-            ],
-            (object)[
-                'id' => 'settings',
-                'view' => null,
-                'title' => 'Settings',
-                'class' => '',
-                'active' => false,
-            ],
-            (object)[
-                'id' => 'user-links',
-                'view' => null,
-                'title' => 'User Links',
-                'class' => '',
-                'active' => false,
-            ],
-            (object)[
-                'id' => 'admin-links',
-                'view' => null,
-                'title' => 'Admin Links',
-                'class' => '',
-                'active' => false,
-            ],
-            (object)[
-                'id' => 'users',
-                'view' => null,
-                'title' => 'Users',
-                'class' => '',
-                'active' => false,
-            ],
-            (object)[
-                'id' => 'stats',
-                'view' => null,
-                'title' => 'Stats',
-                'class' => 'stats',
-                'active' => false,
-            ],
-        ];
-
         $this->jaxon = $jaxon;
     }
 
     protected function init()
     {
-        // Get Polr endpoints from the config
-        if(count($this->endpoints) == 0)
+        if($this->tabs == null)
         {
+            // Get Polr endpoints from the config
             if(!session()->has('polr.endpoint'))
             {
                 $current = config('polr.default', '');
@@ -95,13 +57,50 @@ class PolrAdmin
             {
                 $this->endpoints['names'][$id] = $endpoint['name'];
             }
-        }
-        // Set the tabs content
-        if($this->tabs[0]->view == null)
-        {
-            foreach($this->tabs as &$tab)
+
+            // Set the tabs content
+            $this->tabs = [
+                'home' => (object)[
+                    'view' => null,
+                    'title' => 'Home',
+                    'class' => '',
+                    'active' => true,
+                ],
+                'settings' => (object)[
+                    'view' => null,
+                    'title' => 'Settings',
+                    'class' => '',
+                    'active' => false,
+                ],
+                'user-links' => (object)[
+                    'view' => null,
+                    'title' => 'User Links',
+                    'class' => '',
+                    'active' => false,
+                ],
+                'admin-links' => (object)[
+                    'view' => null,
+                    'title' => 'Admin Links',
+                    'class' => '',
+                    'active' => false,
+                ],
+                'users' => (object)[
+                    'view' => null,
+                    'title' => 'Users',
+                    'class' => '',
+                    'active' => false,
+                ],
+                'stats' => (object)[
+                    'view' => null,
+                    'title' => 'Stats',
+                    'class' => 'stats',
+                    'active' => false,
+                ],
+            ];
+
+            foreach($this->tabs as $id => &$tab)
             {
-                $tab->view = view('polr_admin::tabs.' . $tab->id, ['endpoints' => $this->endpoints]);
+                $tab->view = view('polr_admin::tabs.' . $id, ['endpoints' => $this->endpoints]);
             }
         }
     }
@@ -124,17 +123,32 @@ class PolrAdmin
 
     public function css()
     {
-        return view('polr_admin::css');
+        $template = config('polr.templates.css', 'polr_admin::css');
+        return view($template);
     }
 
     public function js()
     {
-        return view('polr_admin::js', [
-            'jaxonUser' => $this->jaxon->request(User::class), // Ajax request to the Jaxon User class
-            'jaxonLink' => $this->jaxon->request(Link::class), // Ajax request to the Jaxon Link class
-            'jaxonStats' => $this->jaxon->request(Stats::class), // Ajax request to the Jaxon Stats class
+        $template = config('polr.templates.js', 'polr_admin::js');
+        $js = view($template);
+        return view('polr_admin::code', [
+            'js' => $js,
+            'user' => $this->jaxon->request(User::class), // Ajax request to the Jaxon User class
+            'link' => $this->jaxon->request(Link::class), // Ajax request to the Jaxon Link class
+            'stats' => $this->jaxon->request(Stats::class), // Ajax request to the Jaxon Stats class
             'datePickerLeftBound' => Carbon::now()->subDays(Stats::DAYS_TO_FETCH),
             'datePickerRightBound' => Carbon::now(),
         ]);
+    }
+
+    public function ready()
+    {
+        return 'polr.home.setHandlers();polr.home.init();polr.stats.initDatePickers();';
+    }
+
+    public function html()
+    {
+        $template = config('polr.templates.html', 'polr_admin::default');
+        return view($template)->with('tabs', $this->tabs());
     }
 }

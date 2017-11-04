@@ -1,5 +1,5 @@
                 <h2>Welcome to your {{ config('polr.name') }} dashboard!</h2>
-                <p>Use the links on the left hand side to navigate your {{env('APP_NAME')}} dashboard.</p>
+                <p>Use the links on the left hand side to navigate your {{ config('polr.name') }} dashboard.</p>
 
                 <h4>Create a short URL</h4>
                 <div class="" style="text-align: center;">

@@ -1,6 +1,5 @@
     <link rel="stylesheet" href="{{ url('lagdo/polr/admin') }}/css/base.css" />
     <link rel="stylesheet" href="{{ url('lagdo/polr/admin') }}/css/font-awesome.min.css" />
-
     <link rel="stylesheet" href="{{ url('lagdo/polr/admin') }}/css/admin.css" />
     <link rel="stylesheet" href="{{ url('lagdo/polr/admin') }}/css/index.css" />
     <link rel="stylesheet" href="{{ url('lagdo/polr/admin') }}/css/stats.css" />

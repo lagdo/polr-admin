@@ -56,6 +56,9 @@ class PolrAdminServiceProvider extends ServiceProvider
         $sentry = jaxon()->sentry();
         $sentry->addClassInitializer('Lagdo\Polr\Admin\App',
             function($instance) use ($sentry){
+                // Polr plugin instance
+                // $instance->polr = app()->make('lagdo.polr.admin');
+
                 // Polr API Client
                 if($this->apiClient == null)
                 {
