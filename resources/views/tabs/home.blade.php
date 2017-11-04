@@ -1,11 +1,10 @@
-                <h2>Welcome to your {{ config('polr.name') }} dashboard!</h2>
-                <p>Use the links on the left hand side to navigate your {{ config('polr.name') }} dashboard.</p>
+                <h2>Welcome to your {{ $endpoint->name }} dashboard!</h2>
+                <p>Use the links on the left hand side to navigate your {{ $endpoint->name }} dashboard.</p>
 
                 <h4>Create a short URL</h4>
                 <div class="" style="text-align: center;">
                     <form method='POST' id='shorten-form' role='form'>
-                        <input type='url' autocomplete='off' class='form-control long-link-input'
-                            placeholder='http://' name='link-url' />
+                        <input type='url' autocomplete='off' class='form-control long-link-input' placeholder='http://' name='link-url' />
 
                         <div class='row' id='options'>
                             <p>Customize link</p>
@@ -21,7 +20,7 @@
 
                             <div>
                                 <div class='custom-link-text'>
-                                    <h2 class='site-url-field'>{{ $endpoints['current']['url'] }}/</h2>
+                                    <h2 class='site-url-field'>{{ $endpoint->url }}/</h2>
                                     <input type='text' autocomplete="off" class='form-control custom-url-field' name='custom-ending' />
                                 </div>
                                 <div>

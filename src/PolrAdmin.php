@@ -46,13 +46,13 @@ class PolrAdmin
                 $current = session()->get('polr.endpoint');
             }
             $this->endpoints = [
-                'current' => [
-                    'id' => $current,
-                    'url' => config('polr.endpoints.' . $current . '.url'),
-                    'name' => config('polr.endpoints.' . $current . '.name'),
-                ],
+                'current' => (object)config('polr.endpoints.' . $current, null),
                 'names' => [],
             ];
+            if($this->endpoints['current'] != null)
+            {
+                $this->endpoints['current']->id = $current;
+            }
             foreach(config('polr.endpoints') as $id => $endpoint)
             {
                 $this->endpoints['names'][$id] = $endpoint['name'];
@@ -100,7 +100,10 @@ class PolrAdmin
 
             foreach($this->tabs as $id => &$tab)
             {
-                $tab->view = view('polr_admin::tabs.' . $id, ['endpoints' => $this->endpoints]);
+                $tab->view = view('polr_admin::tabs.' . $id, [
+                    'endpoint' => $this->endpoints['current'],
+                    'endpoints' => $this->endpoints['names'],
+                ]);
             }
         }
     }
@@ -116,9 +119,9 @@ class PolrAdmin
         $this->init();
         if(count($this->endpoints) == 0)
         {
-            return '';
+            return null;
         }
-        return $this->endpoints['current']['name'];
+        return $this->endpoints['current'];
     }
 
     public function css()

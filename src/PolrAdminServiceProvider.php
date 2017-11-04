@@ -57,16 +57,16 @@ class PolrAdminServiceProvider extends ServiceProvider
         $sentry->addClassInitializer('Lagdo\Polr\Admin\App',
             function($instance) use ($sentry){
                 // Polr plugin instance
-                // $instance->polr = app()->make('lagdo.polr.admin');
+                $instance->polr = app()->make('lagdo.polr.admin');
 
                 // Polr API Client
                 if($this->apiClient == null)
                 {
                     $cfgKey = 'polr.endpoints.' . session()->get('polr.endpoint');
                     $this->apiKey = config($cfgKey . '.key');
-                    $this->apiClient = new RestClient([
-                        'base_uri' => rtrim(config($cfgKey . '.url'), '/') . '/',
-                    ]);
+                    $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
+                        trim(config($cfgKey . '.api'), '/') . '/';
+                    $this->apiClient = new RestClient(['base_uri' => $uri]);
                 }
                 // Save the HTTP REST client
                 $instance->apiKey = $this->apiKey;
@@ -100,7 +100,7 @@ class PolrAdminServiceProvider extends ServiceProvider
 	    // Register the Polr Admin singleton
         $this->app->singleton('lagdo.polr.admin', function ($app)
         {
-            return new PolrAdmin();
+            return new PolrAdmin($app->make('jaxon'));
         });
     }
 

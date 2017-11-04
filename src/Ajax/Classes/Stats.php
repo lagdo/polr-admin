@@ -128,6 +128,7 @@ class Stats extends JaxonClass
         {
             $header = view('polr_admin::stats.link.header', [
                 'link' => $this->link,
+                'endpoint' => $this->polr->endpoint(),
             ]);
             $this->response->html('stats-filter', $header);
 
