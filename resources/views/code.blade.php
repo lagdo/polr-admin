@@ -113,17 +113,8 @@ polr.home.setHandlers = function(){
 };
 
 $(document).ready(function() {
-    // Init the datatables
-    if(!polr.ajax)
-        polr.home.init();
-});
-$(document).ready(function() {
-    // Init the date pickers
-    if(!polr.ajax)
-        polr.stats.initDatePickers();
-});
-$(document).ready(function() {
-    if(!polr.ajax)
-        polr.home.setHandlers();
+    if(!polr.ajax) {
+        {!! $polr->ready() !!}
+    }
 });
 </script>
