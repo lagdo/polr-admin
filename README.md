@@ -98,7 +98,8 @@ Page Generation
 
 The package provides various functions returning the HTML, Javascript and CSS codes to be inserted into a template.
 
-First of all, let's consider the following Laravel controller, where the `Jaxon` and `PolrAdmin` objects are injected in the `index()` method.
+First of all, let's consider the following Laravel controller,
+where the `Jaxon` and `PolrAdmin` objects are injected in the `index()` method and passed to a template.
 
 ```php
 use Jaxon\Laravel\Jaxon;
@@ -151,7 +152,6 @@ So a sample template will look like this.
 
 <script type="text/javascript">
 $(document).ready(function() {
-    // Init the datatables
     if(!polr.ajax) {
         {!! $polr->ready() !!}
     }
