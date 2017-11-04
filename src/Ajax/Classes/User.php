@@ -211,7 +211,7 @@ class User extends JaxonClass
             $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
-    
+
         // Change the user API quota on the Polr instance
         $apiResponse = $this->apiClient->put('users/' . $user_id . '/api',
             ['query' => ['key' => $this->apiKey, 'quota' => $new_quota]]);
