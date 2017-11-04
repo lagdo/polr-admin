@@ -92,8 +92,8 @@ return [
 ];
 ```
 
-Page Generation
----------------
+Integration
+-----------
 
 The package provides various functions returning the HTML, Javascript and CSS codes to be inserted into a template.
 
