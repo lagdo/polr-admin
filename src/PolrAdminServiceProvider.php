@@ -50,13 +50,16 @@ class PolrAdminServiceProvider extends ServiceProvider
         $sentry = jaxon()->sentry();
         $sentry->addClassInitializer('Lagdo\Polr\Admin\App',
             function($instance) use ($sentry){
-                // Polr plugin instance
-                $instance->polr = app()->make('lagdo.polr.admin');
-
                 // Polr API Client
                 if($this->apiClient == null)
                 {
-                    $cfgKey = 'polradmin.endpoints.' . session()->get('polr.endpoint');
+                    // Get Polr endpoints from the config
+                    if(!($current = session()->get('polr.endpoint')))
+                    {
+                        $current = config('polradmin.default', '');
+                        session()->set('polr.endpoint', $current);
+                    }
+                    $cfgKey = 'polradmin.endpoints.' . $current;
                     $this->apiKey = config($cfgKey . '.key');
                     $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
                         trim(config($cfgKey . '.api'), '/') . '/';
@@ -77,6 +80,9 @@ class PolrAdminServiceProvider extends ServiceProvider
                 // Save the Datatables renderer and request in the class instance
                 $instance->dtRequest = Datatables::getRequest();
                 $instance->dtRenderer = app()->make('jaxon.dt.renderer');
+
+                // Polr plugin instance
+                $instance->polr = app()->make('lagdo.polr.admin');
             }
         );
     }

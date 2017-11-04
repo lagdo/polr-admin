@@ -36,14 +36,10 @@ class PolrAdmin
         if($this->tabs == null)
         {
             // Get Polr endpoints from the config
-            if(!session()->has('polr.endpoint'))
+            if(!($current = session()->get('polr.endpoint')))
             {
                 $current = config('polradmin.default', '');
                 session()->set('polr.endpoint', $current);
-            }
-            else
-            {
-                $current = session()->get('polr.endpoint');
             }
             $this->endpoints = [
                 'current' => (object)config('polradmin.endpoints.' . $current, null),
