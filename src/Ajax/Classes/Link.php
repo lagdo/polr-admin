@@ -248,7 +248,7 @@ class Link extends JaxonClass
     public function getUserLinks($parameters)
     {
         // Fetch the links from the Polr instance
-        $apiResponse = $this->apiClient->get('user/links', [
+        $apiResponse = $this->apiClient->get('users/me/links', [
             'query' => $this->datatableParameters($parameters)
         ]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
