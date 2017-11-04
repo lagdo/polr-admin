@@ -20,12 +20,6 @@ class PolrAdminServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Load package routes
-        if(!$this->app->routesAreCached())
-        {
-            require(__DIR__ . '/Http/routes.php');
-        }
-
         // Set views directory
         view()->addNamespace('polr_admin', __DIR__ . '/../resources/views');
 
