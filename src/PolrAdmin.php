@@ -3,6 +3,8 @@
 namespace Lagdo\Polr\Admin;
 
 use Carbon\Carbon;
+use GuzzleHttp\Client as RestClient;
+use Datatables;
 
 use Jaxon\Laravel\Jaxon;
 
@@ -29,6 +31,10 @@ class PolrAdmin
     public function __construct(Jaxon $jaxon)
     {
         $this->jaxon = $jaxon;
+        // Set the class initializer
+        $this->apiKey = null;
+        $this->apiClient = null;
+        $sentry = jaxon()->sentry();
     }
 
     protected function init()
@@ -130,7 +136,7 @@ class PolrAdmin
     {
         $template = config('polradmin.templates.js', 'polr_admin::js');
         $js = view($template);
-        return view('polr_admin::code', [
+        return view('polr_admin::snippets.js', [
             'js' => $js,
             'user' => $this->jaxon->request(User::class), // Ajax request to the Jaxon User class
             'link' => $this->jaxon->request(Link::class), // Ajax request to the Jaxon Link class
@@ -142,12 +148,51 @@ class PolrAdmin
 
     public function ready()
     {
-        return 'polr.home.setHandlers();polr.home.init();polr.stats.initDatePickers();';
+        return 'polr.home.init();polr.stats.initDatePickers();polr.home.setHandlers();';
     }
 
     public function html()
     {
         $template = config('polradmin.templates.html', 'polr_admin::default');
         return view($template)->with('tabs', $this->tabs());
+    }
+
+    public function initInstance($instance)
+    {
+        // Polr API Client
+        if($this->apiClient == null)
+        {
+            // Get Polr endpoints from the config
+            if(!($current = session()->get('polr.endpoint')))
+            {
+                $current = config('polradmin.default', '');
+                session()->set('polr.endpoint', $current);
+            }
+            $cfgKey = 'polradmin.endpoints.' . $current;
+            $this->apiKey = config($cfgKey . '.key');
+            $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
+                trim(config($cfgKey . '.api'), '/') . '/';
+            $this->apiClient = new RestClient(['base_uri' => $uri]);
+        }
+
+        // Save the HTTP REST client
+        $instance->apiKey = $this->apiKey;
+        $instance->apiClient = $this->apiClient;
+
+        // Dialogs and notifications are implemented by the Dialogs plugin
+        $sentry = jaxon()->sentry();
+        $response = $sentry->ajaxResponse();
+        $instance->dialog = $response->dialog;
+        $instance->notify = $response->dialog;
+
+        // The HTTP Request
+        $instance->httpRequest = app()->make('request');
+        
+        // Save the Datatables renderer and request in the class instance
+        $instance->dtRequest = Datatables::getRequest();
+        $instance->dtRenderer = app()->make('jaxon.dt.renderer');
+
+        // Polr plugin instance
+        $instance->polr = $this;
     }
 }

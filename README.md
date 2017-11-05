@@ -5,7 +5,7 @@ An alternative admin dashboard for the Polr URL shortener.
 
 Our goal is to provide a dashboard with advanced features for managing multiple Polr instances.
 
-This branch is packaged as a Laravel or Lumen extension.
+This dashboard is packaged as a Laravel or Lumen extension.
 Firstly, it makes the package simpler since there is no need to deal with user management features.
 Then, it lets the end user choose how to integrate: in an existing Laravel application, or in a third-party Laravel admin panel.
 
@@ -35,7 +35,7 @@ Add the Github repository and package in the `composer.json` file, and run `comp
         }
     ],
     "require": {
-        "lagdo/polr-admin": "dev-extension"
+        "lagdo/polr-admin": "dev-master"
     }
 }
 ```
@@ -104,7 +104,7 @@ where the `Jaxon` and `PolrAdmin` objects are injected in the `index()` method a
 use Jaxon\Laravel\Jaxon;
 use Lagdo\Polr\Admin\PolrAdmin;
 
-class IndexController extends Controller
+class PolrController extends Controller
 {
     public function index(Jaxon $jaxon, PolrAdmin $polr)
     {
@@ -151,9 +151,7 @@ So a sample template will look like this.
 
 <script type="text/javascript">
 $(document).ready(function() {
-    if(!polr.ajax) {
-        {!! $polr->ready() !!}
-    }
+    {!! $polr->ready() !!}
 });
 </script>
 @endsection

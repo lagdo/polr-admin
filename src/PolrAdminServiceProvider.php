@@ -5,9 +5,6 @@ namespace Lagdo\Polr\Admin;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\ServiceProvider;
 
-use GuzzleHttp\Client as RestClient;
-
-use Datatables;
 use Lagdo\Polr\Admin\Ext\Datatables\Plugin;
 use Lagdo\Polr\Admin\Ext\Datatables\Renderer;
 
@@ -45,44 +42,11 @@ class PolrAdminServiceProvider extends ServiceProvider
         $sentry->addClassNamespaces($xAppConfig);
 
         // Set the class initializer
-        $this->apiKey = null;
-        $this->apiClient = null;
-        $sentry = jaxon()->sentry();
         $sentry->addClassInitializer('Lagdo\Polr\Admin\App',
-            function($instance) use ($sentry){
-                // Polr API Client
-                if($this->apiClient == null)
-                {
-                    // Get Polr endpoints from the config
-                    if(!($current = session()->get('polr.endpoint')))
-                    {
-                        $current = config('polradmin.default', '');
-                        session()->set('polr.endpoint', $current);
-                    }
-                    $cfgKey = 'polradmin.endpoints.' . $current;
-                    $this->apiKey = config($cfgKey . '.key');
-                    $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
-                        trim(config($cfgKey . '.api'), '/') . '/';
-                    $this->apiClient = new RestClient(['base_uri' => $uri]);
-                }
-                // Save the HTTP REST client
-                $instance->apiKey = $this->apiKey;
-                $instance->apiClient = $this->apiClient;
-
-                // Dialogs and notifications are implemented by the Dialogs plugin
-                $response = $sentry->ajaxResponse();
-                $instance->dialog = $response->dialog;
-                $instance->notify = $response->dialog;
-
-                // The HTTP Request
-                $instance->httpRequest = app()->make('request');
-                
-                // Save the Datatables renderer and request in the class instance
-                $instance->dtRequest = Datatables::getRequest();
-                $instance->dtRenderer = app()->make('jaxon.dt.renderer');
-
-                // Polr plugin instance
-                $instance->polr = app()->make('lagdo.polr.admin');
+            function($instance){
+                $polr = app()->make('lagdo.polr.admin');
+                // Init the Jaxon class instance
+                $polr->initInstance($instance);
             }
         );
     }
@@ -112,7 +76,8 @@ class PolrAdminServiceProvider extends ServiceProvider
     public function provides()
     {
         return array(
-            'lagdo.polr.admin'
+            'jaxon.dt.renderer',
+            'lagdo.polr.admin',
         );
     }
 }

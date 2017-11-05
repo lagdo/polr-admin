@@ -111,10 +111,4 @@ polr.home.setHandlers = function(){
         {!! $user->selectEndpoint(rq()->select('select-endpoint')) !!};
     });
 };
-
-$(document).ready(function() {
-    if(!polr.ajax) {
-        {!! $polr->ready() !!}
-    }
-});
 </script>

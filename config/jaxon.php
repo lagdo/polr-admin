@@ -2,9 +2,6 @@
 
 return [
     'app' => [
-        'request' => [
-            'route' => 'jaxon',
-        ],
         'classes' => [
             [
                 'directory' => realpath(__DIR__ . '/../src/Ajax/Classes'),
