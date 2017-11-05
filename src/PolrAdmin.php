@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client as RestClient;
 use Datatables;
 
+use Jaxon\Response\Response;
 use Jaxon\Laravel\Jaxon;
 
 use Lagdo\Polr\Admin\App\Link;
@@ -28,13 +29,19 @@ class PolrAdmin
      */
     protected $endpoints = [];
 
+    /**
+     * A function to call in order to reload the dashboard
+     *
+     * @var Closure
+     */
+    protected static $reloadCallback = null;
+
     public function __construct(Jaxon $jaxon)
     {
         $this->jaxon = $jaxon;
         // Set the class initializer
         $this->apiKey = null;
         $this->apiClient = null;
-        $sentry = jaxon()->sentry();
     }
 
     protected function init()
@@ -194,5 +201,24 @@ class PolrAdmin
 
         // Polr plugin instance
         $instance->polr = $this;
+    }
+
+    public function setReloadCallback(\Closure $callback)
+    {
+        self::$reloadCallback = $callback;
+    }
+
+    public function reload(Response $response)
+    {
+        if(self::$reloadCallback == null)
+        {
+            $url = url(); // Reload the page by redirecting to the current URL
+            $response->redirect($url);
+        }
+        else
+        {
+            $callback = self::$reloadCallback; // Custom callback set by the user
+            $callback($response);
+        }
     }
 }

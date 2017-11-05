@@ -30,7 +30,7 @@ class User extends JaxonClass
         }
 
         session()->set('polr.endpoint', $endpoint);
-        $this->response->redirect(url());
+        $this->polr->reload($this->response);
 
         return $this->response;
     }
