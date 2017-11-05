@@ -7,68 +7,36 @@ return [
         ],
         'classes' => [
             [
-                'directory' => app_path('Ajax/Classes'),
-                'namespace' => '\\Jaxon\\App',
+                'directory' => realpath(__DIR__ . '/../src/Ajax/Classes'),
+                'namespace' => '\\Lagdo\\Polr\\Admin\\App',
                 // 'separator' => '', // '.' or '_'
                 // 'protected' => [],
             ],
         ],
         'options' => [
             'classes' => [
-                \Jaxon\App\Stats::class => [
+                \Lagdo\Polr\Admin\App\Stats::class => [
                     '*' => [
                         'callback' => 'polr.stats.requestCallbacks',
                     ]
                 ],
-                \Jaxon\App\Paginator::class => [
-                    '*' => [
-                        'dt' => 'polr.home.jaxon',
+                \Lagdo\Polr\Admin\App\Link::class => [
+                    'getAdminLinks' => [
+                        'datatables' => 'polr.home.jaxon',
+                    ],
+                    'getUserLinks' => [
+                        'datatables' => 'polr.home.jaxon',
                     ]
-                ]
+                ],
+                \Lagdo\Polr\Admin\App\User::class => [
+                    'getUsers' => [
+                        'datatables' => 'polr.home.jaxon',
+                    ]
+                ],
             ],
         ],
     ],
     'lib' => [
-        'core' => [
-            'language' => 'en',
-            'encoding' => 'UTF-8',
-            'request' => [
-                // 'uri' => url('jaxon'),
-                'csrf_meta' => 'csrf-token',
-            ],
-            'prefix' => [
-                'class' => '',
-            ],
-            'debug' => [
-                'on' => false,
-                'verbose' => false,
-            ],
-            'error' => [
-                'handle' => false,
-            ],
-        ],
-        'js' => [
-            'lib' => [
-                // 'uri' => 'https://cdn.jaxon-php.org/libs/jaxon/1.2.0',
-            ],
-            'app' => [
-                // 'uri' => '',
-                // 'dir' => '',
-                'extern' => false,
-                'minify' => false,
-            ],
-        ],
-        'assets' => [
-            'include' => [
-                'all' => true,
-            ],
-        ],
-        'dialogs' => [
-            'default' => [
-                'modal' => 'bootbox',
-                'alert' => 'noty',
-                'confirm' => 'noty',
-            ],
-        ],
+        // No config options for the Jaxon library
     ],
 ];

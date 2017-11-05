@@ -25,9 +25,25 @@ return [
 
     'endpoints' => [
         'first' => [
-            'url'        => 'http://polr.domain.com/api/v2',
-            'key'        => 'PolrApiKey', // The user API key on the Polr instance
             'name'       => 'First Instance', // The name of this instance for dropdown menu
+            'url'        => 'http://polr.domain.com',
+            'api'        => 'api/v2',
+            'key'        => 'PolrApiKey', // The user API key on the Polr instance
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Polr Templates
+    |--------------------------------------------------------------------------
+    |
+    | These templates will be used to print Polr HTML, Javascript and CSS codes.
+    |
+    */
+
+    'templates' => [
+        // 'html' => '',    // HTML
+        // 'css' => '',     // CSS includes
+        // 'js' => '',      // Javascript includes
     ],
 ];

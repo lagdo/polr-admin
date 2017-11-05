@@ -1,7 +1,7 @@
                         <p>
                             <b>Short Link: </b>
-                            <a target="_blank" href="{{ env('APP_PROTOCOL') }}/{{ env('APP_ADDRESS') }}/{{ $link->short_url }}">
-                                {{ env('APP_ADDRESS') }}/{{ $link->short_url }}
+                            <a target="_blank" href="{{ $endpoint->url }}/{{ $link->short_url }}">
+                                {{ $endpoint->url }}/{{ $link->short_url }}
                             </a>
                         </p>
                         <p>
