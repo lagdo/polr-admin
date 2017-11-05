@@ -9,7 +9,7 @@ This dashboard is packaged as a Laravel extension.
 Firstly, it makes the package simpler since there is no need to deal with user management features.
 Then, it lets the end user choose how to integrate: in an existing Laravel application, or in a third-party Laravel admin panel.
 
-The https://github.com/lagdo/polr-api package needs to be installed on each instance of Polr to be managed.
+The [Polr API](https://github.com/lagdo/polr-api) package needs to be installed on each instance of Polr to be managed.
 
 Features
 --------
