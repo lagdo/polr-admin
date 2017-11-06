@@ -155,7 +155,8 @@ var parseInputDate = function (inputDate) {
         var $rightPicker = $('#right-bound-picker');
 
         var datePickerOptions = {
-            showTodayButton: true
+            showTodayButton: true,
+            format: 'YYYY-MM-DD HH:mm'
         }
 
         $leftPicker.datetimepicker(datePickerOptions);
