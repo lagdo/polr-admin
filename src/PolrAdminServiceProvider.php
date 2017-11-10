@@ -30,8 +30,8 @@ class PolrAdminServiceProvider extends ServiceProvider
             __DIR__ . '/../config/polr.php' => config_path('polradmin.php'),
         ], 'config');
 
-	    // Register an instance of the Datatables plugin
-	    jaxon_register_plugin(new Plugin());
+        // Register an instance of the Datatables plugin
+        jaxon_register_plugin(new Plugin());
 
         // Read config file
         $jaxon = jaxon();
@@ -59,9 +59,9 @@ class PolrAdminServiceProvider extends ServiceProvider
     public function register()
     {
         // The Datatables row renderer
-	    $this->app->singleton('jaxon.dt.renderer', Renderer::class);
+        $this->app->singleton('jaxon.dt.renderer', Renderer::class);
 
-	    // Register the Polr Admin singleton
+        // Register the Polr Admin singleton
         $this->app->singleton('lagdo.polr.admin', function ($app)
         {
             return new PolrAdmin($app->make('jaxon'));

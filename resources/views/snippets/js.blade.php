@@ -105,10 +105,14 @@ polr.home.setHandlers = function(){
     $('#stats-buttons .btn-clear-stats').click(function(){
         polr.stats.short_url = '';
         $('#stats-filter').html('');
+        // Hide the Clear button in Stats tab
+        $('#stats-buttons .clear-stats').hide();
     });
     // Polr Endpoint selection button
     $('#btn-change-endpoint').click(function(){
         {!! $user->selectEndpoint(rq()->select('select-endpoint')) !!};
     });
+    // Hide the Clear button in Stats tab
+    $('#stats-buttons .clear-stats').hide();
 };
 </script>

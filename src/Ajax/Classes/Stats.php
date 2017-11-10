@@ -132,8 +132,9 @@ class Stats extends JaxonClass
             ]);
             $this->response->html('stats-filter', $header);
 
-            // Show the stats tab
+            // Show the stats tab and clear button
             $this->jq('.admin-nav .stats a')->tab('show');
+            $this->jq('#stats-buttons .clear-stats')->show();
         }
 
         // Set the click handler on the refresh button

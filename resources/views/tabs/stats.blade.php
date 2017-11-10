@@ -17,7 +17,7 @@
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
-                            </div>       
+                            </div>
                         </form>
                     </div>
                     <div class="col-md-9 link-meta" id="stats-filter">
@@ -27,7 +27,7 @@
                     <div class="col-md-3">
                         <button type="button" class="form-control btn-refresh-stats" class="form-control">Refresh</button>
                     </div>
-                    <div class="col-md-3 col-md-offset-3">
+                    <div class="col-md-3 col-md-offset-3 clear-stats">
                         <button type="button" class="form-control btn-clear-stats" class="form-control">Clear</button>
                     </div>
                 </div>
