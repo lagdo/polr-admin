@@ -19,7 +19,7 @@ class Link extends JaxonClass
         $link = $jsonResponse->result;
 
         $title = 'Long URL';
-        $content = view('polr_admin::snippets.edit_long_url', ['link' => $link]);
+        $content = $this->view()->render('polr_admin::snippets.edit_long_url', ['link' => $link]);
         $buttons = [
             [
                 'title' => 'Save link',
@@ -194,7 +194,7 @@ class Link extends JaxonClass
         $short_url = $jsonResponse->result;
 
         $title = 'Shortened URL';
-        $content = view('polr_admin::shorten.result', ['short_url' => $short_url]);
+        $content = $this->view()->render('polr_admin::shorten.result', ['short_url' => $short_url]);
         $buttons = [];
         $this->dialog->show($title, $content, $buttons);
         $this->jq('.result-box')->focus()->select();

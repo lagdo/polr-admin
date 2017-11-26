@@ -29,7 +29,7 @@ class User extends JaxonClass
             return $this->response;
         }
 
-        session()->set('polr.endpoint', $endpoint);
+        $this->session()->set('polr.endpoint', $endpoint);
         $this->polr->reload($this->response);
 
         return $this->response;
@@ -155,7 +155,7 @@ class User extends JaxonClass
         }
 
         $title = 'Edit User API Settings';
-        $content = view('polr_admin::snippets.edit_user_api_info', ['user' => $user]);
+        $content = $this->view()->render('polr_admin::snippets.edit_user_api_info', ['user' => $user]);
         $buttons = [
             [
                 'title' => 'Close',
@@ -305,7 +305,7 @@ class User extends JaxonClass
         $users = collect($jsonResponse->result->data);
 
         // Fill user roles dropdown
-        $this->response->html('user-roles', view('polr_admin::snippets.select-roles',
+        $this->response->html('user-roles', $this->view()->render('polr_admin::snippets.select-roles',
             ['roles' => $jsonResponse->settings->roles]));
 
         $datatables = Datatables::of($users)

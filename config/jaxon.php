@@ -2,6 +2,14 @@
 
 return [
     'app' => [
+        'views' => [
+            'polr_admin' => [
+                'directory' => realpath(__DIR__ . '/../resources/views'),
+                'extension' => '.blade.php',
+                'renderer' => 'blade',
+                // 'register' => false,
+            ],
+        ],
         'classes' => [
             [
                 'directory' => realpath(__DIR__ . '/../src/Ajax/Classes'),

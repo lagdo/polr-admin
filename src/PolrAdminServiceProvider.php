@@ -2,7 +2,6 @@
 
 namespace Lagdo\Polr\Admin;
 
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\ServiceProvider;
 
 use Lagdo\Polr\Admin\Ext\Datatables\Plugin;
@@ -40,6 +39,7 @@ class PolrAdminServiceProvider extends ServiceProvider
         $xAppConfig = $jaxon->readConfigFile($sConfigFile, 'lib', 'app');
         $sentry->addClassOptions($xAppConfig);
         $sentry->addClassNamespaces($xAppConfig);
+        $sentry->addViewNamespaces($xAppConfig);
 
         // Set the class initializer
         $sentry->addClassInitializer('Lagdo\Polr\Admin\App',

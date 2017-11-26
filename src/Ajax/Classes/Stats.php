@@ -88,7 +88,7 @@ class Stats extends JaxonClass
         {
             $clicks += $stats->clicks;
         }
-        $content = view('polr_admin::stats.content', [
+        $content = $this->view()->render('polr_admin::stats.content', [
             'clicks' => $clicks,
             'referer_stats' => $referer_stats,
         ]);
@@ -126,7 +126,7 @@ class Stats extends JaxonClass
         // Set the stats header
         if(($this->link))
         {
-            $header = view('polr_admin::stats.link.header', [
+            $header = $this->view()->render('polr_admin::stats.link.header', [
                 'link' => $this->link,
                 'endpoint' => $this->polr->endpoint(),
             ]);
