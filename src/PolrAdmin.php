@@ -3,7 +3,7 @@
 namespace Lagdo\Polr\Admin;
 
 use Carbon\Carbon;
-use GuzzleHttp\Client as RestClient;
+use GuzzleHttp\Client as HttpClient;
 use Datatables;
 
 use Jaxon\Response\Response;
@@ -179,7 +179,7 @@ class PolrAdmin
             $this->apiKey = config($cfgKey . '.key');
             $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
                 trim(config($cfgKey . '.api'), '/') . '/';
-            $this->apiClient = new RestClient(['base_uri' => $uri]);
+            $this->apiClient = new HttpClient(['base_uri' => $uri]);
         }
 
         // Save the HTTP REST client
@@ -208,6 +208,11 @@ class PolrAdmin
         self::$reloadCallback = $callback;
     }
 
+    public function onReload(\Closure $callback)
+    {
+        self::$reloadCallback = $callback;
+    }
+    
     public function reload(Response $response)
     {
         if(self::$reloadCallback == null)
