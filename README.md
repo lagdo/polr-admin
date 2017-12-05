@@ -3,11 +3,11 @@ Polr Admin
 
 An alternative admin dashboard for the Polr URL shortener.
 
-Our goal is to provide a dashboard with advanced features for managing multiple Polr instances.
+Our goal is to provide a dashboard for managing multiple Polr instances.
 
-This dashboard is packaged as a Laravel extension.
+This dashboard is packaged as a Laravel/Lumen extension, to be installed on a running Laravel/Lumen web application.
 Firstly, it makes the package simpler since there is no need to deal with user management features.
-Then, it lets the end user choose how to integrate: in an existing Laravel application, or in a third-party Laravel admin panel.
+Then, it lets the end user choose how to integrate: in an existing Laravel/Lumen application, including Polr itself, or in a third-party Laravel admin panel.
 
 The [Polr API](https://github.com/lagdo/polr-api) package needs to be installed on each instance of Polr to be managed.
 
@@ -16,7 +16,7 @@ Features
 
 The features are mostly the same as Polr, but with few differences.
 
-- The package is a Laravel extension, and not a standalone application.
+- The package is a Laravel/Lumen extension, and not a standalone application.
 - AngularJS is dropped in favor of Jaxon [https://www.jaxon-php.org](https://www.jaxon-php.org).
 - The `Settings` tab allows to choose a Polr instance from a dropdown list.
 - The dashboard can display stats for all links.

@@ -6,10 +6,9 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*",
+        "illuminate/support": "5.1.*",
         "yajra/laravel-datatables-oracle": "~6.0",
         "nesbot/carbon": "^1.22",
-        "google/recaptcha": "~1.1",
         "guzzlehttp/guzzle": "~6.0",
         "jaxon-php/jaxon-laravel": "~2.0",
         "jaxon-php/jaxon-dialogs": "~1.2"
