@@ -42,21 +42,15 @@ Add the Github repository and package in the `composer.json` file, and run `comp
 }
 ```
 
-Add `Jaxon`, `Datatables` and `Polr Admin` to the `providers` and `aliases` entries in `app.php`.
+Add `Jaxon` and `Polr Admin` to the `providers` entries in `app.php`.
 
 ```php
     'providers' => [
+        // ...
         // Jaxon Ajax library
         Jaxon\Laravel\JaxonServiceProvider::class,
-        // Datatables
-        Yajra\Datatables\DatatablesServiceProvider::class,
         // Polr Admin
         Lagdo\Polr\Admin\PolrAdminServiceProvider::class,
-    ],
-
-    'aliases' => [
-        // Datatables
-        'Datatables'   => Yajra\Datatables\Facades\Datatables::class,
     ],
 ```
 

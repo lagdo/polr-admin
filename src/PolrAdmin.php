@@ -4,7 +4,6 @@ namespace Lagdo\Polr\Admin;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client as HttpClient;
-use Datatables;
 
 use Jaxon\Response\Response;
 use Jaxon\Laravel\Jaxon;
@@ -195,8 +194,7 @@ class PolrAdmin
         // The HTTP Request
         $instance->httpRequest = app()->make('request');
         
-        // Save the Datatables renderer and request in the class instance
-        $instance->dtRequest = Datatables::getRequest();
+        // Save the Datatables renderer in the class instance
         $instance->dtRenderer = app()->make('jaxon.dt.renderer');
 
         // Polr plugin instance
