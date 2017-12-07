@@ -3,7 +3,7 @@
 namespace Lagdo\Polr\Admin\App;
 
 use Validator;
-use Datatables;
+// use Datatables;
 
 use Jaxon\Sentry\Armada as JaxonClass;
 
@@ -225,8 +225,8 @@ class Link extends JaxonClass
         ]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $this->dtRenderer->settings = $jsonResponse->settings;
-        $links = collect($jsonResponse->result->data);
 
+        /*$links = collect($jsonResponse->result->data);
         $datatables = Datatables::of($links)
             ->setRowAttr([
                 'data-id' => '{{$id}}',
@@ -240,7 +240,19 @@ class Link extends JaxonClass
             ->make(true);
 
         $this->response->datatables->show($datatables,
-            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);*/
+
+        $this->response->datatables->make($jsonResponse->result->data,
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->draw)
+            ->add('disable', [$this->dtRenderer, 'renderToggleLinkActiveCell'])
+            ->add('delete', [$this->dtRenderer, 'renderDeleteLinkCell'])
+            ->edit('clicks', [$this->dtRenderer, 'renderClicksCell'])
+            ->edit('long_url', [$this->dtRenderer, 'renderLongUrlCell'])
+            ->escape(['short_url', 'creator'])
+            ->attr([
+                'data-id' => 'id',
+                'data-ending' => 'short_url',
+            ]);
 
         return $this->response;
     }
@@ -253,8 +265,8 @@ class Link extends JaxonClass
         ]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $this->dtRenderer->settings = $jsonResponse->settings;
-        $links = collect($jsonResponse->result->data);
 
+        /*$links = collect($jsonResponse->result->data);
         $datatables = Datatables::of($links)
             ->setRowAttr([
                 'data-id' => '{{$id}}',
@@ -266,7 +278,17 @@ class Link extends JaxonClass
             ->make(true);
 
         $this->response->datatables->show($datatables,
-            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);*/
+
+        $this->response->datatables->make($jsonResponse->result->data,
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->draw)
+            ->edit('clicks', [$this->dtRenderer, 'renderClicksCell'])
+            ->edit('long_url', [$this->dtRenderer, 'renderLongUrlCell'])
+            ->escape(['short_url'])
+            ->attr([
+                'data-id' => 'id',
+                'data-ending' => 'short_url',
+            ]);
 
         return $this->response;
     }

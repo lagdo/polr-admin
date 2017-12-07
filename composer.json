@@ -7,7 +7,6 @@
     "require": {
         "php": ">=5.5.9",
         "illuminate/support": "5.1.*",
-        "yajra/laravel-datatables-oracle": "~6.0",
         "nesbot/carbon": "^1.22",
         "guzzlehttp/guzzle": "~6.0",
         "jaxon-php/jaxon-laravel": "~2.0",

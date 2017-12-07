@@ -26,7 +26,7 @@ class Plugin extends \Jaxon\Plugin\Response
     public function generateHash()
     {
         // The version number is used as hash
-        return '0.0.1';
+        return '0.1.0';
     }
 
     /**
@@ -48,7 +48,7 @@ jaxon.command.handler.register("datatables", function(args) {
      *
      * @return void
      */
-    public function show($datatables, $total = 0, $filtered = 0)
+    /*public function show($datatables, $total = 0, $filtered = 0)
     {
         $content = json_decode($datatables->content());
         if($total > 0)
@@ -60,5 +60,20 @@ jaxon.command.handler.register("datatables", function(args) {
             $content->recordsFiltered = $filtered;
         }
         $this->addCommand(array('cmd' => 'datatables'), $content);
+    }*/
+
+    /**
+     * Create a datatable object, and add the corresponding command into the response
+     * @param array $data
+     * @param integer $total
+     * @param integer $draw
+     * @return \Lagdo\Polr\Admin\Ext\Datatables\Datatables
+     */
+    public function make(array $data, $total, $draw = 0)
+    {
+        $datatables = new Datatables($data, $total, $draw);
+        $this->addCommand(array('cmd' => 'datatables'), $datatables);
+
+        return $datatables;
     }
 }

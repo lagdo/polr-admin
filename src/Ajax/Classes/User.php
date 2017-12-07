@@ -2,12 +2,8 @@
 
 namespace Lagdo\Polr\Admin\App;
 
-use Hash;
 use Validator;
-use Datatables;
-use App\Helpers\UserHelper;
-use App\Helpers\CryptoHelper;
-use App\Factories\UserFactory;
+// use Datatables;
 
 use Jaxon\Sentry\Armada as JaxonClass;
 
@@ -302,12 +298,12 @@ class User extends JaxonClass
         ]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $this->dtRenderer->settings = $jsonResponse->settings;
-        $users = collect($jsonResponse->result->data);
 
         // Fill user roles dropdown
         $this->response->html('user-roles', $this->view()->render('polr_admin::snippets.select-roles',
             ['roles' => $jsonResponse->settings->roles]));
 
+        /*$users = collect($jsonResponse->result->data);
         $datatables = Datatables::of($users)
             ->setRowAttr([
                 'data-id' => '{{$id}}',
@@ -321,7 +317,19 @@ class User extends JaxonClass
             ->make(true);
 
         $this->response->datatables->show($datatables,
-            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);*/
+
+        $this->response->datatables->make($jsonResponse->result->data,
+            $jsonResponse->result->recordsTotal, $jsonResponse->result->draw)
+            ->add('api_action', [$this->dtRenderer, 'renderAdminApiActionCell'])
+            ->add('toggle_active', [$this->dtRenderer, 'renderToggleUserActiveCell'])
+            ->add('change_role', [$this->dtRenderer, 'renderChangeUserRoleCell'])
+            ->add('delete', [$this->dtRenderer, 'renderDeleteUserCell'])
+            ->escape(['username', 'email'])
+            ->attr([
+                'data-id' => 'id',
+                'data-name' => 'username',
+            ]);
 
         return $this->response;
     }
