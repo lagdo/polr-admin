@@ -29,15 +29,21 @@ class PolrAdmin
     protected $endpoints = [];
 
     /**
+     * The Polr config options, read from config file
+     *
+     * @var Jaxon\Utils\Config\Config
+     */
+    protected $config;
+
+    /**
      * A function to call in order to reload the dashboard
      *
      * @var Closure
      */
     protected static $reloadCallback = null;
 
-    public function __construct(Jaxon $jaxon)
+    public function __construct()
     {
-        $this->jaxon = $jaxon;
         // Set the class initializer
         $this->apiKey = null;
         $this->apiClient = null;
@@ -47,21 +53,28 @@ class PolrAdmin
     {
         if($this->tabs == null)
         {
+            $jaxon = jaxon();
+            // Read the config file
+            $this->config = $jaxon->readConfigFile(config_path('polradmin.php'), 'lib', '');
             // Get Polr endpoints from the config
-            if(!($current = session()->get('polr.endpoint')))
+            $armada = $jaxon->armada();
+            if(!($current = $armada->session()->get('polr.endpoint')))
             {
-                $current = config('polradmin.default', '');
-                session()->set('polr.endpoint', $current);
+                // $current = config('polradmin.default', '');
+                $current = $this->config->getOption('default', '');
+                $armada->session()->set('polr.endpoint', $current);
             }
             $this->endpoints = [
-                'current' => (object)config('polradmin.endpoints.' . $current, null),
+                // 'current' => (object)config('polradmin.endpoints.' . $current, null),
+                'current' => (object)$this->config->getOption('endpoints.' . $current, null),
                 'names' => [],
             ];
             if($this->endpoints['current'] != null)
             {
                 $this->endpoints['current']->id = $current;
             }
-            foreach(config('polradmin.endpoints') as $id => $endpoint)
+            // foreach(config('polradmin.endpoints') as $id => $endpoint)
+            foreach($this->config->getOption('endpoints') as $id => $endpoint)
             {
                 $this->endpoints['names'][$id] = $endpoint['name'];
             }
@@ -108,7 +121,7 @@ class PolrAdmin
 
             foreach($this->tabs as $id => &$tab)
             {
-                $tab->view = view('polr_admin::tabs.' . $id, [
+                $tab->view = $armada->view()->render('polr_admin::tabs.' . $id, [
                     'endpoint' => $this->endpoints['current'],
                     'endpoints' => $this->endpoints['names'],
                 ]);
@@ -134,19 +147,25 @@ class PolrAdmin
 
     public function css()
     {
-        $template = config('polradmin.templates.css', 'polr_admin::css');
-        return view($template);
+        $this->init();
+        $armada = jaxon()->armada();
+        // $template = config('polradmin.templates.css', 'polr_admin::css');
+        $template = $this->config->getOption('templates.css', 'polr_admin::css');
+        return $armada->view()->render($template);
     }
 
     public function js()
     {
-        $template = config('polradmin.templates.js', 'polr_admin::js');
-        $js = view($template);
-        return view('polr_admin::snippets.js', [
+        $this->init();
+        $armada = jaxon()->armada();
+        // $template = config('polradmin.templates.js', 'polr_admin::js');
+        $template = $this->config->getOption('templates.js', 'polr_admin::js');
+        $js = $armada->view()->render($template);
+        return $armada->view()->render('polr_admin::snippets.js', [
             'js' => $js,
-            'user' => $this->jaxon->request(User::class), // Ajax request to the Jaxon User class
-            'link' => $this->jaxon->request(Link::class), // Ajax request to the Jaxon Link class
-            'stats' => $this->jaxon->request(Stats::class), // Ajax request to the Jaxon Stats class
+            'user' => $armada->request(User::class), // Ajax request to the Jaxon User class
+            'link' => $armada->request(Link::class), // Ajax request to the Jaxon Link class
+            'stats' => $armada->request(Stats::class), // Ajax request to the Jaxon Stats class
             'datePickerLeftBound' => Carbon::now()->subDays(Stats::DAYS_TO_FETCH),
             'datePickerRightBound' => Carbon::now(),
         ]);
@@ -159,25 +178,35 @@ class PolrAdmin
 
     public function html()
     {
-        $template = config('polradmin.templates.html', 'polr_admin::default');
-        return view($template)->with('tabs', $this->tabs());
+        $this->init();
+        $armada = jaxon()->armada();
+        // $template = config('polradmin.templates.html', 'polr_admin::default');
+        $template = $this->config->getOption('templates.html', 'polr_admin::default');
+        return $armada->view()->render($template)->with('tabs', $this->tabs());
     }
 
     public function initInstance($instance)
     {
+        $this->init();
         // Polr API Client
         if($this->apiClient == null)
         {
+            $armada = jaxon()->armada();
             // Get Polr endpoints from the config
-            if(!($current = session()->get('polr.endpoint')))
+            if(!($current = $armada->session()->get('polr.endpoint')))
             {
-                $current = config('polradmin.default', '');
-                session()->set('polr.endpoint', $current);
+                // $current = config('polradmin.default', '');
+                $current = $this->config->getOption('default', '');
+                $armada->session()->set('polr.endpoint', $current);
             }
-            $cfgKey = 'polradmin.endpoints.' . $current;
-            $this->apiKey = config($cfgKey . '.key');
-            $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
-                trim(config($cfgKey . '.api'), '/') . '/';
+            // $cfgKey = 'polradmin.endpoints.' . $current;
+            // $this->apiKey = config($cfgKey . '.key');
+            // $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
+            //     trim(config($cfgKey . '.api'), '/') . '/';
+            $cfgKey = 'endpoints.' . $current;
+            $this->apiKey = $this->config->getOption($cfgKey . '.key');
+            $uri = rtrim($this->config->getOption($cfgKey . '.url'), '/') . '/' .
+                trim($this->config->getOption($cfgKey . '.api'), '/') . '/';
             $this->apiClient = new HttpClient(['base_uri' => $uri]);
         }
 
@@ -193,7 +222,7 @@ class PolrAdmin
 
         // The HTTP Request
         $instance->httpRequest = app()->make('request');
-        
+
         // Save the Datatables renderer in the class instance
         $instance->dtRenderer = app()->make('jaxon.dt.renderer');
 

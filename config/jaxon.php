@@ -7,7 +7,7 @@ return [
                 'directory' => realpath(__DIR__ . '/../resources/views'),
                 'extension' => '.blade.php',
                 'renderer' => 'blade',
-                // 'register' => false,
+                'register' => true,
             ],
         ],
         'classes' => [
@@ -40,8 +40,5 @@ return [
                 ],
             ],
         ],
-    ],
-    'lib' => [
-        // No config options for the Jaxon library
     ],
 ];

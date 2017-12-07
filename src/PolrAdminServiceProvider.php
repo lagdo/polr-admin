@@ -17,7 +17,7 @@ class PolrAdminServiceProvider extends ServiceProvider
     public function boot()
     {
         // Set views directory
-        view()->addNamespace('polr_admin', __DIR__ . '/../resources/views');
+        // view()->addNamespace('polr_admin', __DIR__ . '/../resources/views');
 
         // Publish package assets
         $this->publishes([
@@ -64,7 +64,7 @@ class PolrAdminServiceProvider extends ServiceProvider
         // Register the Polr Admin singleton
         $this->app->singleton('lagdo.polr.admin', function ($app)
         {
-            return new PolrAdmin($app->make('jaxon'));
+            return new PolrAdmin();
         });
     }
 
