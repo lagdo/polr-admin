@@ -6,10 +6,9 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "illuminate/support": "5.1.*",
         "nesbot/carbon": "^1.22",
         "guzzlehttp/guzzle": "~6.0",
-        "jaxon-php/jaxon-laravel": "~2.0",
+        "jaxon-php/jaxon-view-blade": "~2.0",
         "jaxon-php/jaxon-dialogs": "~1.2"
     },
     "require-dev": {
@@ -26,7 +25,10 @@
             "Lagdo\\Polr\\Admin\\": "src/",
             "Lagdo\\Polr\\Admin\\App\\": "src/Ajax/Classes/",
             "Lagdo\\Polr\\Admin\\Ext\\": "src/Ajax/Plugins/"
-        }
+        },
+        "files": [
+            "src/start.php"
+        ]
     },
     "config": {
         "preferred-install": "dist"

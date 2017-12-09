@@ -42,11 +42,13 @@ class PolrAdmin
      */
     protected static $reloadCallback = null;
 
-    public function __construct()
+    public function __construct($dtRenderer)
     {
         // Set the class initializer
         $this->apiKey = null;
         $this->apiClient = null;
+        // Set the Datatables renderer
+        $this->dtRenderer = $dtRenderer;
     }
 
     protected function init()
@@ -54,18 +56,14 @@ class PolrAdmin
         if($this->tabs == null)
         {
             $jaxon = jaxon();
-            // Read the config file
-            $this->config = $jaxon->readConfigFile(config_path('polradmin.php'), 'lib', '');
             // Get Polr endpoints from the config
             $armada = $jaxon->armada();
             if(!($current = $armada->session()->get('polr.endpoint')))
             {
-                // $current = config('polradmin.default', '');
                 $current = $this->config->getOption('default', '');
                 $armada->session()->set('polr.endpoint', $current);
             }
             $this->endpoints = [
-                // 'current' => (object)config('polradmin.endpoints.' . $current, null),
                 'current' => (object)$this->config->getOption('endpoints.' . $current, null),
                 'names' => [],
             ];
@@ -73,7 +71,6 @@ class PolrAdmin
             {
                 $this->endpoints['current']->id = $current;
             }
-            // foreach(config('polradmin.endpoints') as $id => $endpoint)
             foreach($this->config->getOption('endpoints') as $id => $endpoint)
             {
                 $this->endpoints['names'][$id] = $endpoint['name'];
@@ -129,15 +126,20 @@ class PolrAdmin
         }
     }
 
+    public function config($sConfigFile)
+    {
+        // Read the config file
+        $this->config = jaxon()->readConfigFile($sConfigFile, 'lib', '');
+        $this->init();
+    }
+
     public function tabs()
     {
-        $this->init();
         return $this->tabs;
     }
 
     public function endpoint()
     {
-        $this->init();
         if(count($this->endpoints) == 0)
         {
             return null;
@@ -147,18 +149,14 @@ class PolrAdmin
 
     public function css()
     {
-        $this->init();
         $armada = jaxon()->armada();
-        // $template = config('polradmin.templates.css', 'polr_admin::css');
         $template = $this->config->getOption('templates.css', 'polr_admin::css');
         return $armada->view()->render($template);
     }
 
     public function js()
     {
-        $this->init();
         $armada = jaxon()->armada();
-        // $template = config('polradmin.templates.js', 'polr_admin::js');
         $template = $this->config->getOption('templates.js', 'polr_admin::js');
         $js = $armada->view()->render($template);
         return $armada->view()->render('polr_admin::snippets.js', [
@@ -178,16 +176,13 @@ class PolrAdmin
 
     public function html()
     {
-        $this->init();
         $armada = jaxon()->armada();
-        // $template = config('polradmin.templates.html', 'polr_admin::default');
         $template = $this->config->getOption('templates.html', 'polr_admin::default');
         return $armada->view()->render($template)->with('tabs', $this->tabs());
     }
 
     public function initInstance($instance)
     {
-        $this->init();
         // Polr API Client
         if($this->apiClient == null)
         {
@@ -199,10 +194,6 @@ class PolrAdmin
                 $current = $this->config->getOption('default', '');
                 $armada->session()->set('polr.endpoint', $current);
             }
-            // $cfgKey = 'polradmin.endpoints.' . $current;
-            // $this->apiKey = config($cfgKey . '.key');
-            // $uri = rtrim(config($cfgKey . '.url'), '/') . '/' .
-            //     trim(config($cfgKey . '.api'), '/') . '/';
             $cfgKey = 'endpoints.' . $current;
             $this->apiKey = $this->config->getOption($cfgKey . '.key');
             $uri = rtrim($this->config->getOption($cfgKey . '.url'), '/') . '/' .
@@ -220,11 +211,11 @@ class PolrAdmin
         $instance->dialog = $response->dialog;
         $instance->notify = $response->dialog;
 
-        // The HTTP Request
-        $instance->httpRequest = app()->make('request');
+        // The client IP address
+        $instance->remoteAddress = $_SERVER['REMOTE_ADDR'];
 
         // Save the Datatables renderer in the class instance
-        $instance->dtRenderer = app()->make('jaxon.dt.renderer');
+        $instance->dtRenderer = $this->dtRenderer;
 
         // Polr plugin instance
         $instance->polr = $this;
@@ -244,7 +235,7 @@ class PolrAdmin
     {
         if(self::$reloadCallback == null)
         {
-            $url = url(); // Reload the page by redirecting to the current URL
+            $url = \Jaxon\Utils\URI::detect(); // Reload the page by redirecting to the current URL
             $response->redirect($url);
         }
         else

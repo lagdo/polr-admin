@@ -181,7 +181,7 @@ class Link extends JaxonClass
             'key' => $this->apiKey,
             'url' => $values['link-url'],
             'secret' => ($values['options'] == "s" ? 'true' : 'false'),
-            'ip' => $this->httpRequest->ip(),
+            'ip' => $this->remoteAddress,
         ];
         if($values['custom-ending'] != '')
         {
