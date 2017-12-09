@@ -3,7 +3,7 @@
                     <div class="col-md-3">
                         <form id="stats-dates">
                             <div class="form-group">
-                                <div class='input-group date' id='left-bound-picker'>
+                                <div class="input-group date" id="left-bound-picker">
                                     <input type="text" class="form-control" name="left_bound">
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
@@ -11,7 +11,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class='input-group date' id='right-bound-picker'>
+                                <div class="input-group date" id="right-bound-picker">
                                     <input type="text" class="form-control" name="right_bound">
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>

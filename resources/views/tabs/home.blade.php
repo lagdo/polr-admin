@@ -3,37 +3,37 @@
 
                 <h4>Create a short URL</h4>
                 <div class="" style="text-align: center;">
-                    <form method='POST' id='shorten-form' role='form'>
-                        <input type='url' autocomplete='off' class='form-control long-link-input' placeholder='http://' name='link-url' />
+                    <form method="POST" id="shorten-form" role="form">
+                        <input type="url" autocomplete="off" class="form-control long-link-input" placeholder="http://" name="link-url" />
 
-                        <div class='row' id='options'>
+                        <div class="row" id="options">
                             <p>Customize link</p>
 
-                            <div class='btn-group btn-toggle visibility-toggler' data-toggle='buttons'>
-                                <label class='btn btn-primary btn-sm active'>
-                                    <input type='radio' name='options' value='p' checked /> Public
+                            <div class="btn-group btn-toggle visibility-toggler" data-toggle="buttons">
+                                <label class="btn btn-primary btn-sm active">
+                                    <input type="radio" name="options" value="p" checked /> Public
                                 </label>
-                                <label class='btn btn-sm btn-default'>
-                                    <input type='radio' name='options' value='s' /> Secret
+                                <label class="btn btn-sm btn-default">
+                                    <input type="radio" name="options" value="s" /> Secret
                                 </label>
                             </div>
 
                             <div>
-                                <div class='custom-link-text'>
-                                    <h2 class='site-url-field'>{{ $endpoint->url }}/</h2>
-                                    <input type='text' autocomplete="off" class='form-control custom-url-field' name='custom-ending' />
+                                <div class="custom-link-text">
+                                    <h2 class="site-url-field">{{ $endpoint->url }}/</h2>
+                                    <input type="text" autocomplete="off" class="form-control custom-url-field" name="custom-ending" />
                                 </div>
                                 <div>
-                                    <a href='javascript:void(0)' class='btn btn-success btn-xs check-btn' id='check-link-availability'>Check Availability</a>
-                                    <div id='link-availability-status'></div>
+                                    <button type="button" class="btn btn-success btn-xs check-btn" id="check-link-availability">Check Availability</button>
+                                    <div id="link-availability-status"></div>
                                 </div>
                             </div>
                         </div>
-                        <input class='btn btn-info' id='shorten-btn' value='Shorten' />
-                        <a href='#' class='btn btn-warning' id='show-link-options'>Link Options</a>
+                        <button type="button" class="btn btn-info" id="shorten-btn">Shorten</button>
+                        <button type="button" class="btn btn-warning" id="show-link-options">Link Options</button>
                     </form>
 
-                    <div id='tips' class='text-muted tips'>
-                        <i class='fa fa-spinner'></i> Loading Tips...
+                    <div id="tips" class="text-muted tips">
+                        <i class="fa fa-spinner"></i> Loading Tips...
                     </div>
                 </div>
