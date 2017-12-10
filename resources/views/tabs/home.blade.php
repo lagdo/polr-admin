@@ -4,7 +4,7 @@
                 <h4>Create a short URL</h4>
                 <div class="" style="text-align: center;">
                     <form method="POST" id="shorten-form" role="form">
-                        <input type="url" autocomplete="off" class="form-control long-link-input" placeholder="http://" name="link-url" />
+                        <input type="url" autocomplete="off" class="form-control long-link-input" placeholder="http://" name="url" />
 
                         <div class="row" id="options">
                             <p>Customize link</p>
@@ -21,7 +21,7 @@
                             <div>
                                 <div class="custom-link-text">
                                     <h2 class="site-url-field">{{ $endpoint->url }}/</h2>
-                                    <input type="text" autocomplete="off" class="form-control custom-url-field" name="custom-ending" />
+                                    <input type="text" autocomplete="off" class="form-control custom-url-field" name="ending" />
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-success btn-xs check-btn" id="check-link-availability">Check Availability</button>

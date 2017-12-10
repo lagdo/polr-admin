@@ -2,8 +2,7 @@
 
 namespace Lagdo\Polr\Admin\App;
 
-use Validator;
-// use Datatables;
+use Valitron\Validator;
 
 use Jaxon\Sentry\Armada as JaxonClass;
 
@@ -11,15 +10,9 @@ class User extends JaxonClass
 {
     public function selectEndpoint($endpoint)
     {
+        $endpoint = trim($endpoint);
         // Validate the new endpoint
-        $values = [
-            'endpoint' => trim($endpoint),
-        ];
-        $rules = array(
-            'endpoint' => 'alpha_dash',
-        );
-        $validator = Validator::make($values, $rules);
-        if($validator->fails())
+        if(!$this->validator->validateEndpoint($endpoint))
         {
             $this->notify->error('The endpoint id is not valid.', 'Error');
             return $this->response;
@@ -31,19 +24,16 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function generateNewKey($user_id, $fromDev)
+    public function generateNewKey($userId, $fromDev)
     {
-        $validator = \Validator::make(['id' => $user_id], [
-            'id' => 'required|numeric',
-        ]);
-        if ($validator->fails())
+        if(!$this->validator->validateId($userId))
         {
             $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
         // Generate the new key on the Polr instance
-        $apiResponse = $this->apiClient->post('users/' . $user_id . '/api',
+        $apiResponse = $this->apiClient->post('users/' . $userId . '/api',
             ['query' => ['key' => $this->apiKey]]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $user = $jsonResponse->result;
@@ -68,82 +58,19 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    /*public function changePassword(array $formValues)
+    public function showAPIInfo($userId)
     {
-        $username = '';
-        $old_password = $formValues['old_password'];
-        $new_password = $formValues['new_password'];
-
-        $messages = [
-            'old_password.required' => 'The old Password is required',
-            'new_password.required' => 'The new password is required',
-            'new_password.min' => 'The new password must have at least 6 chars length',
-            'new_password.regex' => 'The new password must contain at least one uppercase/lowercase letter and one number.',
-            'new_password.confirmed' => 'The confirmation password is not the same as the new password.',
-        ];
-        // Check password validity
-        $validator = \Validator::make($formValues, [
-            'new_password' => 'required|min:6|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
-        ], $messages);
-        if ($validator->fails())
-        {
-            $this->notify->error($validator->errors()->first(), 'Error');
-            return $this->response;
-        }
-
-        // Clear the form
-        $this->jq('#change-password-form .password-box')->val('');
-
-        // Show a confirmation message
-        $this->notify->info("Password successfully changed.", 'Success');
-
-        return $this->response;
-    }*/
-
-    /*public function addNewUser(array $formValues)
-    {
-        // Clear and hide the form
-        $this->jq('#new-user-form input.form-control')->val('');
-        $this->jq('.new-user-fields')->hide();
-        // Reload the datatable
-        $this->response->script("polr.home.reloadUserTables()");
-        // Show a confirmation message
-        $this->notify->info("User successfully created.", 'Success');
-
-        return $this->response;
-    }*/
-
-    /*public function deleteUser($user_id)
-    {
-        // Reload the datatable
-        $this->response->script("polr.home.reloadUserTables()");
-        // Show a confirmation message
-        $this->notify->info("User successfully deleted.", 'Success');
-
-        return $this->response;
-    }*/
-
-    public function showAPIInfo($user_id)
-    {
-        $validator = \Validator::make(['id' => $user_id], [
-            'id' => 'required|numeric',
-        ]);
-        if ($validator->fails())
+        if(!$this->validator->validateId($userId))
         {
             $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
         // Get the user on the Polr instance
-        $apiResponse = $this->apiClient->get('users/' . $user_id,
+        $apiResponse = $this->apiClient->get('users/' . $userId,
             ['query' => ['key' => $this->apiKey]]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $user = $jsonResponse->result;
-        /*if(!$user)
-        {
-            $this->notify->error('User not found.', 'Error');
-            return $this->response;
-        }*/
         if(!$user->active)
         {
             $this->notify->error('User not active.', 'Error');
@@ -170,19 +97,16 @@ class User extends JaxonClass
         return $this->response;
     }
     
-    public function toggleAPIActive($user_id)
+    public function toggleAPIActive($userId)
     {
-        $validator = \Validator::make(['id' => $user_id], [
-            'id' => 'required|numeric',
-        ]);
-        if ($validator->fails())
+        if(!$this->validator->validateId($userId))
         {
             $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
         // Toogle the user API status on the Polr instance
-        $apiResponse = $this->apiClient->put('users/' . $user_id . '/api',
+        $apiResponse = $this->apiClient->put('users/' . $userId . '/api',
             ['query' => ['key' => $this->apiKey, 'status' => 'toggle']]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $user = $jsonResponse->result;
@@ -196,21 +120,18 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function editAPIQuota($user_id, $new_quota)
+    public function editAPIQuota($userId, $newQuota)
     {
-        $validator = \Validator::make(['id' => $user_id, 'quota' => $new_quota], [
-            'id' => 'required|numeric',
-            'quota' => 'required|numeric',
-        ]);
-        if ($validator->fails())
+        $values = ['id' => $userId, 'quota' => $newQuota];
+        if(!$this->validator->validateUserQuota($values))
         {
             $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
         // Change the user API quota on the Polr instance
-        $apiResponse = $this->apiClient->put('users/' . $user_id . '/api',
-            ['query' => ['key' => $this->apiKey, 'quota' => $new_quota]]);
+        $apiResponse = $this->apiClient->put('users/' . $userId . '/api',
+            ['query' => ['key' => $this->apiKey, 'quota' => $newQuota]]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $user = $jsonResponse->result;
 
@@ -220,13 +141,10 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function setUserStatus($user_id, $status)
+    public function setUserStatus($userId, $status)
     {
-        $validator = \Validator::make(['id' => $user_id, 'status' => $status], [
-            'id' => 'required|numeric',
-            'status' => 'required|numeric|in:0,1',
-        ]);
-        if ($validator->fails())
+        $values = ['id' => $userId, 'status' => $status];
+        if(!$this->validator->validateUserStatus($values))
         {
             $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
@@ -234,7 +152,7 @@ class User extends JaxonClass
 
         // Change the user status on the Polr instance
         $status = ($status == 1) ? 'enable' : 'disable';
-        $apiResponse = $this->apiClient->put('users/' . $user_id,
+        $apiResponse = $this->apiClient->put('users/' . $userId,
             ['query' => ['key' => $this->apiKey, 'status' => $status]]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $user = $jsonResponse->result;
@@ -248,20 +166,17 @@ class User extends JaxonClass
         return $this->response;
     }
 
-    public function changeUserRole($user_id, $role)
+    public function changeUserRole($userId, $role)
     {
-        $validator = \Validator::make(['id' => $user_id, 'role' => $role], [
-            'id' => 'required|numeric',
-        	'role' => 'required|between:1,16|alpha_num',
-        ]);
-        if ($validator->fails())
+        $values = ['id' => $userId, 'role' => $role];
+        if(!$this->validator->validateUserRole($values))
         {
             $this->notify->error('Invalid or missing parameters.', 'Error');
             return $this->response;
         }
 
         // Change the user role on the Polr instance
-        $apiResponse = $this->apiClient->put('users/' . $user_id,
+        $apiResponse = $this->apiClient->put('users/' . $userId,
             ['query' => ['key' => $this->apiKey, 'role' => $role]]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $user = $jsonResponse->result;
@@ -302,22 +217,6 @@ class User extends JaxonClass
         // Fill user roles dropdown
         $this->response->html('user-roles', $this->view()->render('polr_admin::snippets.select-roles',
             ['roles' => $jsonResponse->settings->roles]));
-
-        /*$users = collect($jsonResponse->result->data);
-        $datatables = Datatables::of($users)
-            ->setRowAttr([
-                'data-id' => '{{$id}}',
-                'data-name' => '{{$username}}',
-            ])
-            ->addColumn('api_action', [$this->dtRenderer, 'renderAdminApiActionCell'])
-            ->addColumn('toggle_active', [$this->dtRenderer, 'renderToggleUserActiveCell'])
-            ->addColumn('change_role', [$this->dtRenderer, 'renderChangeUserRoleCell'])
-            ->addColumn('delete', [$this->dtRenderer, 'renderDeleteUserCell'])
-            ->escapeColumns(['username', 'email'])
-            ->make(true);
-
-        $this->response->datatables->show($datatables,
-            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);*/
 
         $this->response->datatables->make($jsonResponse->result->data,
             $jsonResponse->result->recordsTotal, $jsonResponse->result->draw)

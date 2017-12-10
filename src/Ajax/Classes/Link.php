@@ -2,8 +2,7 @@
 
 namespace Lagdo\Polr\Admin\App;
 
-use Validator;
-// use Datatables;
+use Valitron\Validator;
 
 use Jaxon\Sentry\Armada as JaxonClass;
 
@@ -11,8 +10,15 @@ class Link extends JaxonClass
 {
     public function editLongUrl($ending)
     {
-        // Fetch the link from the Polr instance
         $ending = trim($ending);
+        // Validate the input
+        if(!$this->validator->validateLinkEnding($ending))
+        {
+            $this->notify->error('Ending not valid.', 'Error');
+            return $this->response;
+        }
+
+        // Fetch the link from the Polr instance
         $apiResponse = $this->apiClient->get('links/' . $ending,
             ['query' => ['key' => $this->apiKey]]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
@@ -41,12 +47,7 @@ class Link extends JaxonClass
     {
         // Validate the new URL
         $values['ending'] = trim($ending);
-        $rules = array(
-            'ending' => 'alpha_dash',
-            'long_url' => 'required|url',
-        );
-        $validator = Validator::make($values, $rules);
-        if($validator->fails())
+        if(!$this->validator->validateLinkUrl($values, true))
         {
             $this->notify->error('Link not valid.', 'Error');
             return $this->response;
@@ -54,7 +55,7 @@ class Link extends JaxonClass
 
         // Update the link in the Polr instance
         $apiResponse = $this->apiClient->put('links/' . $values['ending'],
-            ['query' => ['key' => $this->apiKey, 'url' => $values['long_url']]]);
+            ['query' => ['key' => $this->apiKey, 'url' => $values['url']]]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
 
         // Reload the datatable
@@ -74,12 +75,7 @@ class Link extends JaxonClass
             'ending' => trim($ending),
             'status' => trim($status),
         ];
-        $rules = array(
-            'ending' => 'alpha_dash',
-            'status' => 'required|in:0,1',
-        );
-        $validator = Validator::make($values, $rules);
-        if($validator->fails())
+        if(!$this->validator->validateLinkStatus($values))
         {
             $this->notify->error('Status not valid.', 'Error');
             return $this->response;
@@ -101,22 +97,16 @@ class Link extends JaxonClass
 
     public function deleteLink($ending)
     {
+        $ending = trim($ending);
         // Validate the input
-        $values = [
-            'ending' => trim($ending),
-        ];
-        $rules = array(
-            'ending' => 'alpha_dash',
-        );
-        $validator = Validator::make($values, $rules);
-        if($validator->fails())
+        if(!$this->validator->validateLinkEnding($ending))
         {
             $this->notify->error('Ending not valid.', 'Error');
             return $this->response;
         }
 
         // Delete the link in the Polr instance
-        $apiResponse = $this->apiClient->delete('links/' . $values['ending'],
+        $apiResponse = $this->apiClient->delete('links/' . $ending,
             ['query' => ['key' => $this->apiKey]]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
 
@@ -132,11 +122,8 @@ class Link extends JaxonClass
     public function checkAvailability($ending)
     {
         $ending = trim($ending);
-        // Validate the new URL
-        $values = ['ending' => $ending];
-        $rules = ['ending' => 'alpha_dash'];
-        $validator = Validator::make($values, $rules);
-        if($validator->fails())
+        // Validate the input
+        if(!$this->validator->validateLinkEnding($ending))
         {
             $this->response->html('link-availability-status',
                 '<span style="color:orange"><i class="fa fa-exclamation-triangle"></i> Invalid Custom URL Ending</span>');
@@ -166,11 +153,7 @@ class Link extends JaxonClass
     public function shorten(array $values)
     {
         // Validate URL form data
-        $validator = Validator::make($values, [
-            'link-url' => 'required|url',
-            'custom-ending' => 'alpha_dash'
-        ]);
-        if ($validator->fails())
+        if(!$this->validator->validateLinkUrl($values, false))
         {
             $this->notify->error('Invalid URL or custom ending.', 'Error');
             return $this->response;
@@ -179,13 +162,13 @@ class Link extends JaxonClass
         // API request parameters
         $parameters = [
             'key' => $this->apiKey,
-            'url' => $values['link-url'],
+            'url' => $values['url'],
             'secret' => ($values['options'] == "s" ? 'true' : 'false'),
             'ip' => $this->remoteAddress,
         ];
-        if($values['custom-ending'] != '')
+        if($values['ending'] != '')
         {
-            $parameters['ending'] = $values['custom-ending'];
+            $parameters['ending'] = $values['ending'];
         }
 
         // Update the link in the Polr instance
@@ -226,22 +209,6 @@ class Link extends JaxonClass
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $this->dtRenderer->settings = $jsonResponse->settings;
 
-        /*$links = collect($jsonResponse->result->data);
-        $datatables = Datatables::of($links)
-            ->setRowAttr([
-                'data-id' => '{{$id}}',
-                'data-ending' => '{{$short_url}}',
-            ])
-            ->addColumn('disable', [$this->dtRenderer, 'renderToggleLinkActiveCell'])
-            ->addColumn('delete', [$this->dtRenderer, 'renderDeleteLinkCell'])
-            ->editColumn('clicks', [$this->dtRenderer, 'renderClicksCell'])
-            ->editColumn('long_url', [$this->dtRenderer, 'renderLongUrlCell'])
-            ->escapeColumns(['short_url', 'creator'])
-            ->make(true);
-
-        $this->response->datatables->show($datatables,
-            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);*/
-
         $this->response->datatables->make($jsonResponse->result->data,
             $jsonResponse->result->recordsTotal, $jsonResponse->result->draw)
             ->add('disable', [$this->dtRenderer, 'renderToggleLinkActiveCell'])
@@ -265,20 +232,6 @@ class Link extends JaxonClass
         ]);
         $jsonResponse = json_decode($apiResponse->getBody()->getContents());
         $this->dtRenderer->settings = $jsonResponse->settings;
-
-        /*$links = collect($jsonResponse->result->data);
-        $datatables = Datatables::of($links)
-            ->setRowAttr([
-                'data-id' => '{{$id}}',
-                'data-ending' => '{{$short_url}}',
-            ])
-            ->editColumn('clicks', [$this->dtRenderer, 'renderClicksCell'])
-            ->editColumn('long_url', [$this->dtRenderer, 'renderLongUrlCell'])
-            ->escapeColumns(['short_url'])
-            ->make(true);
-
-        $this->response->datatables->show($datatables,
-            $jsonResponse->result->recordsTotal, $jsonResponse->result->recordsFiltered);*/
 
         $this->response->datatables->make($jsonResponse->result->data,
             $jsonResponse->result->recordsTotal, $jsonResponse->result->draw)

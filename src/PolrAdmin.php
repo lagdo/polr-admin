@@ -49,10 +49,30 @@ class PolrAdmin
         $this->apiClient = null;
         // Set the Datatables renderer
         $this->dtRenderer = $dtRenderer;
+        // Set the input validator
+        $this->validator = new Helpers\Validator();
     }
 
     protected function init()
     {
+        // Polr API Client
+        if($this->apiClient == null)
+        {
+            $armada = jaxon()->armada();
+            // Get Polr endpoints from the config
+            if(!($current = $armada->session()->get('polr.endpoint')))
+            {
+                // $current = config('polradmin.default', '');
+                $current = $this->config->getOption('default', '');
+                $armada->session()->set('polr.endpoint', $current);
+            }
+            $cfgKey = 'endpoints.' . $current;
+            $this->apiKey = $this->config->getOption($cfgKey . '.key');
+            $uri = rtrim($this->config->getOption($cfgKey . '.url'), '/') . '/' .
+                trim($this->config->getOption($cfgKey . '.api'), '/') . '/';
+            $this->apiClient = new HttpClient(['base_uri' => $uri]);
+        }
+
         if($this->tabs == null)
         {
             $jaxon = jaxon();
@@ -183,24 +203,6 @@ class PolrAdmin
 
     public function initInstance($instance)
     {
-        // Polr API Client
-        if($this->apiClient == null)
-        {
-            $armada = jaxon()->armada();
-            // Get Polr endpoints from the config
-            if(!($current = $armada->session()->get('polr.endpoint')))
-            {
-                // $current = config('polradmin.default', '');
-                $current = $this->config->getOption('default', '');
-                $armada->session()->set('polr.endpoint', $current);
-            }
-            $cfgKey = 'endpoints.' . $current;
-            $this->apiKey = $this->config->getOption($cfgKey . '.key');
-            $uri = rtrim($this->config->getOption($cfgKey . '.url'), '/') . '/' .
-                trim($this->config->getOption($cfgKey . '.api'), '/') . '/';
-            $this->apiClient = new HttpClient(['base_uri' => $uri]);
-        }
-
         // Save the HTTP REST client
         $instance->apiKey = $this->apiKey;
         $instance->apiClient = $this->apiClient;
@@ -219,6 +221,9 @@ class PolrAdmin
 
         // Polr plugin instance
         $instance->polr = $this;
+
+        // The input validator
+        $instance->validator = $this->validator;
     }
 
     public function setReloadCallback(\Closure $callback)

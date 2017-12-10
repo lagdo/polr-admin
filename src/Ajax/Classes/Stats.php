@@ -12,18 +12,14 @@ class Stats extends JaxonClass
 
     private function checkInputs(array $dates, $short_url)
     {
-        $validator = \Validator::make($dates, [
-            'left_bound' => 'date',
-            'right_bound' => 'date'
-        ]);
-        if ($validator->fails())
+        if(!$this->validator->validateStatsDate($dates))
         {
             $this->notify->error('Invalid date bounds.', 'Error');
             return false;
         }
+
         $user_left_bound = array_key_exists('left_bound', $dates) ? $dates['left_bound'] : '';
         $user_right_bound = array_key_exists('right_bound', $dates) ? $dates['right_bound'] : '';
-
         // Carbon bounds for StatHelper
         $this->left_bound = $user_left_bound ?: Carbon::now()->subDays(self::DAYS_TO_FETCH);
         $this->right_bound = $user_right_bound ?: Carbon::now();
@@ -45,7 +41,7 @@ class Stats extends JaxonClass
                 ['query' => ['key' => $this->apiKey]]);
             $jsonResponse = json_decode($apiResponse->getBody()->getContents());
             $this->link = $jsonResponse->result;
-            if ($this->link == null)
+            if($this->link == null)
             {
                 $this->notify->error('Cannot show stats for nonexistent link.', 'Error');
                 return false;
