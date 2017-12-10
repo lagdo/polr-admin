@@ -120,7 +120,6 @@ Let's consider the following Laravel controller, where the `Jaxon` instance is i
 
 ```php
 use Jaxon\Laravel\Jaxon;
-use Lagdo\Polr\Admin\PolrAdmin;
 
 class PolrController extends Controller
 {
