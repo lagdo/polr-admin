@@ -56,93 +56,85 @@ class PolrAdmin
     protected function init()
     {
         // Polr API Client
-        if($this->apiClient == null)
+        $armada = jaxon()->armada();
+        // Get Polr endpoints from the config
+        if(!($current = $armada->session()->get('polr.endpoint')))
         {
-            $armada = jaxon()->armada();
-            // Get Polr endpoints from the config
-            if(!($current = $armada->session()->get('polr.endpoint')))
-            {
-                // $current = config('polradmin.default', '');
-                $current = $this->config->getOption('default', '');
-                $armada->session()->set('polr.endpoint', $current);
-            }
-            $cfgKey = 'endpoints.' . $current;
-            $this->apiKey = $this->config->getOption($cfgKey . '.key');
-            $uri = rtrim($this->config->getOption($cfgKey . '.url'), '/') . '/' .
-                trim($this->config->getOption($cfgKey . '.api'), '/') . '/';
-            $this->apiClient = new HttpClient(['base_uri' => $uri]);
+            // $current = config('polradmin.default', '');
+            $current = $this->config->getOption('default', '');
+            $armada->session()->set('polr.endpoint', $current);
+        }
+        $cfgKey = 'endpoints.' . $current;
+        $this->apiKey = $this->config->getOption($cfgKey . '.key');
+        $uri = rtrim($this->config->getOption($cfgKey . '.url'), '/') . '/' .
+            trim($this->config->getOption($cfgKey . '.api'), '/') . '/';
+        $this->apiClient = new HttpClient(['base_uri' => $uri]);
+
+        // Get Polr endpoints from the config
+        if(!($current = $armada->session()->get('polr.endpoint')))
+        {
+            $current = $this->config->getOption('default', '');
+            $armada->session()->set('polr.endpoint', $current);
+        }
+        $this->endpoints = [
+            'current' => (object)$this->config->getOption('endpoints.' . $current, null),
+            'names' => [],
+        ];
+        if($this->endpoints['current'] != null)
+        {
+            $this->endpoints['current']->id = $current;
+        }
+        foreach($this->config->getOption('endpoints') as $id => $endpoint)
+        {
+            $this->endpoints['names'][$id] = $endpoint['name'];
         }
 
-        if($this->tabs == null)
+        // Set the tabs content
+        $this->tabs = [
+            'home' => (object)[
+                'view' => null,
+                'title' => 'Home',
+                'class' => '',
+                'active' => true,
+            ],
+            'settings' => (object)[
+                'view' => null,
+                'title' => 'Settings',
+                'class' => '',
+                'active' => false,
+            ],
+            'user-links' => (object)[
+                'view' => null,
+                'title' => 'User Links',
+                'class' => '',
+                'active' => false,
+            ],
+            'admin-links' => (object)[
+                'view' => null,
+                'title' => 'Admin Links',
+                'class' => '',
+                'active' => false,
+            ],
+            'users' => (object)[
+                'view' => null,
+                'title' => 'Users',
+                'class' => '',
+                'active' => false,
+            ],
+            'stats' => (object)[
+                'view' => null,
+                'title' => 'Stats',
+                'class' => 'stats',
+                'active' => false,
+            ],
+        ];
+
+        foreach($this->tabs as $id => &$tab)
         {
-            $jaxon = jaxon();
-            // Get Polr endpoints from the config
-            $armada = $jaxon->armada();
-            if(!($current = $armada->session()->get('polr.endpoint')))
-            {
-                $current = $this->config->getOption('default', '');
-                $armada->session()->set('polr.endpoint', $current);
-            }
-            $this->endpoints = [
-                'current' => (object)$this->config->getOption('endpoints.' . $current, null),
-                'names' => [],
-            ];
-            if($this->endpoints['current'] != null)
-            {
-                $this->endpoints['current']->id = $current;
-            }
-            foreach($this->config->getOption('endpoints') as $id => $endpoint)
-            {
-                $this->endpoints['names'][$id] = $endpoint['name'];
-            }
-
-            // Set the tabs content
-            $this->tabs = [
-                'home' => (object)[
-                    'view' => null,
-                    'title' => 'Home',
-                    'class' => '',
-                    'active' => true,
-                ],
-                'settings' => (object)[
-                    'view' => null,
-                    'title' => 'Settings',
-                    'class' => '',
-                    'active' => false,
-                ],
-                'user-links' => (object)[
-                    'view' => null,
-                    'title' => 'User Links',
-                    'class' => '',
-                    'active' => false,
-                ],
-                'admin-links' => (object)[
-                    'view' => null,
-                    'title' => 'Admin Links',
-                    'class' => '',
-                    'active' => false,
-                ],
-                'users' => (object)[
-                    'view' => null,
-                    'title' => 'Users',
-                    'class' => '',
-                    'active' => false,
-                ],
-                'stats' => (object)[
-                    'view' => null,
-                    'title' => 'Stats',
-                    'class' => 'stats',
-                    'active' => false,
-                ],
-            ];
-
-            foreach($this->tabs as $id => &$tab)
-            {
-                $tab->view = $armada->view()->render('polr_admin::tabs.' . $id, [
-                    'endpoint' => $this->endpoints['current'],
-                    'endpoints' => $this->endpoints['names'],
-                ]);
-            }
+            $tab->view = $armada->view()->render('polr_admin::tabs.' . $id, [
+                'endpoint' => $this->endpoints['current'],
+                'endpoints' => $this->endpoints['names'],
+            ]);
         }
     }
 
@@ -226,11 +218,6 @@ class PolrAdmin
         $instance->validator = $this->validator;
     }
 
-    public function setReloadCallback(\Closure $callback)
-    {
-        self::$reloadCallback = $callback;
-    }
-
     public function onReload(\Closure $callback)
     {
         self::$reloadCallback = $callback;
@@ -240,8 +227,8 @@ class PolrAdmin
     {
         if(self::$reloadCallback == null)
         {
-            $url = \Jaxon\Utils\URI::detect(); // Reload the page by redirecting to the current URL
-            $response->redirect($url);
+            $script = 'window.location.reload()'; // Reload the page
+            $response->script($script);
         }
         else
         {
