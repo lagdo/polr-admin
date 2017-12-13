@@ -39,21 +39,13 @@ In the case an unsupported framework (or no framework) is used, the [Armada pack
 
 The Jaxon packages are [documented online](https://www.jaxon-php.org/docs/plugins/integration.html).
 
-The following example uses to the Laravel framework, but the same principles apply to other frameworks.
+Documentation
+-------------
 
-Installation
-------------
+- [Using with Laravel](docs/laravel.md)
 
-Add the package in the `composer.json` file, and run `composer update`.
-
-```json
-{
-    "require": {
-        "jaxon-php/jaxon-laravel": "~2.0",
-        "lagdo/polr-admin": "dev-master"
-    }
-}
-```
+Notice for other frameworks
+===========================
 
 This package uses the Blade template engine to display its views.
 As a consequence, when using a framework other than Laravel, the Blade package for Jaxon must also be installed.
@@ -63,124 +55,7 @@ As a consequence, when using a framework other than Laravel, the Blade package f
     "require": {
         "jaxon-php/jaxon-codeigniter": "~2.0",
         "jaxon-php/jaxon-blade": "~2.0",
-        "lagdo/polr-admin": "dev-master"
+        "lagdo/polr-admin": "~0.1"
     }
 }
 ```
-
-Add `Jaxon` to the `providers` entries in `app.php`.
-
-```php
-    'providers' => [
-        // ...
-        // Jaxon Ajax library
-        Jaxon\Laravel\JaxonServiceProvider::class,
-    ],
-```
-
-Publish the public files.
-
-```bash
-php artisan vendor:publish --tag=public --force
-```
-
-Publish the config files.
-
-```bash
-php artisan vendor:publish --provider="Jaxon\Laravel\JaxonServiceProvider" --tag="config"
-```
-
-This will create the `jaxon.php` files in the `config` dir.
-
-Configuration
--------------
-
-Manually create and edit the `config/polradmin.php` config file, to list the Polr intances to be managed.
-
-```php
-return [
-    'default' => 'first',
-    'endpoints' => [
-        'first' => [
-            'name'       => 'First Instance', // The name of this instance for dropdown menu
-            'url'        => 'http://polr.domain.com',
-            'api'        => 'api/v2',
-            'key'        => 'PolrApiKey', // The user API key on the Polr instance
-        ],
-    ],
-];
-```
-
-Page template
--------------
-
-The package provides various functions returning the HTML, Javascript and CSS codes to be inserted into a template.
-
-Let's consider the following Laravel controller, where the `Jaxon` instance is injected in the `index()` method and passed to a template.
-
-```php
-use Jaxon\Laravel\Jaxon;
-
-class PolrController extends Controller
-{
-    public function index(Jaxon $jaxon)
-    {
-        // Get the Polr Admin instance
-        $polr = $jaxon->package('polr.admin');
-        // Load the Polr Admin configuration
-        $polr->config(config_path('polradmin.php'));
-
-        // Register Jaxon classes
-        $jaxon->register();
-
-        return view('index', ['jaxon' => $jaxon, 'polr' => $polr]);
-    }
-}
-```
-
-The following calls will return the codes to be inserted in the template.
-
-- `$jaxon->css()`: The Jaxon CSS includes.
-- `$jaxon->js()`: The Jaxon Javascript includes.
-- `$jaxon->script()`: The Jaxon Javascript code.
-- `$polr->css()`: The Polr Admin CSS includes.
-- `$polr->js()`: The Polr Admin Javascript includes.
-- `$polr->html()`: The Polr Admin HTML code.
-- `$polr->ready()`: The Javascript code to run on page ready.
-
-So a sample template will look like this.
-
-```html
-@extends('layouts.base')
-
-@section('css')
-{!! $jaxon->css() !!}
-
-{!! $polr->css() !!}
-@endsection
-
-@section('content')
-
-{!! $polr->html() !!}
-
-@endsection
-
-@section('js')
-{!! $jaxon->js() !!}
-{!! $jaxon->script() !!}
-
-{!! $polr->js() !!}
-
-<script type="text/javascript">
-$(document).ready(function() {
-    {!! $polr->ready() !!}
-});
-</script>
-@endsection
-```
-
-Notice for other frameworks
-===========================
-
-When using a framework other than Laravel, the Jaxon object is an instance of a different class.
-The config file path (maybe its format too), the controller and the template engine are also different.
