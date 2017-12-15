@@ -71,7 +71,7 @@ class Datatables implements JsonSerializable
         $this->data = $data;
         $this->draw = $draw;
         $this->recordsTotal = $total;
-        $this->recordsFiltered = count($data);
+        $this->recordsFiltered = $total; // count($data);
         $this->columns = array();
         $this->add = $this->edit = $this->hide = $this->attrs = array();
     }
