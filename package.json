@@ -1,0 +1,36 @@
+{
+  "name": "polr-admin",
+  "version": "0.1.3",
+  "description": "Polr Admin Dashboard",
+  "main": "polr.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lagdo/polr-admin.git"
+  },
+  "keywords": [
+    "polr",
+    "ulr shortener",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/lagdo/polr-admin/issues"
+  },
+  "homepage": "https://github.com/lagdo/polr-admin#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^3.0.0",
+    "gulp-deporder": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-strip-debug": "^1.1.0",
+    "gulp-uglify": "^3.0.0"
+  }
+}
