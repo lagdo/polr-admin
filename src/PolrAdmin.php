@@ -58,12 +58,28 @@ class PolrAdmin
         // Polr API Client
         $armada = jaxon()->armada();
         // Get Polr endpoints from the config
-        if(!($current = $armada->session()->get('polr.endpoint')))
+        $endpoints = $this->config->getOption('endpoints', []);
+        if(!is_array($endpoints) || count($endpoints) == 0)
         {
-            // $current = config('polradmin.default', '');
+            return;
+        }
+        // Get the current endpoint from the session
+        $current = $armada->session()->get('polr.endpoint');
+        // Check if the current endpoint value exists
+        if(!$current || !key_exists($current, $endpoints))
+        {
+            // Get the current endpoint from the configuration
             $current = $this->config->getOption('default', '');
+            // Check if the current endpoint value exists
+            if(!$current || !key_exists($current, $endpoints))
+            {
+                // Set the first endpoint in the configuration as current
+                reset($endpoints);
+                $current = key($endpoints);
+            }
             $armada->session()->set('polr.endpoint', $current);
         }
+
         $cfgKey = 'endpoints.' . $current;
         $this->apiKey = $this->config->getOption($cfgKey . '.key');
         $uri = rtrim($this->config->getOption($cfgKey . '.url'), '/') . '/' .
@@ -77,14 +93,14 @@ class PolrAdmin
             $armada->session()->set('polr.endpoint', $current);
         }
         $this->endpoints = [
-            'current' => (object)$this->config->getOption('endpoints.' . $current, null),
+            'current' => (object)$endpoints[$current],
             'names' => [],
         ];
         if($this->endpoints['current'] != null)
         {
             $this->endpoints['current']->id = $current;
         }
-        foreach($this->config->getOption('endpoints') as $id => $endpoint)
+        foreach($endpoints as $id => $endpoint)
         {
             $this->endpoints['names'][$id] = $endpoint['name'];
         }
