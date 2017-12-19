@@ -205,6 +205,10 @@ class PolrAdmin
     public function html()
     {
         $armada = jaxon()->armada();
+        if(!$this->endpoint())
+        {
+            return $armada->view()->render('polr_admin::snippets.empty');
+        }
         $template = $this->config->getOption('templates.html', 'polr_admin::default');
         return $armada->view()->render($template)->with('tabs', $this->tabs());
     }
