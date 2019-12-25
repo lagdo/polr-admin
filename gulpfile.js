@@ -14,7 +14,7 @@ var devBuild = (process.env.NODE_ENV !== 'production');
 var folders = {
         js: 'resources/assets/js',
         css: 'resources/assets/css',
-        dist: 'resources/assets/dist'
+        dist: 'dist'
     },
 
     files = {
