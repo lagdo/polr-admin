@@ -4,7 +4,7 @@
 var gulp = require('gulp'),
     concat = require('gulp-concat'),
     rename = require('gulp-rename'),
-    uglify = require('gulp-uglify'),
+    terser = require('gulp-terser'),
     csso = require('gulp-csso');
 
 // Development mode?
@@ -45,7 +45,7 @@ gulp.task('js', ['js-polr']);
 gulp.task('js-polr-min', ['js-polr'], function() {
     return gulp.src(folders.dist + '/polr.js')
         // .pipe(stripdebug())
-        .pipe(uglify())
+        .pipe(terser())
         .pipe(rename('polr.min.js'))
         .pipe(gulp.dest(folders.dist));
 });
