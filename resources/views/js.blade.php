@@ -4,6 +4,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/lagdo/polr-admin@0.1/resources/assets/dist/jquery-jvectormap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/lagdo/polr-admin@0.1/resources/assets/dist/jquery-jvectormap-world-mill.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/lagdo/polr-admin@0.1/resources/assets/dist/polr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/lagdo/polr-admin@0.2/dist/jquery-jvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/lagdo/polr-admin@0.2/dist/jquery-jvectormap-world-mill.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/lagdo/polr-admin@0.2/dist/polr.min.js"></script>

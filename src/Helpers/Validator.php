@@ -1,6 +1,6 @@
 <?php
 
-namespace Lagdo\Polr\Admin\Helpers;
+namespace Lagdo\PolrAdmin\Helpers;
 
 use Valitron\Validator as ValitronValidator;
 
@@ -52,7 +52,8 @@ class Validator
     {
         $rules = array(
             'ending' => [['slug']],
-            'url' => [['required'], ['url']],
+            'url' => [['url']],
+            'status' => [['in', ['enable', 'disable']]],
         );
         if(($endingRequired))
         {
@@ -64,37 +65,19 @@ class Validator
     }
 
     /**
-     * Validate link status
-     *
-     * @param array $values
-     *
-     * @return boolean
-     */
-    public function validateLinkStatus(array $values)
-    {
-        $rules = array(
-            'ending' => [['required'], ['slug']],
-            'status' => [['required'], ['in', [0, 1]]],
-        );
-        $validator = new ValitronValidator($values);
-        $validator->mapFieldsRules($rules);
-        return $validator->validate();
-    }
-
-    /**
      * Validate end point name
      *
-     * @param string $endpoint
+     * @param string $server
      *
      * @return boolean
      */
-    public function validateEndpoint($endpoint)
+    public function validateServer($server)
     {
         $values = [
-            'endpoint' => $endpoint,
+            'server' => $server,
         ];
         $rules = array(
-            'endpoint' => [['required'], ['slug']],
+            'server' => [['required'], ['slug']],
         );
         $validator = new ValitronValidator($values);
         $validator->mapFieldsRules($rules);

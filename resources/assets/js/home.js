@@ -16,35 +16,12 @@
             }
         };
 
-        if ($('#admin_users_table').length) {
-            $scope.datatables['admin_users_table'] = $('#admin_users_table').DataTable($.extend({
-                "ajax": function(data, callback, settings) {
-                    // Pass the Datatables callback and settings to the Jaxon call
-                    $scope.jaxon = {callback: callback, settings: settings};
-                    Lagdo.Polr.Admin.App.User.getUsers(data);
-                    // Clear the Datatables data after the Jaxon call
-                    $scope.jaxon = null;
-                },
-                // "ajax": BASE_API_PATH + 'get_admin_users',
-
-                "columns": [
-                    {className: 'wrap-text', data: 'username', name: 'username'},
-                    {className: 'wrap-text', data: 'email', name: 'email'},
-                    {data: 'created_at', name: 'created_at'},
-
-                    {data: 'toggle_active', name: 'toggle_active', orderable: false, searchable: false},
-                    {data: 'api_action', name: 'api_action', orderable: false, searchable: false},
-                    {data: 'change_role', name: 'change_role', orderable: false, searchable: false},
-                    {data: 'delete', name: 'delete', orderable: false, searchable: false}
-                ]
-            }, datatables_config));
-        }
         if ($('#admin_links_table').length) {
             $scope.datatables['admin_links_table'] = $('#admin_links_table').DataTable($.extend({
                 "ajax": function(data, callback, settings) {
                     // Pass the Datatables callback and settings to the Jaxon call
                     $scope.jaxon = {callback: callback, settings: settings};
-                    Lagdo.Polr.Admin.App.Link.getAdminLinks(data);
+                    $scope.getAdminLinks(data); // The getAdminLinks() function is to be defined as a Jaxon call.
                     // Clear the Datatables data after the Jaxon call
                     $scope.jaxon = null;
                 },
@@ -68,7 +45,7 @@
             "ajax": function(data, callback, settings) {
                 // Pass the Datatables callback and settings to the Jaxon call
                 $scope.jaxon = {callback: callback, settings: settings};
-                Lagdo.Polr.Admin.App.Link.getUserLinks(data);
+                $scope.getUserLinks(data); // The getUserLinks() function is to be defined as a Jaxon call.
                 // Clear the Datatables data after the Jaxon call
                 $scope.jaxon = null;
             },
@@ -93,9 +70,9 @@
         $scope.datatables['user_links_table'].ajax.reload(null, false);
     };
 
-    $scope.reloadUserTables = function () {
+    /*$scope.reloadUserTables = function () {
         $scope.datatables['admin_users_table'].ajax.reload(null, false);
-    };
+    };*/
 
     function setTip(tip) {
         $("#tips").html(tip);
@@ -142,7 +119,6 @@
             e.preventDefault();
             $(this).tab('show');
         });
-        $('.new-user-fields').hide();
 
         $scope.initTables();
     };

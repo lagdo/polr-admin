@@ -18,8 +18,16 @@ jQuery.fn.clearForm = function() {
 // console.log('%cNeed help? Open a ticket: https://github.com/cydrobolt/polr', 'color:blue');
 // console.log('%cDocs: https://docs.polr.me', 'color:blue');
 
+// Stats data
+var dayData = {};
+var refererData = {};
+var countryData = {};
+
 //Set up the Polr object
 var polr = {
     home: {},
-    stats: {}
+    stats: {
+        leftBound: '',
+        rightBound: ''
+    }
 };

@@ -24,8 +24,8 @@ var parseInputDate = function (inputDate) {
         // Populate empty days in $scope.dayData with zeroes
 
         // Number of days in range
-        var numDays = moment(datePickerRightBound).diff(moment(datePickerLeftBound), 'days');
-        var i = moment(datePickerLeftBound);
+        var numDays = moment($scope.rightBound).diff(moment($scope.leftBound), 'days');
+        var i = moment($scope.leftBound);
 
         var daysWithData = {};
 
@@ -165,8 +165,8 @@ var parseInputDate = function (inputDate) {
         $leftPicker.data("DateTimePicker").parseInputDate(parseInputDate);
         $rightPicker.data("DateTimePicker").parseInputDate(parseInputDate);
 
-        $leftPicker.data("DateTimePicker").date(datePickerLeftBound, Date, moment, null);
-        $rightPicker.data("DateTimePicker").date(datePickerRightBound, Date, moment, null);
+        $leftPicker.data("DateTimePicker").date($scope.leftBound, Date, moment, null);
+        $rightPicker.data("DateTimePicker").date($scope.rightBound, Date, moment, null);
     }
 
     $scope.initData = function (day, referer, country, leftBound, rightBound) {
@@ -175,8 +175,8 @@ var parseInputDate = function (inputDate) {
         refererData = referer;
         countryData = country;
         // Datepicker dates
-        datePickerLeftBound = leftBound;
-        datePickerRightBound = rightBound;
+        $scope.leftBound = leftBound;
+        $scope.rightBound = rightBound;
     };
 
     $scope.initCharts = function () {

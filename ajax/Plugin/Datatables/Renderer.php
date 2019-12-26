@@ -4,9 +4,7 @@
  * Renderer.php - Renderer for the Datatables plugin.
  */
 
-namespace Lagdo\Polr\Admin\Ext\Datatables;
-
-use App\Helpers\UserHelper;
+namespace Lagdo\PolrAdmin\Ajax\Plugin\Datatables;
 
 class Renderer
 {

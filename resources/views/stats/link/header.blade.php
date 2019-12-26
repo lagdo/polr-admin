@@ -1,7 +1,7 @@
                         <p>
                             <b>Short Link: </b>
-                            <a target="_blank" href="{{ $endpoint->url }}/{{ $link->short_url }}">
-                                {{ $endpoint->url }}/{{ $link->short_url }}
+                            <a target="_blank" href="{{ $server->url }}/{{ $link->short_url }}">
+                                {{ $server->url }}/{{ $link->short_url }}
                             </a>
                         </p>
                         <p>

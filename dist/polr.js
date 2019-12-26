@@ -18,10 +18,18 @@ jQuery.fn.clearForm = function() {
 // console.log('%cNeed help? Open a ticket: https://github.com/cydrobolt/polr', 'color:blue');
 // console.log('%cDocs: https://docs.polr.me', 'color:blue');
 
+// Stats data
+var dayData = {};
+var refererData = {};
+var countryData = {};
+
 //Set up the Polr object
 var polr = {
     home: {},
-    stats: {}
+    stats: {
+        leftBound: '',
+        rightBound: ''
+    }
 };
 
 
@@ -43,35 +51,12 @@ var polr = {
             }
         };
 
-        if ($('#admin_users_table').length) {
-            $scope.datatables['admin_users_table'] = $('#admin_users_table').DataTable($.extend({
-                "ajax": function(data, callback, settings) {
-                    // Pass the Datatables callback and settings to the Jaxon call
-                    $scope.jaxon = {callback: callback, settings: settings};
-                    Lagdo.Polr.Admin.App.User.getUsers(data);
-                    // Clear the Datatables data after the Jaxon call
-                    $scope.jaxon = null;
-                },
-                // "ajax": BASE_API_PATH + 'get_admin_users',
-
-                "columns": [
-                    {className: 'wrap-text', data: 'username', name: 'username'},
-                    {className: 'wrap-text', data: 'email', name: 'email'},
-                    {data: 'created_at', name: 'created_at'},
-
-                    {data: 'toggle_active', name: 'toggle_active', orderable: false, searchable: false},
-                    {data: 'api_action', name: 'api_action', orderable: false, searchable: false},
-                    {data: 'change_role', name: 'change_role', orderable: false, searchable: false},
-                    {data: 'delete', name: 'delete', orderable: false, searchable: false}
-                ]
-            }, datatables_config));
-        }
         if ($('#admin_links_table').length) {
             $scope.datatables['admin_links_table'] = $('#admin_links_table').DataTable($.extend({
                 "ajax": function(data, callback, settings) {
                     // Pass the Datatables callback and settings to the Jaxon call
                     $scope.jaxon = {callback: callback, settings: settings};
-                    Lagdo.Polr.Admin.App.Link.getAdminLinks(data);
+                    $scope.getAdminLinks(data); // The getAdminLinks() function is to be defined as a Jaxon call.
                     // Clear the Datatables data after the Jaxon call
                     $scope.jaxon = null;
                 },
@@ -95,7 +80,7 @@ var polr = {
             "ajax": function(data, callback, settings) {
                 // Pass the Datatables callback and settings to the Jaxon call
                 $scope.jaxon = {callback: callback, settings: settings};
-                Lagdo.Polr.Admin.App.Link.getUserLinks(data);
+                $scope.getUserLinks(data); // The getUserLinks() function is to be defined as a Jaxon call.
                 // Clear the Datatables data after the Jaxon call
                 $scope.jaxon = null;
             },
@@ -120,9 +105,9 @@ var polr = {
         $scope.datatables['user_links_table'].ajax.reload(null, false);
     };
 
-    $scope.reloadUserTables = function () {
+    /*$scope.reloadUserTables = function () {
         $scope.datatables['admin_users_table'].ajax.reload(null, false);
-    };
+    };*/
 
     function setTip(tip) {
         $("#tips").html(tip);
@@ -169,7 +154,6 @@ var polr = {
             e.preventDefault();
             $(this).tab('show');
         });
-        $('.new-user-fields').hide();
 
         $scope.initTables();
     };
@@ -204,8 +188,8 @@ var parseInputDate = function (inputDate) {
         // Populate empty days in $scope.dayData with zeroes
 
         // Number of days in range
-        var numDays = moment(datePickerRightBound).diff(moment(datePickerLeftBound), 'days');
-        var i = moment(datePickerLeftBound);
+        var numDays = moment($scope.rightBound).diff(moment($scope.leftBound), 'days');
+        var i = moment($scope.leftBound);
 
         var daysWithData = {};
 
@@ -345,8 +329,8 @@ var parseInputDate = function (inputDate) {
         $leftPicker.data("DateTimePicker").parseInputDate(parseInputDate);
         $rightPicker.data("DateTimePicker").parseInputDate(parseInputDate);
 
-        $leftPicker.data("DateTimePicker").date(datePickerLeftBound, Date, moment, null);
-        $rightPicker.data("DateTimePicker").date(datePickerRightBound, Date, moment, null);
+        $leftPicker.data("DateTimePicker").date($scope.leftBound, Date, moment, null);
+        $rightPicker.data("DateTimePicker").date($scope.rightBound, Date, moment, null);
     }
 
     $scope.initData = function (day, referer, country, leftBound, rightBound) {
@@ -355,8 +339,8 @@ var parseInputDate = function (inputDate) {
         refererData = referer;
         countryData = country;
         // Datepicker dates
-        datePickerLeftBound = leftBound;
-        datePickerRightBound = rightBound;
+        $scope.leftBound = leftBound;
+        $scope.rightBound = rightBound;
     };
 
     $scope.initCharts = function () {

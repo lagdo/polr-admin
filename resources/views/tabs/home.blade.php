@@ -1,5 +1,5 @@
-                <h3>Welcome to your {{ $endpoint->name }} dashboard!</h3>
-                <p>Use the tabs to navigate your {{ $endpoint->name }} dashboard.</p>
+                <h4>Welcome to your {{ $server->name }} dashboard!</h4>
+                <p>Use the tabs to navigate your {{ $server->name }} dashboard.</p>
 
                 <h4>Create a short URL</h4>
                 <div class="" style="text-align: center;">
@@ -20,7 +20,7 @@
 
                             <div>
                                 <div class="custom-link-text">
-                                    <h2 class="site-url-field">{{ $endpoint->url }}/</h2>
+                                    <h2 class="site-url-field">{{ $server->url }}/</h2>
                                     <input type="text" autocomplete="off" class="form-control custom-url-field" name="ending" />
                                 </div>
                                 <div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lagdo\Polr\Admin\Ext\Datatables;
+namespace Lagdo\PolrAdmin\Ajax\Plugin\Datatables;
 
 use JsonSerializable;
 
@@ -79,7 +79,7 @@ class Datatables implements JsonSerializable
     /**
      * Set the datatable row attributes
      * @param array $attrs
-     * @return \Lagdo\Polr\Admin\Ext\Datatables\Datatables
+     * @return \Lagdo\PolrAdmin\Ext\Datatables\Datatables
      */
     public function attr(array $attrs)
     {
@@ -91,7 +91,7 @@ class Datatables implements JsonSerializable
     /**
      * Set the number of records in the datatable before filtering
      * @param integer $total
-     * @return \Lagdo\Polr\Admin\Ext\Datatables\Datatables
+     * @return \Lagdo\PolrAdmin\Ext\Datatables\Datatables
      */
     public function setTotal($total)
     {
@@ -103,7 +103,7 @@ class Datatables implements JsonSerializable
     /**
      * Set the datatable columns
      * @param array $columns
-     * @return \Lagdo\Polr\Admin\Ext\Datatables\Datatables
+     * @return \Lagdo\PolrAdmin\Ext\Datatables\Datatables
      */
     public function setColumns(array $columns)
     {
@@ -116,7 +116,7 @@ class Datatables implements JsonSerializable
      * Add a column to the datatable
      * @param string $newColumn
      * @param Closure $closure
-     * @return \Lagdo\Polr\Admin\Ext\Datatables\Datatables
+     * @return \Lagdo\PolrAdmin\Ext\Datatables\Datatables
      */
     public function add($newColumn, $closure)
     {
@@ -129,7 +129,7 @@ class Datatables implements JsonSerializable
      * Edit a column in the datatable
      * @param string $column
      * @param Closure $closure
-     * @return \Lagdo\Polr\Admin\Ext\Datatables\Datatables
+     * @return \Lagdo\PolrAdmin\Ext\Datatables\Datatables
      */
     public function edit($column, $closure)
     {
@@ -141,7 +141,7 @@ class Datatables implements JsonSerializable
     /**
      * Escape columns in the datatable
      * @param array $columns
-     * @return \Lagdo\Polr\Admin\Ext\Datatables\Datatables
+     * @return \Lagdo\PolrAdmin\Ext\Datatables\Datatables
      */
     public function escape(array $columns)
     {
@@ -158,7 +158,7 @@ class Datatables implements JsonSerializable
     /**
      * Hide columns in the datatable
      * @param array $columns
-     * @return \Lagdo\Polr\Admin\Ext\Datatables\Datatables
+     * @return \Lagdo\PolrAdmin\Ext\Datatables\Datatables
      */
     public function hide($columns)
     {
