@@ -10,7 +10,6 @@ use Carbon\Carbon;
 
 class Package extends JaxonPackage
 {
-
     /**
      * The home page tabs
      *

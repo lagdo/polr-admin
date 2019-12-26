@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" id="polr-dashboard-container">
 	<div class="col-md-12">
 		<div class="portlet light">
 			<div class="portlet-title tabbable-line">
