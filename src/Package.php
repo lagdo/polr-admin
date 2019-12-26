@@ -10,12 +10,34 @@ use Carbon\Carbon;
 
 class Package extends JaxonPackage
 {
+
     /**
-     * A function to call in order to reload the dashboard
+     * The home page tabs
      *
-     * @var Closure
+     * @var array
      */
-    protected static $reloadCallback = null;
+    protected $tabs = [
+        'home' => [
+            'title' => 'Home',
+            'class' => '',
+            'active' => true,
+        ],
+        'user-links' => [
+            'title' => 'User Links',
+            'class' => '',
+            'active' => false,
+        ],
+        'admin-links' => [
+            'title' => 'Admin Links',
+            'class' => '',
+            'active' => false,
+        ],
+        'stats' => [
+            'title' => 'Stats',
+            'class' => 'stats',
+            'active' => false,
+        ],
+    ];
 
     public function __construct(Helpers\Validator $validator)
     {
@@ -73,79 +95,33 @@ class Package extends JaxonPackage
         ]);
     }
 
-    protected function servers()
+    public function getHtml()
     {
         // Get Polr servers from the config
         $config = $this->getConfig();
         $servers = $config->getOption('servers', []);
         if(!\is_array($servers) || \count($servers) == 0)
         {
-            return null;
+            return $this->view()->render('polr_admin::snippets.empty');
         }
 
         // Get the current server from the configuration
         $selected = $config->getOption('default', '');
-        if(\key_exists($selected, $servers))
-        {
-            $selected = '';
-        }
-
         // Set the selected server
-        foreach($servers as $key => &$server)
+        if($selected == '' || \key_exists($selected, $servers))
         {
-            if($selected == '')
+            // Set the first server as selected
+            foreach($servers as $key => &$server)
             {
                 $selected = $key;
-                $server['selected'] = true;
-            }
-            elseif($selected == $key)
-            {
-                $server['selected'] = true;
-            }
-            else
-            {
-                $server['selected'] = false;
+                break;
             }
         }
-
-        return $servers;
-    }
-
-    public function getHtml()
-    {
-        $servers = $this->servers();
-        if(!$servers)
-        {
-            return $this->view()->render('polr_admin::snippets.empty');
-        }
-
-        // Set the tabs content
-        $tabs = [
-            'home' => [
-                'title' => 'Home',
-                'class' => '',
-                'active' => false,
-            ],
-            'user-links' => [
-                'title' => 'User Links',
-                'class' => '',
-                'active' => true,
-            ],
-            'admin-links' => [
-                'title' => 'Admin Links',
-                'class' => '',
-                'active' => false,
-            ],
-            'stats' => [
-                'title' => 'Stats',
-                'class' => 'stats',
-                'active' => false,
-            ],
-        ];
 
         return $this->view()->render('polr_admin::home', [
-            'tabs' => $tabs,
+            'tabs' => $this->tabs,
             'servers' => $servers,
+            'selected' => $selected,
         ]);
     }
 }
