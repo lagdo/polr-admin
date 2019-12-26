@@ -1,35 +1,30 @@
 {
     "name": "lagdo/polr-admin",
-    "description": "An admin dashboard for the Polr URL shortener.",
-    "keywords": ["framework", "laravel"],
+    "type": "library",
+    "description": "A dashboard for the Polr URL shortener.",
+    "authors": [
+        {"name": "Thierry Feuzeu"}
+    ],
+    "homepage": "https://github.com/lagdo/polr-admin",
     "license": "GPL-v2",
-    "type": "project",
+    "keywords": ["URL Shortener", "Short URL", "Polr", "Dashboard", "Jaxon", "Ajax"],
+    "support": {
+        "issues": "https://github.com/lagdo/polr-admin/issues",
+        "source": "https://github.com/lagdo/polr-admin"
+    },
     "require": {
-        "php": ">=5.5.9",
-        "nesbot/carbon": "^1.22",
         "guzzlehttp/guzzle": "~6.0",
         "vlucas/valitron": "1.4.*",
-        "jaxon-php/jaxon-view-blade": "~2.0",
-        "jaxon-php/jaxon-dialogs": "~1.2"
-    },
-    "require-dev": {
-        "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.1"
+        "jaxon-php/jaxon-view-blade": "~3.0",
+        "jaxon-php/jaxon-dialogs": "^3.1"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "Lagdo\\Polr\\Admin\\": "src/",
-            "Lagdo\\Polr\\Admin\\App\\": "src/Ajax/Classes/",
-            "Lagdo\\Polr\\Admin\\Ext\\": "src/Ajax/Plugins/"
+            "Lagdo\\PolrAdmin\\": "src/",
+            "Lagdo\\PolrAdmin\\Ajax\\": "ajax/"
         },
         "files": [
             "src/start.php"
         ]
-    },
-    "config": {
-        "preferred-install": "dist"
     }
 }
