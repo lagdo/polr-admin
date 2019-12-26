@@ -4,9 +4,9 @@
 			<div class="portlet-title tabbable-line">
 				<div class="col-md-3 invisible">
 					<select class="form-control" name="server" id="select-server">
-					@foreach( $servers as $id => $name )
-						<option value="{{ $id }}"{{ ($id == $server->id) ? ' selected' : '' }}>{{ $name }}</option>
-					@endforeach
+@foreach( $servers as $id => $server )
+						<option value="{{ $id }}"{{ ($server['selected']) ? ' selected' : '' }}>{{ $server['name'] }}</option>
+@endforeach
 					</select>
 				</div>
 				<div class="col-md-1 invisible">
@@ -14,8 +14,8 @@
 				</div>
 				<ul class="nav nav-tabs admin-nav">
 @foreach( $tabs as $id => $tab )
-					<li class="{{ $tab->active ? 'active' : '' }} {{ $tab->class }}">
-						<a href="#{{ $id }}" data-toggle="tab">{{ $tab->title }}</a>
+					<li class="{{ $tab['active'] ? 'active' : '' }} {{ $tab['class'] }}">
+						<a href="#{{ $id }}" data-toggle="tab">{{ $tab['title'] }}</a>
 					</li>
 @endforeach
 				</ul>
@@ -23,8 +23,8 @@
 			<div class="portlet-body">
 				<div class="tab-content">
 @foreach( $tabs as $id => $tab )
-					<div class="tab-pane {{ $tab->active ? 'active' : '' }} {{ $tab->class }}" id="{{ $id }}">
-						{!! $tab->view !!}
+					<div class="tab-pane {{ $tab['active'] ? 'active' : '' }} {{ $tab['class'] }}" id="{{ $id }}">
+@include('polr_admin::tabs.' . $id)
 					</div>
 @endforeach
 				</div>

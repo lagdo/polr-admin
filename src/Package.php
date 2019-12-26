@@ -78,34 +78,37 @@ class Package extends JaxonPackage
     {
         // Get Polr servers from the config
         $config = $this->getConfig();
-        $_servers = $config->getOption('servers', []);
-        if(!\is_array($_servers) || \count($_servers) == 0)
+        $servers = $config->getOption('servers', []);
+        if(!\is_array($servers) || \count($servers) == 0)
         {
             return null;
         }
 
         // Get the current server from the configuration
-        $current = $config->getOption('default', '');
-        // Check if the current server value exists
-        if(!$current || !\key_exists($current, $_servers))
+        $selected = $config->getOption('default', '');
+        if(\key_exists($selected, $servers))
         {
-            // Set the first server in the configuration as current
-            reset($_servers);
-            $current = key($_servers);
+            $selected = '';
         }
 
-        $servers = [
-            'current' => (object)$_servers[$current],
-            'names' => [],
-        ];
-        if($servers['current'] != null)
+        // Set the selected server
+        foreach($servers as $key => &$server)
         {
-            $servers['current']->id = $current;
+            if($selected == '')
+            {
+                $selected = $key;
+                $server['selected'] = true;
+            }
+            elseif($selected == $key)
+            {
+                $server['selected'] = true;
+            }
+            else
+            {
+                $server['selected'] = false;
+            }
         }
-        foreach($_servers as $id => $server)
-        {
-            $servers['names'][$id] = $server['name'];
-        }
+
         return $servers;
     }
 
@@ -119,41 +122,31 @@ class Package extends JaxonPackage
 
         // Set the tabs content
         $tabs = [
-            'home' => (object)[
-                'view' => null,
+            'home' => [
                 'title' => 'Home',
                 'class' => '',
                 'active' => false,
             ],
-            'user-links' => (object)[
-                'view' => null,
+            'user-links' => [
                 'title' => 'User Links',
                 'class' => '',
                 'active' => true,
             ],
-            'admin-links' => (object)[
-                'view' => null,
+            'admin-links' => [
                 'title' => 'Admin Links',
                 'class' => '',
                 'active' => false,
             ],
-            'stats' => (object)[
-                'view' => null,
+            'stats' => [
                 'title' => 'Stats',
                 'class' => 'stats',
                 'active' => false,
             ],
         ];
 
-        foreach($tabs as $id => $tab)
-        {
-            $tab->view = $this->view()->render('polr_admin::tabs.' . $id);
-        }
-
-        return $this->view()->render('polr_admin::default', [
+        return $this->view()->render('polr_admin::home', [
             'tabs' => $tabs,
-            'server' => $servers['current'],
-            'servers' => $servers['names'],
+            'servers' => $servers,
         ]);
     }
 }
