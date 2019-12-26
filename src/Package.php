@@ -5,7 +5,6 @@ namespace Lagdo\PolrAdmin;
 use Jaxon\Plugin\Package as JaxonPackage;
 use Lagdo\PolrAdmin\Ajax\App\Link;
 use Lagdo\PolrAdmin\Ajax\App\Stats;
-use Lagdo\PolrAdmin\Ajax\App\User;
 
 use Carbon\Carbon;
 

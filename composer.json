@@ -6,7 +6,7 @@
         {"name": "Thierry Feuzeu"}
     ],
     "homepage": "https://github.com/lagdo/polr-admin",
-    "license": "GPL-v2",
+    "license": "GPL-2.0-or-later",
     "keywords": ["URL Shortener", "Short URL", "Polr", "Dashboard", "Jaxon", "Ajax"],
     "support": {
         "issues": "https://github.com/lagdo/polr-admin/issues",
