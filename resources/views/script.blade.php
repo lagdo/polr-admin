@@ -63,4 +63,12 @@ polr.home.getAdminLinks = function(data) {
 polr.home.getUserLinks = function(data) {
     {!! $link->getUserLinks(pr()->js('polr.home.server'), pr()->js('data')) !!}
 };
+polr.init = function(leftBound, rightBound) {
+    polr.home.server = {!! pr()->select('select-server') !!};
+    polr.home.init();
+    polr.stats.leftBound = leftBound;
+    polr.stats.rightBound = rightBound;
+    polr.stats.initDatePickers();
+    polr.home.setHandlers();
+};
 </script>
