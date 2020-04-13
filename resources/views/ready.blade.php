@@ -1,7 +1,7 @@
 <script>
     // Polr Server selection button
     $('#btn-change-server').click(function(){
-        polr.init('{{ $datePickerLeftBound }}', '{{ $datePickerRightBound }}');
+        {!! $home->reload(pr()->select('select-server')) !!};
     });
     polr.init('{{ $datePickerLeftBound }}', '{{ $datePickerRightBound }}');
 </script>

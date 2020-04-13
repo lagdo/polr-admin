@@ -5,6 +5,7 @@ namespace Lagdo\PolrAdmin;
 use Jaxon\Plugin\Package as JaxonPackage;
 use Lagdo\PolrAdmin\Ajax\App\Link;
 use Lagdo\PolrAdmin\Ajax\App\Stats;
+use Lagdo\PolrAdmin\Ajax\App\Home;
 
 use Carbon\Carbon;
 
@@ -88,13 +89,13 @@ class Package extends JaxonPackage
     public function getReadyScript()
     {
         return $this->_render('polr_admin::ready', [
-            'link' => jaxon()->request(Link::class), // Ajax request to the Jaxon Link class
+            'home' => jaxon()->request(Home::class), // Ajax request to the Jaxon Home class
             'datePickerLeftBound' => Carbon::now()->subDays(Stats::DAYS_TO_FETCH),
             'datePickerRightBound' => Carbon::now(),
         ]);
     }
 
-    public function getHtml()
+    public function getHtml($selected = '')
     {
         // Get Polr servers from the config
         $config = $this->getConfig();
@@ -105,9 +106,12 @@ class Package extends JaxonPackage
         }
 
         // Get the current server from the configuration
-        $selected = $config->getOption('default', '');
+        if($selected == '')
+        {
+            $selected = $config->getOption('default', '');
+        }
         // Set the selected server
-        if($selected == '' || \key_exists($selected, $servers))
+        if($selected == '' || !\key_exists($selected, $servers))
         {
             // Set the first server as selected
             foreach($servers as $key => &$server)
