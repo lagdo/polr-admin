@@ -13,7 +13,7 @@
         "source": "https://github.com/lagdo/polr-admin"
     },
     "require": {
-        "guzzlehttp/guzzle": "^6.3.1",
+        "guzzlehttp/guzzle": "*",
         "vlucas/valitron": "1.4.*",
         "jaxon-php/jaxon-view-blade": "~3.0",
         "jaxon-php/jaxon-dialogs": "^3.1"
