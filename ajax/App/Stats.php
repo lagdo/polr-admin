@@ -6,7 +6,7 @@ use Lagdo\PolrAdmin\Client;
 use Lagdo\PolrAdmin\Helpers\Validator;
 
 use Carbon\Carbon;
-use Jaxon\CallableClass;
+use Jaxon\App\CallableClass;
 
 class Stats extends CallableClass
 {

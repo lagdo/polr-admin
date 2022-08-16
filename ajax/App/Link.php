@@ -5,7 +5,7 @@ namespace Lagdo\PolrAdmin\Ajax\App;
 use Lagdo\PolrAdmin\Client;
 use Lagdo\PolrAdmin\Helpers\Validator;
 
-use Jaxon\CallableClass;
+use Jaxon\App\CallableClass;
 use Exception;
 
 class Link extends CallableClass

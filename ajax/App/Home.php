@@ -4,7 +4,7 @@ namespace Lagdo\PolrAdmin\Ajax\App;
 
 use Lagdo\PolrAdmin\Package;
 
-use Jaxon\CallableClass;
+use Jaxon\App\CallableClass;
 
 class Home extends CallableClass
 {
